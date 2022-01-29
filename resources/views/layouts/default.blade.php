@@ -1,0 +1,2 @@
+@include('adminlte::page')
+
