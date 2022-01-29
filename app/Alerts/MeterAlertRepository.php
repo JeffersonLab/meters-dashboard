@@ -8,13 +8,11 @@
 
 namespace App\Alerts;
 
-
-use App\Meters\Meter;
-use App\Meters\MeterDataException;
-use App\Utilities\NagiosServicelist;
+use App\Exceptions\MeterDataException;
+use App\Models\Meters\Meter;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+
 
 /**
  * Class MeterAlertRepository

@@ -8,8 +8,7 @@
 
 namespace App\Alerts;
 
-
-use App\Meters\Meter;
+use App\Models\Meters\Meter;
 use App\Utilities\NagiosServicelist;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;

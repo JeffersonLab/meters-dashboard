@@ -2,7 +2,8 @@
 
 namespace App\Alerts;
 
-use App\Meters\Meter;
+
+use App\Models\Meters\Meter;
 
 /**
  * Class ServiceAlert
