@@ -20,7 +20,7 @@ class MenuServiceProvider extends ServiceProvider
      *
      * @var int
      */
-    public $ttl = 10;
+    public $ttl = 30;
 
     /**
      * Register services.
@@ -142,7 +142,7 @@ class MenuServiceProvider extends ServiceProvider
         $items = $buildings->sortBy('building_num')->map(function (Building $building) {
             return $this->buildingMenuItem($building);
         });
-        Cache::put('menu-building-items', $items, 10*60);
+        Cache::put('menu-building-items', $items, $this->ttl);
         return $items;
 
     }
@@ -197,6 +197,9 @@ class MenuServiceProvider extends ServiceProvider
 
 
     public function getAlertLabel(){
+        if (env('APP_ENV') == 'testing'){
+            return 'X';
+        }
         if (Cache::has('menu-alert-label')) {
             return Cache::get('menu-alert-label');
         }
@@ -207,7 +210,7 @@ class MenuServiceProvider extends ServiceProvider
             $meterAlertRepo = new MeterAlertRepository();
             $count += $meterAlertRepo->alerts()->count();
             $label = ($count ? $count : '');
-            Cache::put('menu-alert-label', $label, 5);
+            Cache::put('menu-alert-label', $label, $this->ttl);
             return $label;
         }catch (\Exception $e){
             Log::error($e);

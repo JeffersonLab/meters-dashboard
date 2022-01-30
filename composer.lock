@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "64d8c117d26987a2cc3fb275f80bb6ad",
+    "content-hash": "1b9b9271ecc4e60e44218ee7a7743bb5",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -1461,16 +1461,16 @@
         },
         {
             "name": "jlab/laravel-utilities",
-            "version": "8.2",
+            "version": "8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JeffersonLab/laravel-utilities.git",
-                "reference": "614005cb6412279eeb279cb31ad264acebd9eb1b"
+                "reference": "f22b539c53b626630014853fddedb569ffa79678"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JeffersonLab/laravel-utilities/zipball/614005cb6412279eeb279cb31ad264acebd9eb1b",
-                "reference": "614005cb6412279eeb279cb31ad264acebd9eb1b",
+                "url": "https://api.github.com/repos/JeffersonLab/laravel-utilities/zipball/f22b539c53b626630014853fddedb569ffa79678",
+                "reference": "f22b539c53b626630014853fddedb569ffa79678",
                 "shasum": ""
             },
             "require": {
@@ -1508,10 +1508,10 @@
             ],
             "description": "Package of reusable utilities for laravel applications used at JLab",
             "support": {
-                "source": "https://github.com/JeffersonLab/laravel-utilities/tree/8.2",
+                "source": "https://github.com/JeffersonLab/laravel-utilities/tree/8.3",
                 "issues": "https://github.com/JeffersonLab/laravel-utilities/issues"
             },
-            "time": "2022-01-24T19:15:16+00:00"
+            "time": "2022-01-30T14:54:46+00:00"
         },
         {
             "name": "laracasts/utilities",
@@ -9387,7 +9387,9 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.3|^8.0"
+        "php": "^7.3|^8.0",
+        "ext-pdo": "*",
+        "ext-json": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"

@@ -204,6 +204,7 @@ class MeterLimit extends BaseModel
         return $this->isTooLowMinor($value) || $this->isTooLowMajor($value);
     }
 
+
     public function getValidator(){
         $validator = Validator::make($this->attributes, static::$rules);
 

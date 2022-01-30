@@ -15,7 +15,7 @@ class CreateTableMeterLimits extends Migration
     {
         Schema::create('meter_limits', function (Blueprint $table) {
             $table->unsignedInteger('meter_id');
-            $table->string('field');
+            $table->string('field',32);
             $table->integer('interval');
             $table->double('low',8,2)->nullable();
             $table->double('high',8,2)->nullable();

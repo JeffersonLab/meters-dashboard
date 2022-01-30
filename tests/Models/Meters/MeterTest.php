@@ -36,7 +36,6 @@ class MeterTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
         //specify the valid epics field names for a power meter
         Config::set('meters.pvs',$this->pvsPowerConfig);
     }

@@ -16,7 +16,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "jeroennoten/laravel-adminlte": "^3.7",
-        "jlab/laravel-utilities": "^8.0",
+        "jlab/laravel-utilities": "^8.3",
         "laracasts/utilities": "^3.2",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",

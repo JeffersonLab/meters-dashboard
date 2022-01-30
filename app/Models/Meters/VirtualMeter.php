@@ -8,11 +8,14 @@
 
 namespace App\Models\Meters;
 
-use Carbon\Carbon;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
-use DB;
 
+use App\Models\BaseModel;
+use App\Models\DataTables\DataTableInterface;
+use App\Models\DataTables\DataTableReporter;
+use App\Models\DataTables\DataTableTrait;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class VirtualMeter
@@ -73,7 +76,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
     public function __construct(array $attributes = array())
     {
         $this->dataTableFk = 'meter_id';
-        $this->begins_at = Carbon::now();
+        $this->begins_at = Carbon::now()->startOfDay();
         parent::__construct($attributes);
     }
 
@@ -181,7 +184,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
     }
 
     /**
-     * @return \app\Meters\DataTableReporter
+     * @return DataTableReporter
      */
     public function reporter()
     {
@@ -194,7 +197,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
     /**
      * Returns a Query Builder for the appropriate data table.
      *
-     * @return Builder
+     * @return \Illuminate\Database\Query\Builder
      */
     public function dataTable()
     {
@@ -242,7 +245,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
     {
         return $this->dataTable()
             ->whereIn($this->dataTableFk(), $this->meterIds())
-            ->latest()->first();
+            ->latest('date')->first();
 
     }
 

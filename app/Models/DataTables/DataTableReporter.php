@@ -148,8 +148,8 @@ class DataTableReporter
         /** @noinspection PhpUndefinedFieldInspection */
         return $this->model->dataTable()
             ->where($this->dataTableFk, '=', $this->model->id)
-            ->where('date', '>=', $this->begins_at)
-            ->where('date', '<=', $this->ends_at)
+            ->whereDate('date', '>=', $this->begins_at)
+            ->whereDate('date', '<=', $this->ends_at)
             ->orderBy('date');
     }
 

@@ -10,10 +10,19 @@ namespace App\Models\DataTables;
 
 use Carbon\Carbon;
 
+/**
+ *
+ */
 trait DateRangeTrait
 {
 
+    /**
+     * @var
+     */
     protected $begins_at;  // earliest data of range
+    /**
+     * @var
+     */
     protected $ends_at;    // latest data of range
 
 
@@ -36,7 +45,7 @@ trait DateRangeTrait
     function defaultBeginning()
     {
         $date = Carbon::now();
-        $date->day(1)->hour(0)->minute(0)->second(0);
+        $date->day(1)->startOfDay();
         $this->beginning($date->format('Y-m-d H:i:s'));
     }
 
@@ -44,12 +53,12 @@ trait DateRangeTrait
 
     /**
      * Chainable method to set the beginning of the reporting date range.
-     * @param $date
+     * @param string $date
      * @return static
      */
     function beginning($date)
     {
-        $this->begins_at = new Carbon($date);
+        $this->begins_at = Carbon::parse($date);
         return $this;
     }
 
@@ -61,33 +70,36 @@ trait DateRangeTrait
         if (is_a($this->begins_at,Carbon::class)){
             // End at start of month that follows begins_at
             $date = clone $this->begins_at;
-            $date->addMonth()->day(1);
+            $date->addMonth()->day(1)->startOfDay();
         }else{
+            // End of the current month
             $date = new Carbon('next month');
-            $date->day(1);
+            $date->day(1)->startOfDay();
         }
         if ($date->greaterThan(Carbon::today())){
-            $date = Carbon::today();
+            $date = Carbon::tomorrow()->startOfDay();
         }
 
-        $date->hour(0)->minute(0)->second(0);
         $this->ending($date->format('Y-m-d H:i:s'));
     }
 
     /**
      * Chainable method to set the ending of the reporting date range.
-     * @param $date
+     * @param string $date
      * @return static
      */
     function ending($date)
     {
-        $this->ends_at = new Carbon($date);
+        $this->ends_at = Carbon::parse($date);
         return $this;
     }
 
 
-
-
+    /**
+     *
+     * @param string $format
+     * @return string
+     */
     function beginsAt($format=null){
         if ($format === null){
             if (0 == $this->begins_at->hour && 0 == $this->begins_at->minute){
@@ -101,6 +113,11 @@ trait DateRangeTrait
     }
 
 
+    /**
+     *
+     * @param string $format
+     * @return string
+     */
     function endsAt($format=null){
         if ($format === null){
             if (0 == $this->ends_at->hour && 0 == $this->ends_at->minute){
