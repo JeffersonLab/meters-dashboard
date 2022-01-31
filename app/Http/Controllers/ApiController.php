@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Charts\ChartFactory;
 use App\Http\Requests\ChartRequest;
-use App\Meters\Building;
-use App\Meters\Meter;
-use App\Meters\VirtualMeter;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
+use App\Models\Buildings\Building;
+use App\Models\Meters\Meter;
+use App\Models\Meters\VirtualMeter;
+use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Request;
 
 class ApiController extends Controller
 {
@@ -52,14 +54,14 @@ class ApiController extends Controller
     /**
      * Return data for a canvasJs chart
      *
-     * @param Request $request
+     * @param HttpRequest $request
      * @return \Illuminate\Http\Response;
      */
-    public function reportChartData(Request $request)
+    public function reportChartData(HttpRequest $request)
     {
         try{
             $meter = new VirtualMeter();
-            $meter->setMeters(Meter::whereIn('id',array_wrap($request->input('model_id')))->get());
+            $meter->setMeters(Meter::whereIn('id',Arr::wrap($request->input('model_id')))->get());
             $chart = ChartFactory::make('multimeter', $meter, $request);
             return $this->response($chart->toArray());
         }catch (\Exception $e){
@@ -80,14 +82,14 @@ class ApiController extends Controller
         $struct['data'] = $data;
 
         $options = 0;
-        if (Input::get('pretty')){
+        if (Request::input('pretty')){
             $options = JSON_PRETTY_PRINT;
         }
 
         $response = response()->json($struct, 200, [], $options);
 
-        if (Input::has('jsonp')){
-            $response->setCallback(Input::get('jsonp'));
+        if (Request::has('jsonp')){
+            $response->setCallback(Request::input('jsonp'));
         }
 
         return $response;
@@ -106,14 +108,14 @@ class ApiController extends Controller
         $struct['message'] = $msg;
 
         $options = 0;
-        if (Input::get('pretty')){
+        if (Request::input('pretty')){
             $options = JSON_PRETTY_PRINT;
         }
 
         $response = response()->json($struct, $code, [], $options);
 
-        if (Input::has('jsonp')){
-            $response->setCallback(Input::get('jsonp'));
+        if (Request::has('jsonp')){
+            $response->setCallback(Request::input('jsonp'));
         }
         return $response;
     }

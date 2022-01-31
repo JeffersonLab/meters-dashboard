@@ -2,6 +2,8 @@
 
 @extends('layouts.default')
 
+
+
 @section('title', 'Meters')
 
 @section('content_header')
@@ -56,7 +58,7 @@
     .box select{
         color : black;
     }
-    .chart-box{
+    .chart-card{
         min-width: 600px;
         min-height: 400px;
     }
@@ -72,11 +74,11 @@
         $(document).ready(function(){
 
          $('.chart-select').on('change', jlab.meters.changeChart);
-         $('.chart-box').each(jlab.meters.makeChart);
-         $('table.meter-data').DataTable({
-             "searching": false,
-             "scrollY": "400px"
-         });
+         $('.chart-card').each(jlab.meters.makeChart);
+         // $('table.meter-data').DataTable({
+         //     "searching": false,
+         //     "scrollY": "400px"
+         // });
         });
 
     </script>
