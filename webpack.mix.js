@@ -26,6 +26,7 @@ mix.js('resources/js/voltage.js', 'public/js').vue()
 
 mix.copy('resources/js/meters.js','public/js/meters.js');
 mix.copy('resources/js/epics2web.js','public/js/epics2web.js');
+mix.copy('resources/js/odometer.min.js','public/js/odometer.min.js');
 mix.copy('resources/js/canvasjs-1.9.10.min.js','public/js/canvasjs-1.9.10.min.js');
 mix.copy('resources/js/jquery.dynameter.js','public/js/jquery.dynameter.js');
 mix.copy('resources/js/jquery.maphilight.min.js','public/js/jquery.maphilight.min.js');

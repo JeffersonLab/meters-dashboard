@@ -75,10 +75,10 @@
 
          $('.chart-select').on('change', jlab.meters.changeChart);
          $('.chart-card').each(jlab.meters.makeChart);
-         // $('table.meter-data').DataTable({
-         //     "searching": false,
-         //     "scrollY": "400px"
-         // });
+         $('table.meter-data').DataTable({
+             "searching": false,
+             "scrollY": "400px"
+         });
         });
 
     </script>

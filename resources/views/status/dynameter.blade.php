@@ -22,13 +22,14 @@
         the same interval.  Meters without non-zero data for the past three days are not shown.</p>
     <div class="row">
         @foreach($meters as $meter)
+
             @if(isset($meter->epics_name) && $meter->hasData())
                 <?php $stats = $meter->currentStatistics(); ?>
                 @if($stats != null && $stats->max > 0)
                     <div class="col-md-3">
                         <a href="{!! route('meters.show',[$meter->id]) !!}">
-                            <div class="box box-solid">
-                                <div class="box-body">
+                            <div class="card card-solid">
+                                <div class="card-body">
 
                                     <div id="gauge-{{$meter->epics_name}}" class="gauge"
                                          data-label="{{$meter->epics_name}}"
@@ -40,12 +41,12 @@
                                     ></div>
                                 </div>
 
-                                <!-- /.box-body -->
-                                <div class="box-footer">
+                                <!-- /.card-body -->
+                                <div class="card-footer">
                                     <span class="stats">Avg={{round($stats->avg,1)}}, Min={{round($stats->min,1)}}, Max={{round($stats->max,1)}}</span>
                                     <span id="{{$meter->epics_name}}{{$field}}"></span><span class="pv-status"></span>
                                 </div>
-                                <!-- box-footer -->
+                                <!-- card-footer -->
                             </div>
                         </a>
                     </div>

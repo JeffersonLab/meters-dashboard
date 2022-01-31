@@ -12,11 +12,9 @@ jlab.meters.chart = jlab.meters.chart || {};
  * Meters graphing via chartjs
  */
 jlab.meters.makeChart = function(){
-    console.log('howdy from makeChart ');
     var chartId = $(this).attr('id');
     var chartType = $(this).data('type');
     jlab.meters.chart[chartId] = new CanvasJS.Chart(chartId);
-    console.log( jlab.meters.chart[chartId] );
     jlab.meters.getChartOptions(chartType, chartId);
 };
 
@@ -25,8 +23,6 @@ jlab.meters.changeChart = function (){
 };
 
 jlab.meters.getChartOptions = function(chartType, chartId) {
-    console.log(chartId);
-    console.log(jlab.currentApiUrl);
     $.get(jlab.currentApiUrl, {
             'start' : jlab.currentDateRange.begins,
             'end'   : jlab.currentDateRange.ends,
@@ -34,8 +30,6 @@ jlab.meters.getChartOptions = function(chartType, chartId) {
             'model_id' : jlab.currentModel.id
         },
         function(response){
-            console.log(response.data);
-            console.log('zz',jlab.meters.chart);
             if (response.status == 'ok') {
                 jlab.meters.chart[chartId].options = response.data;
                 jlab.meters.chart[chartId].render();

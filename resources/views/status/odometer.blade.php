@@ -17,15 +17,15 @@
                 @if($reference)
                     <div class="col-md-4">
 
-                            <div class="box box-solid">
-                                <div class="box-header with-border">
+                            <div class="card card-solid">
+                                <div class="card-header with-border">
                                     <a href="{!! route('meters.show',[$meter->id]) !!}">
-                                    <h3 class="box-title">{{$meter->epics_name}}</h3>
+                                    <h3 class="card-title">{{$meter->epics_name}}</h3>
                                     </a>
                                 </div>
-                                <!-- /.box-header -->
+                                <!-- /.card-header -->
 
-                                <div class="box-body">
+                                <div class="card-body">
                                     <label class="odometer-label">{{$label}}: </label>
                                     <div id="gauge-{{$meter->epics_name}}" class="odometer"
                                          data-label="{{$meter->epics_name}}"
@@ -34,13 +34,13 @@
                                          data-pv="{{$meter->epics_name}}:{{$field}}"></div>
                                 </div>
 
-                                <!-- /.box-body -->
-                                <div class="box-footer">
+                                <!-- /.card-body -->
+                                <div class="card-footer">
                                     Since: <b>{{$reference->date->format('Y-m-d')}}</b>
                                     <div id="comm-{{$meter->epics_name}}" class="comm"
                                          data-pv="{{$meter->epics_name}}:commErr"></div>
                                 </div>
-                                <!-- box-footer -->
+                                <!-- card-footer -->
                             </div>
                     </div>
                     @endif
