@@ -1,5 +1,7 @@
 const mix = require('laravel-mix');
 
+// @see https://github.com/laravel-mix/laravel-mix/issues/1136
+mix.setResourceRoot('../');
 
 /*
  |--------------------------------------------------------------------------
