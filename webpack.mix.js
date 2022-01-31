@@ -1,8 +1,5 @@
 const mix = require('laravel-mix');
 
-// @see https://github.com/laravel-mix/laravel-mix/issues/1136
-mix.setResourceRoot('../');
-
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -15,8 +12,16 @@ mix.setResourceRoot('../');
  */
 
 
+// It seems that if we don't set this, then we get errors from the likes
+// of font-awesome that can't load their assets at run time
+// @see https://github.com/laravel-mix/laravel-mix/issues/1136
+mix.setResourceRoot('../');
+
 // Javascript
 mix.js('resources/js/app.js', 'public/js').vue()
+    .sourceMaps();
+
+mix.js('resources/js/voltage.js', 'public/js').vue()
     .sourceMaps();
 
 mix.copy('resources/js/meters.js','public/js/meters.js');

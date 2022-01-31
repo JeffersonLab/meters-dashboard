@@ -16,6 +16,7 @@
 
 <script>
 
+    import moment from "moment";
     import ReadbackWidget from './ReadbackWidget';
     const clockTick = 10000;  //milliseconds
 

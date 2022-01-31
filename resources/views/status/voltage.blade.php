@@ -29,3 +29,8 @@
 
 
 @stop
+
+
+@section('js')
+    <script src="{{asset('js/voltage.js')}}"></script>
+@stop
