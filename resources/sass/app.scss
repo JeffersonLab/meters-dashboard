@@ -1,6 +1,9 @@
+// Variables
+@import "variables";
 
 // Fonts
 //@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic');
+$fa-font-path: "../webfonts";
 @import '~@fortawesome/fontawesome-free/css/all.css';
 // OverlayScrollbars
 @import '~overlayscrollbars/css/OverlayScrollbars.css';
@@ -9,7 +12,6 @@
 // AdminLTE
 @import '../../vendor/almasaeed2010/adminlte/dist/css/adminlte.css';
 
-// Variables
-@import "variables";
+
 
 
