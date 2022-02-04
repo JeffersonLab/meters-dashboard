@@ -487,17 +487,18 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      */
     function statsBetween($field, Carbon $fromDate, Carbon $toDate)
     {
-        // Not compatible with sqllite used for testing:
-        //      STDDEV($field) as stddev
-        // If we actually need it, perhaps
-        // @see https://stackoverflow.com/questions/2298339/standard-deviation-for-sqlite/24423341
-
-        $query = $this->dataTable()
-            ->select(DB::raw("AVG($field) as avg,  MIN($field) as min, MAX($field) as max"))
-            ->where('meter_id', $this->id)
-            ->where('date', '>=', $fromDate)
-            ->where('date', '<=', $toDate)
-            ->whereNotNull($field);
+        if (config('database.default') == 'mysql'){
+            $query = $this->dataTable()
+                ->select(DB::raw("AVG($field) as avg,  MIN($field) as min, MAX($field) as max, STDDEV($field) as stddev"));
+        }else{
+            // sqlite used for testing doesn't have thes STDEV function like mysql does above.
+            $query = $this->dataTable()
+                ->select(DB::raw("AVG($field) as avg,  MIN($field) as min, MAX($field) as max"));
+        }
+        $query->where('meter_id', $this->id)
+              ->where('date', '>=', $fromDate)
+              ->where('date', '<=', $toDate)
+              ->whereNotNull($field);
         return $query->first();
     }
 
@@ -627,9 +628,12 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      */
     public function dataTable()
     {
-        //$name = $this->type . '_meter_daily_consumption';
-        $name = $this->type . '_meter_data';
-        return DB::table($name);
+        return DB::table($this->tableName());
+    }
+
+
+    public function tableName(){
+        return $this->type . '_meter_data_' . $this->id;
     }
 
     /**
