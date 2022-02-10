@@ -13,32 +13,6 @@ use Tests\TestCase;
 class MeterTest extends TestCase
 {
 
-    protected $pvsPowerConfig = [
-        'power' => [
-            ':totkW' => [
-                'description' => 'Total real power',
-                'units' => 'kW'
-            ],
-            ':totkWh' => [
-                'description' => 'Total real energy',
-                'units' => 'kWh'
-            ],
-            ':totMBTU' => [
-                'description' => 'Total real energy',
-                'units' => 'MBTU'
-            ],
-        ],
-        'water' => [':totFlow' => []],
-        'gas' => [':totVol' => []],
-    ];
-
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        //specify the valid epics field names for a power meter
-        Config::set('meters.pvs',$this->pvsPowerConfig);
-    }
 
     /**
      * @test
@@ -61,7 +35,8 @@ class MeterTest extends TestCase
     /**
      * @test
      */
-    public function it_retrieves_meter_using_from_pv_scope(){
+    public function it_retrieves_meter_using_from_pv_scope()
+    {
 
 
         $model = Meter::factory()->create([
@@ -78,11 +53,11 @@ class MeterTest extends TestCase
     public function it_returns_pv_fields()
     {
         $meter = Meter::factory()->make(['name' => 'foo', 'epics_name' => 'bar', 'type' => 'power']);
-        Config::set('meters.pvs', $this->pvsPowerConfig);
-        $this->assertCount(3, $meter->pvFields());
+        $this->assertCount(4, $meter->pvFields());
         $this->assertContains(':totkW', $meter->pvFields());
         $this->assertContains(':totkWh', $meter->pvFields());
         $this->assertContains(':totMBTU', $meter->pvFields());
+        $this->assertContains(':llVolt', $meter->pvFields());
     }
 
     /**
@@ -102,25 +77,27 @@ class MeterTest extends TestCase
     /**
      * @test
      */
-    public function it_finds_all_pv_fields(){
-        Config::set('meters.pvs', $this->pvsPowerConfig);
+    public function it_finds_all_pv_fields()
+    {
         $found = Meter::allPvFields();
-        $this->assertCount(5, $found);
+        $this->assertCount(8, $found);
         $this->assertContains(':totkW', $found);
         $this->assertContains(':totkWh', $found);
         $this->assertContains(':totMBTU', $found);
-        $this->assertContains(':totFlow', $found);
-        $this->assertContains(':totVol', $found);
+        $this->assertContains(':llVolt', $found);
+        $this->assertContains(':gal', $found);
+        $this->assertContains(':galPerMin', $found);
 
     }
 
     /**
      * @test
      */
-    public function it_finds_rollover_config(){
+    public function it_finds_rollover_config()
+    {
         Config::set('meters.rollover.ModelX.totkWh', 500);
-        $meter1 =  Meter::factory()->create(['type' => 'power', 'model_number' => 'ModelX']);
-        $meter2 =  Meter::factory()->create(['type' => 'power', 'model_number' => 'ModelY']);
+        $meter1 = Meter::factory()->create(['type' => 'power', 'model_number' => 'ModelX']);
+        $meter2 = Meter::factory()->create(['type' => 'power', 'model_number' => 'ModelY']);
         $this->assertTrue($meter1->hasRolloverIncrement('totkWh'));
         $this->assertFalse($meter2->hasRolloverIncrement('totkWh'));
         $this->assertEquals(500, $meter1->rolloverIncrement('totkWh'));
@@ -132,12 +109,16 @@ class MeterTest extends TestCase
     /**
      * @test
      */
-    public function it_has_rollover_events(){
+    public function it_has_rollover_events()
+    {
         Config::set('meters.rollover.ModelX.totkWh', 500);
         $meter1 = Meter::factory()->create(['type' => 'power', 'model_number' => 'ModelX']);
-        $event = new RolloverEvent(['meter_id'=>$meter1->id, 'field'=>'totkWh',
-            'rollover_at'=>Carbon::now(),
-            'rollover_accumulated' => $meter1->rolloverIncrement('totkWh')]);
+        $event = new RolloverEvent([
+            'meter_id' => $meter1->id,
+            'field' => 'totkWh',
+            'rollover_at' => Carbon::now(),
+            'rollover_accumulated' => $meter1->rolloverIncrement('totkWh')
+        ]);
         $this->assertTrue($event->save());
         $meter1->fresh();
         $found = $meter1->rolloverEvents;
@@ -149,7 +130,8 @@ class MeterTest extends TestCase
     /**
      * @test
      */
-    public function test_it_finds_epics_name_in_pv(){
+    public function test_it_finds_epics_name_in_pv()
+    {
         $this->assertEquals('foo', Meter::epicsNameFromPv('foo:totkW'));
         $this->assertEquals('bar:totkW', Meter::epicsNameFromPv('bar:totkW:totkW'));
         $this->assertNull(Meter::epicsNameFromPv('alligator'));
@@ -175,7 +157,8 @@ class MeterTest extends TestCase
     /**
      * @test
      */
-    public function test_it_obtains_reporter(){
+    public function test_it_obtains_reporter()
+    {
         $meter1 = Meter::factory()->create(['type' => 'power']);
         $this->assertInstanceOf(DataTableReporter::class, $meter1->reporter());
     }
@@ -184,7 +167,8 @@ class MeterTest extends TestCase
     /**
      * @test
      */
-    public function test_it_is_precluded_from_duplicate_epics_name(){
+    public function test_it_is_precluded_from_duplicate_epics_name()
+    {
         //TODO implement afer database migration update
         $this->assertTrue(true);  //placeholder
     }
@@ -193,13 +177,14 @@ class MeterTest extends TestCase
     /**
      * @test
      */
-    public function test_it_retrieves_limits(){
+    public function test_it_retrieves_limits()
+    {
         $meter = Meter::factory()->create(['type' => 'water', 'name' => 'm1', 'epics_name' => 'en1']);
         $limit = new MeterLimit([
-            'meter_id'=>$meter->id,
+            'meter_id' => $meter->id,
             'field' => 'gal',
             'interval' => 1,
-            'lolo'   => 0,
+            'lolo' => 0,
             'hihi' => 100,
             'source' => 'epics'
         ]);
@@ -211,22 +196,23 @@ class MeterTest extends TestCase
         $this->assertEquals(1, $meter->meterLimits->count());
         $this->assertEquals(100, $meter->meterLimits->first()->hihi);
 
-        $this->assertTrue($meter->withinLimits('gal',50));
-        $this->assertFalse($meter->withinLimits('gal',0));
-        $this->assertFalse($meter->withinLimits('gal',100));
+        $this->assertTrue($meter->withinLimits('gal', 50));
+        $this->assertFalse($meter->withinLimits('gal', 0));
+        $this->assertFalse($meter->withinLimits('gal', 100));
 
     }
 
     /**
      * @test
      */
-    public function test_it_respects_major_and_minir_limits(){
+    public function test_it_respects_major_and_minir_limits()
+    {
         $meter = Meter::factory()->create(['type' => 'water', 'name' => 'm1', 'epics_name' => 'en1']);
         $limit = new MeterLimit([
-            'meter_id'=>$meter->id,
+            'meter_id' => $meter->id,
             'field' => 'gal',
             'interval' => 1,
-            'lolo'   => 0,
+            'lolo' => 0,
             'low' => 20,
             'high' => 80,
             'hihi' => 100,
@@ -241,37 +227,38 @@ class MeterTest extends TestCase
         $this->assertEquals(100, $meter->meterLimits->first()->hihi);
 
 
-        $this->assertTrue($meter->withinLimits('gal',50));
-        $this->assertFalse($meter->withinLimits('gal',10)); // less than minor low
-        $this->assertFalse($meter->withinLimits('gal',90)); // more than minor high
+        $this->assertTrue($meter->withinLimits('gal', 50));
+        $this->assertFalse($meter->withinLimits('gal', 10)); // less than minor low
+        $this->assertFalse($meter->withinLimits('gal', 90)); // more than minor high
 
     }
-
-
 
 
     /**
      * @test
      */
-    function test_it_returns_average_for_an_interval(){
-        $meter = Meter::factory()->create(['type' => 'water', 'begins_at'=>Carbon::yesterday()->subDay(2)]);
-        $meter->dataTable()->insert(['meter_id'=>$meter->id, 'date'=>Carbon::yesterday()->hour(1), 'gal' => 125]);
-        $meter->dataTable()->insert(['meter_id'=>$meter->id, 'date'=>Carbon::yesterday()->hour(2), 'gal' => 0]);
-        $meter->dataTable()->insert(['meter_id'=>$meter->id, 'date'=>Carbon::yesterday()->hour(3), 'gal' => 250]);
-        $stats = $meter->statsBetween('gal', Carbon::yesterday()->hour(1),Carbon::yesterday()->hour(3) );
-        $this->assertEquals(125, $stats->avg );
-        $this->assertEquals(0, $stats->min );
-        $this->assertEquals(250, $stats->max );
+    function test_it_returns_average_for_an_interval()
+    {
+        $meter = Meter::factory()->create(['type' => 'water', 'begins_at' => Carbon::yesterday()->subDay(2)]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::yesterday()->hour(1), 'gal' => 125]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::yesterday()->hour(2), 'gal' => 0]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::yesterday()->hour(3), 'gal' => 250]);
+        $stats = $meter->statsBetween('gal', Carbon::yesterday()->hour(1), Carbon::yesterday()->hour(3));
+        $this->assertEquals(125, $stats->avg);
+        $this->assertEquals(0, $stats->min);
+        $this->assertEquals(250, $stats->max);
     }
 
     /**
      * @test
      */
-    function test_it_returns_first_on_or_after (){
-        $meter = Meter::factory()->create(['type' => 'water', 'begins_at'=>Carbon::yesterday()->subDay(5)]);
-        $meter->dataTable()->insert(['meter_id'=>$meter->id, 'date'=>Carbon::today()->subDays(3), 'gal' => 125]);
-        $meter->dataTable()->insert(['meter_id'=>$meter->id, 'date'=>Carbon::today()->subDays(2), 'gal' => 250]);
-        $meter->dataTable()->insert(['meter_id'=>$meter->id, 'date'=>Carbon::today()->subDays(1), 'gal' => 375]);
+    function test_it_returns_first_on_or_after()
+    {
+        $meter = Meter::factory()->create(['type' => 'water', 'begins_at' => Carbon::yesterday()->subDay(5)]);
+
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(3), 'gal' => 125]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(2), 'gal' => 250]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(1), 'gal' => 375]);
 
         $data = $meter->firstDataOnOrAfter('gal', Carbon::today()->subDay(5));
         $this->assertEquals(Carbon::today()->subDays(3), $data->date);
@@ -287,22 +274,23 @@ class MeterTest extends TestCase
     /**
      * @test
      */
-    function test_it_makes_and_applies_rollover_events (){
+    function test_it_makes_and_applies_rollover_events()
+    {
         Config::set('meters.rollover.ModelX.totkWh', 1000);
         $meter = Meter::factory()->create([
             'type' => 'power',
-            'begins_at'=>Carbon::yesterday()->subDay(10),
+            'begins_at' => Carbon::yesterday()->subDay(10),
             'model_number' => 'ModelX',
         ]);
         $this->assertCount(0, $meter->rolloverEvents);
         $this->assertEquals(1000, $meter->rolloverIncrement('totkWh'));
         $this->assertContains('totkWh', $meter->rolloverFields());
 
-        $meter->dataTable()->insert(['meter_id'=>$meter->id, 'date'=>Carbon::today()->subDays(9), 'totkWh' => 125]);
-        $meter->dataTable()->insert(['meter_id'=>$meter->id, 'date'=>Carbon::today()->subDays(8), 'totkWh' => 250]);
-        $meter->dataTable()->insert(['meter_id'=>$meter->id, 'date'=>Carbon::today()->subDays(7), 'totkWh' => 775]);
-        $meter->dataTable()->insert(['meter_id'=>$meter->id, 'date'=>Carbon::today()->subDays(6), 'totkWh' => 5]);
-        $meter->dataTable()->insert(['meter_id'=>$meter->id, 'date'=>Carbon::today()->subDays(5), 'totkWh' => 345]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(9), 'totkWh' => 125]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(8), 'totkWh' => 250]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(7), 'totkWh' => 775]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(6), 'totkWh' => 5]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(5), 'totkWh' => 345]);
 
         $meter->makeNewRolloverEvents();
         $meter->load('rolloverEvents');  // forces collection to reload from db
@@ -318,9 +306,7 @@ class MeterTest extends TestCase
         $this->assertEquals(1345, $data->last()->totkWh);
 
 
-
     }
-
 
 
 }

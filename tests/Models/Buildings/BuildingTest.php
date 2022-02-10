@@ -9,32 +9,6 @@ use Tests\TestCase;
 
 class BuildingTest extends TestCase
 {
-    protected $pvsConfig = [
-        'power' => [
-            ':totkW' => [
-                'description' => 'Total real power',
-                'units' => 'kW'
-            ],
-            ':totkWh' => [
-                'description' => 'Total real energy',
-                'units' => 'kWh'
-            ],
-            ':totMBTU' => [
-                'description' => 'Total real energy',
-                'units' => 'MBTU'
-            ],
-
-
-        ],
-        'water' => [
-            ':gal' => [
-                'description' => 'Total Gallons',
-                'units'     => 'gallons',
-            ]
-        ],
-        'gas' => [],
-    ];
-
 
     public function test_it_returns_pv_fields()
     {
@@ -42,13 +16,13 @@ class BuildingTest extends TestCase
         $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'building_id'=>$building->id]);
         $meter2 = Meter::factory()->create(['type' => 'water', 'name' => 'm2', 'building_id'=>$building->id]);
 
-        Config::set('meters.pvs', $this->pvsConfig);
-
-        $this->assertCount(4, $building->pvFields());
+        $this->assertCount(5, $building->pvFields());
         $this->assertContains(':totkW', $building->pvFields());
         $this->assertContains(':totkWh', $building->pvFields());
-        //$this->assertContains(':totMBTU', $building->pvFields());
+        $this->assertContains(':totMBTU', $building->pvFields());
         $this->assertContains(':gal', $building->pvFields());
+        $this->assertContains(':galPerMin', $building->pvFields());
+        $this->assertNotContains(':llVolt', $building->pvFields());
     }
 
     public function test_it_return_channels()
@@ -57,12 +31,12 @@ class BuildingTest extends TestCase
         $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'building_id'=>$building->id]);
         $meter2 = Meter::factory()->create(['type' => 'water', 'name' => 'm2', 'building_id'=>$building->id]);
 
-        Config::set('meters.pvs', $this->pvsConfig);
 
-        $this->assertCount(4, $building->channels());
+        $this->assertCount(5, $building->channels());
         $this->assertContains('foo:totkW', $building->channels());
         $this->assertContains('foo:totkWh', $building->channels());
         $this->assertContains('foo:gal', $building->channels());
+        $this->assertContains('foo:totMBTU', $building->channels());
     }
 
     public function test_meter_types(){
