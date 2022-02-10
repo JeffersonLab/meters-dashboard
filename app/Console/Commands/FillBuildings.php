@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Meters\Building;
+use App\Models\Buildings\Building;
 use Illuminate\Console\Command;
 
 class FillBuildings extends Command

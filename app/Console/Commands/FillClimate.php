@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Meters\Building;
-use Carbon\Carbon;
-use DB;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class FillClimate extends Command
 {
@@ -14,8 +12,8 @@ class FillClimate extends Command
      *
      * @var string
      */
-    protected $signature = 'climate:fill 
-                {--date= : Yesterday is assumed unless specified (yyyy-mm-dd) } 
+    protected $signature = 'climate:fill
+                {--date= : Yesterday is assumed unless specified (yyyy-mm-dd) }
                 {--source=jlab : specify data source (darksky | jlab) }
                 {--replace : Replace existing data }' ;
 

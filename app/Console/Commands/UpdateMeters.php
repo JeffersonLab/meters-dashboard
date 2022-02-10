@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Meters\Meter;
+use App\Models\Meters\Meter;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
@@ -14,8 +14,8 @@ class UpdateMeters extends Command
      *
      * @var string
      */
-    protected $signature = 'meters:update 
-                {--meter= : Specify the id of a specific meter } 
+    protected $signature = 'meters:update
+                {--meter= : Specify the id of a specific meter }
                 {--type=  : Specify a meter type (water, gas, power) }
                 {begin : Specify starting date }
                 {pvs* : PVs to update. Avoid updating pvs susceptible to rollover}';
