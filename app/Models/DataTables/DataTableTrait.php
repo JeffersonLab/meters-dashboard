@@ -9,6 +9,9 @@
 namespace App\Models\DataTables;
 
 
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
+
 trait DataTableTrait
 {
 
@@ -26,11 +29,22 @@ trait DataTableTrait
     }
 
     /**
+     * Returns a Query Builder for the appropriate data table.
+     *
+     * @return Builder
+     * @throws \Exception if physical meters are of different types;
+     */
+    public function dataTable(): Builder
+    {
+        return DB::table($this->tableName());
+    }
+
+    /**
      * Answer whether the data table has any rows for the current object.
      *
      * @return bool
      */
-    public function hasData()
+    public function hasData(): bool
     {
         if ($this->dataTable()->where($this->dataTableFk(), $this->id)->limit(1)->first()) {
             return true;

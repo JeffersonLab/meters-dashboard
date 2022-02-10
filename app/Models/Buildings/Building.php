@@ -6,6 +6,7 @@ namespace App\Models\Buildings;
 use App\Models\BaseModel;
 use App\Models\DataTables\BuildingDataTableReporter;
 use App\Models\DataTables\DataTableInterface;
+use App\Models\DataTables\DataTableReporter;
 use App\Models\DataTables\DataTableTrait;
 use App\Models\Meters\Meter;
 use App\Presenters\BuildingPresenter;
@@ -88,7 +89,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
         return new BuildingPresenter($this);
     }
 
-    public function reporter()
+    public function reporter(): DataTableReporter
     {
         if (!$this->reporter) {
             $this->reporter = new BuildingDataTableReporter($this);
@@ -98,12 +99,13 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
 
 
     /**
-     * @return \Illuminate\Database\Query\Builder
+     * The name of the table where meter data points are stored.
+     *
+     * @return string
      */
-    public function dataTable(){
-        return DB::table('building_data');
+    public function tableName(): string {
+        return 'building_data_' . $this->id;
     }
-
 
 
     public function fillDataTable()

@@ -72,7 +72,7 @@ abstract class MeterPresenter extends Presenter implements BoxInterface
 
 
     function currentStatistics(){
-        $fromDate = Carbon::today()->subDays(3);
+        $fromDate = Carbon::today()->subDays(30);
         $toDate = Carbon::today();
         switch ($this->type){
             case 'power' : return $this->statsBetween('totkW', $fromDate, $toDate);

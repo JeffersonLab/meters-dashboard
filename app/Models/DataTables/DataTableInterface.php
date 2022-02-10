@@ -8,6 +8,9 @@
 
 namespace App\Models\DataTables;
 
+
+use Illuminate\Database\Query\Builder;
+
 /**
  * Interface DataTableInterface
  *
@@ -21,21 +24,30 @@ interface DataTableInterface
     /**
      * @return DataTableReporter
      */
-    function reporter();
+    function reporter(): DataTableReporter;
+
 
     /**
-     * Query to obtain the Query Builder for the model.
+     * The name of the table where meter data points are stored.
      *
-     * The builder must reference a table with a column named 'date'.
+     * @return string
+     */
+    public function tableName(): string;
+
+
+    /**
+     * Obtain a Query Builder for the model.
+     *
+     * Note: The builder must reference a table with a column named 'date'.
      *
      * @return \Illuminate\Database\Query\Builder
      */
-    function dataTable();
+    function dataTable(): Builder;
 
     /**
      * Answer whether the object has any data in its data table
      */
-    public function hasData();
+    public function hasData(): bool;
 
     /**
      * Put data into the object's data table.

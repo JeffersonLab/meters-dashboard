@@ -5,6 +5,7 @@ namespace App\Models\Meters;
 use App\Exceptions\MeterDataException;
 use App\Exceptions\ModelValidationException;
 use App\Models\BaseModel;
+use App\Models\DataTables\DataTableCreator;
 use App\Models\DataTables\DataTableInterface;
 use App\Models\DataTables\DataTableReporter;
 use App\Models\DataTables\DataTableTrait;
@@ -195,6 +196,20 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         return $eventsMade;
     }
 
+    public function save(array $options = [])
+    {
+        $saved = parent::save($options);
+        if ($this->wasRecentlyCreated){
+            (new DataTableCreator($this))->createTable();
+        }
+        return $saved;
+    }
+
+    public function delete()
+    {
+        (new DataTableCreator($this))->dropTable();
+        return parent::delete();
+    }
 
     /**
      * @param string $field
@@ -506,7 +521,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     /**
      * @return DataTableReporter
      */
-    public function reporter()
+    public function reporter(): DataTableReporter
     {
         if (!$this->reporter) {
             $this->reporter = new DataTableReporter($this);
@@ -620,19 +635,14 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         return array_keys(config($key));
     }
 
+
+
     /**
-     * Returns a Query Builder for the appropriate data table.
+     * The name of the table where meter data points are stored.
      *
-     * @return Builder
-     * @throws \Exception if physical meters are of different types;
+     * @return string
      */
-    public function dataTable()
-    {
-        return DB::table($this->tableName());
-    }
-
-
-    public function tableName(){
+    public function tableName(): string {
         return $this->type . '_meter_data_' . $this->id;
     }
 

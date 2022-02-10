@@ -32,7 +32,7 @@ class DataTableCreator
     }
 
     /**
-     * Create a database table with columns appropriate to our meter type.
+     * Create a database table with columns appropriate to the meter type.
      *
      * @return void
      */
@@ -59,16 +59,31 @@ class DataTableCreator
         });
     }
 
+    /**
+     * The pvs to be stored as data columns.
+     *
+     * @return array|false[]|string[]
+     */
     public function pvs(){
         return array_map(fn($value) => substr($value,1), $this->meter->pvFields());
     }
 
+    /**
+     * The list of columns for the meter's data tables.
+     *
+     * @return array|false[]|string[]
+     */
     public function columnList(){
         $list = [ 'date', 'meter_id', 'src', 'created_at', 'updated_at', 'rollover_accumulated' ];
         return array_merge($list, $this->pvs());
 
     }
 
+    /**
+     * The name of the data table before conversion to table-per-meter.
+     *
+     * @return string|void
+     */
     public function oldTableName(){
         switch($this->meter->type){
             case 'gas': return 'gas_meter_data';
@@ -77,6 +92,10 @@ class DataTableCreator
         }
     }
 
+    /**
+     * Migrate data from the old monolithic single data table into the new per-meter table.
+     * @return void
+     */
     public function migrateData(){
         $sql = sprintf("insert into %s (%s) select %s from %s where meter_id = %s",
             $this->meter->tableName(),
@@ -88,6 +107,11 @@ class DataTableCreator
         $this->db->statement($sql);
     }
 
+    /**
+     * Drop the meter's data table.
+     *
+     * @return void
+     */
     public function dropTable(){
         $this->schema->dropIfExists($this->meter->tableName());
     }

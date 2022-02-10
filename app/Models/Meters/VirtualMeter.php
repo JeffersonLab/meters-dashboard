@@ -14,6 +14,7 @@ use App\Models\DataTables\DataTableInterface;
 use App\Models\DataTables\DataTableReporter;
 use App\Models\DataTables\DataTableTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -77,6 +78,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
     {
         $this->dataTableFk = 'meter_id';
         $this->begins_at = Carbon::now()->startOfDay();
+        $this->meters = new Collection();
         parent::__construct($attributes);
     }
 
@@ -86,7 +88,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      * @return \Illuminate\Support\Collection
      */
     public function meters(){
-        if ($this->meters == null){
+        if ($this->meters->isEmpty()){
             $this->setMeters($this->physicalMeters()->get());
         }
         return $this->meters;
@@ -186,7 +188,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
     /**
      * @return DataTableReporter
      */
-    public function reporter()
+    public function reporter(): DataTableReporter
     {
         if (!$this->reporter) {
             $this->reporter = new DataTableReporter($this);
@@ -195,14 +197,26 @@ class VirtualMeter extends BaseModel implements DataTableInterface
     }
 
     /**
+     * The name of the table where meter data points are stored.
+     *
+     * @return string
+     */
+    public function tableName(): string {
+        return 'virtual_meter_data_' . $this->id;
+    }
+
+    /**
      * Returns a Query Builder for the appropriate data table.
      *
-     * @return \Illuminate\Database\Query\Builder
+     * @return Builder
      */
-    public function dataTable()
+    public function dataTable(): Builder
     {
-        $name = $this->type() . '_meter_data';
-        return DB::table($name);
+       $builder = null;
+       foreach ($this->meters() as $meter){
+           $builder = $builder ? $builder->union($meter->dataTable()) : $meter->dataTable();
+       }
+       return $builder;
     }
 
     /**
@@ -210,7 +224,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * @return bool
      */
-    public function hasData()
+    public function hasData(): bool
     {
         if ($this->dataTable()->whereIn($this->dataTableFk(), $this->meterIds())->limit(1)->first()) {
             return true;
