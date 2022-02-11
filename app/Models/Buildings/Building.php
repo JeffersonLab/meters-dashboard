@@ -5,6 +5,7 @@ namespace App\Models\Buildings;
 
 use App\Models\BaseModel;
 use App\Models\DataTables\BuildingDataTableReporter;
+use App\Models\DataTables\DataTableCreator;
 use App\Models\DataTables\DataTableInterface;
 use App\Models\DataTables\DataTableReporter;
 use App\Models\DataTables\DataTableTrait;
@@ -210,5 +211,20 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
         }
 
         return $this->removeNonBuildingFields($fields);
+    }
+
+    public function save(array $options = [])
+    {
+        $saved = parent::save($options);
+        if ($this->wasRecentlyCreated){
+            (new DataTableCreator($this))->createTable();
+        }
+        return $saved;
+    }
+
+    public function delete()
+    {
+        (new DataTableCreator($this))->dropTable();
+        return parent::delete();
     }
 }
