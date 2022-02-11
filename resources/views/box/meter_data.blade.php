@@ -31,7 +31,7 @@ The following variables must be passed when including this view:
                         @if($col == 'date')
                             <td>{{date('Y-m-d H:i', strtotime($datum->$col))}}</td>
                         @else
-                            <td>{{$datum->$col}}</td>
+                            <td>{{isset($datum->$col) ? $datum->$col : ''}}</td>
                         @endif
                     @endforeach
                 </tr>
