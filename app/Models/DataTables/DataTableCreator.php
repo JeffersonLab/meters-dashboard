@@ -2,6 +2,7 @@
 
 namespace App\Models\DataTables;
 
+use App\Models\Buildings\Building;
 use App\Models\Meters\Meter;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -12,7 +13,7 @@ class DataTableCreator
     /**
      * @var Meter
      */
-    protected $meter;
+    protected $model;
 
     /**
      * @var Schema
@@ -25,8 +26,8 @@ class DataTableCreator
     protected $db;
 
 
-    public function __construct(Meter $meter){
-        $this->meter = $meter;
+    public function __construct(DataTableInterface $model){
+        $this->model = $model;
         $this->schema = Schema::connection(config("database.default"));
         $this->db = DB::connection(config("database.default"));
     }
@@ -37,24 +38,28 @@ class DataTableCreator
      * @return void
      */
     public function createTable(){
-        $this->schema->create($this->meter->tableName(), function($table)
+        $this->schema->create($this->model->tableName(), function($table)
         {
             // The columns that are common to all meter types
             $table->increments('id');
             $table->dateTime('date');
-            $table->unsignedInteger('meter_id');
+            $table->unsignedInteger($this->fk());
             $table->string('src',20)->default('mya');
             $table->timestamps();
             $table->bigInteger('rollover_accumulated')->nullable();
             // The columns that are meter-type specific can be
             // obtained from the meter pv list.  As of now we
             // have only floating point PVs in use.
-            foreach ($this->meter->pvFields() as $field) {
+            foreach ($this->model->pvFields() as $field) {
                 $columnName = substr($field, 1);  //to strip initial ":"
                 $table->double($columnName)->nullable();
             }
-            // The indexes which are again common across types.
-            $table->foreign('meter_id')->references('id')->on('meters');
+            // The index construction differs for buildings vs meters
+            if ($this->model instanceof Building) {
+                $table->foreign($this->fk())->references('id')->on('buildings')->onDelete('cascade');
+            }else{
+                $table->foreign($this->fk())->references('id')->on('meters')->onDelete('cascade');;
+            }
             $table->index('date');
         });
     }
@@ -65,7 +70,18 @@ class DataTableCreator
      * @return array|false[]|string[]
      */
     public function pvs(){
-        return array_map(fn($value) => substr($value,1), $this->meter->pvFields());
+        return array_map(fn($value) => substr($value,1), $this->model->pvFields());
+    }
+
+    /**
+     * The foreign key column name in the data table.
+     * It will be meter_id in a meter_data_* table and building_id in a building_data_table
+     */
+    protected function fk(): string {
+        if ($this->model instanceof Building){
+            return 'building_id';
+        }
+        return 'meter_id';
     }
 
     /**
@@ -74,22 +90,34 @@ class DataTableCreator
      * @return array|false[]|string[]
      */
     public function columnList(){
-        $list = [ 'date', 'meter_id', 'src', 'created_at', 'updated_at', 'rollover_accumulated' ];
+        if ($this->model instanceof Building){
+            $list = ['date', $this->fk(), 'src', 'created_at', 'updated_at'];
+        }else{
+            $list = ['date', $this->fk(), 'src', 'created_at', 'updated_at', 'rollover_accumulated'];
+        }
         return array_merge($list, $this->pvs());
-
     }
 
     /**
-     * The name of the data table before conversion to table-per-meter.
+     * The name of the data table before conversion to table-per-meter/building.
      *
-     * @return string|void
+     * @return string|null
      */
     public function oldTableName(){
-        switch($this->meter->type){
-            case 'gas': return 'gas_meter_data';
-            case 'power': return 'power_meter_data';
-            case 'water': return 'water_meter_data';
+        if ($this->model instanceof Building){
+            return 'building_data';
         }
+        if ($this->model instanceof Meter) {
+            switch ($this->model->type) {
+                case 'gas':
+                    return 'gas_meter_data';
+                case 'power':
+                    return 'power_meter_data';
+                case 'water':
+                    return 'water_meter_data';
+            }
+        }
+        return null;
     }
 
     /**
@@ -97,15 +125,17 @@ class DataTableCreator
      * @return void
      */
     public function migrateData(){
-        $sql = sprintf("insert into %s (%s) select %s from %s where meter_id = %s",
-            $this->meter->tableName(),
+        $sql = sprintf("insert into %s (%s) select %s from %s where %s = %s",
+            $this->model->tableName(),
             implode(',', $this->columnList()),
             implode(',',$this->columnList()),
             $this->oldTableName(),
-            $this->meter->id);
+            $this->fk(),
+            $this->model->id);
 
         $this->db->statement($sql);
     }
+
 
     /**
      * Drop the meter's data table.
@@ -113,7 +143,7 @@ class DataTableCreator
      * @return void
      */
     public function dropTable(){
-        $this->schema->dropIfExists($this->meter->tableName());
+        $this->schema->dropIfExists($this->model->tableName());
     }
 
 
