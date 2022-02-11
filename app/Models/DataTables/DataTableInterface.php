@@ -34,7 +34,6 @@ interface DataTableInterface
      */
     public function tableName(): string;
 
-
     /**
      * Obtain a Query Builder for the model.
      *
@@ -67,6 +66,12 @@ interface DataTableInterface
      */
     public function lastDataDate();
 
+    /**
+     * Returns the array of fields that can be appended to
+     * epics_name to form pvs.
+     * @return array
+     */
+    public function pvFields(): array;
 
 
 }

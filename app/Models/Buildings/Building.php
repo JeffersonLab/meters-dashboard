@@ -198,7 +198,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
      *
      * @return array
      */
-    public function pvFields()
+    public function pvFields(): array
     {
         //They are total for the building and could be from a single
         //meter or by summing multiple.  Gary takes care of this

@@ -629,7 +629,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * epics_name to form pvs.
      * @return array
      */
-    public function pvFields()
+    public function pvFields(): array
     {
         $key = 'meters.pvs.' . $this->type;
         return array_keys(config($key));
