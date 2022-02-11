@@ -2,6 +2,8 @@
 
 namespace App\Models\DataTables;
 
+use App\Exceptions\DataConversionException;
+use App\Exceptions\MeterDataException;
 use App\Models\Buildings\Building;
 use App\Models\Meters\Meter;
 use Illuminate\Support\Facades\DB;
@@ -32,12 +34,19 @@ class DataTableCreator
         $this->db = DB::connection(config("database.default"));
     }
 
+    protected function assertTableDoesNotExist($table){
+        if ($this->schema->hasTable($table)){
+            throw new DataConversionException("Table $table already exists");
+        }
+    }
+
     /**
      * Create a database table with columns appropriate to the meter type.
      *
      * @return void
      */
     public function createTable(){
+        $this->assertTableDoesNotExist($this->model->tableName());
         $this->schema->create($this->model->tableName(), function($table)
         {
             // The columns that are common to all meter types
