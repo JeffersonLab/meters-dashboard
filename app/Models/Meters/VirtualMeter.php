@@ -264,4 +264,10 @@ class VirtualMeter extends BaseModel implements DataTableInterface
     }
 
 
+    public function pvFields(): array
+    {
+        // All meters are required to be of the same type and will therefore
+        // have the same fields.
+        return $this->meters()->first()->pvFields();
+    }
 }
