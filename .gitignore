@@ -8,7 +8,7 @@
 /public/js/
 /public/mix-manifest.json
 /public/select2-dist/
-
+/sail-mysql
 /storage/*.key
 /vendor
 .env

@@ -1,6 +1,34 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
+    softioc:
+        image: slominskir/softioc:1.1.0
+        tty: true
+        stdin_open: true
+        hostname: softioc
+        container_name: meters-softioc
+        ports:
+            - "5064:5064/tcp"
+            - "5065:5065/tcp"
+            - "5064:5064/udp"
+            - "5065:5065/udp"
+        volumes:
+            - ./softioc/db:/db
+            - ./softioc/scripts:/scripts
+        networks:
+            - sail
+    epics2web:
+        image: slominskir/epics2web:1.13.0
+        hostname: epics2web
+        container_name: meters-epics2web
+        environment:
+            EPICS_CA_ADDR_LIST: softioc
+        depends_on:
+            -   softioc
+        ports:
+            - 8080:8080
+        networks:
+            - sail
     laravel.test:
         build:
             context: ./docker/7.4
@@ -8,6 +36,7 @@ services:
             args:
                 WWWGROUP: '${WWWGROUP}'
         image: sail-7.4/app
+        hostname: webserver
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
@@ -21,6 +50,7 @@ services:
             - '.:/var/www/html'
         networks:
             - sail
+            - sail-global
         depends_on:
             - mysql
     mysql:
@@ -35,7 +65,7 @@ services:
             MYSQL_PASSWORD: '${DB_PASSWORD}'
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         volumes:
-            - 'sail-mysql:/var/lib/mysql'
+            - './sail-mysql:/var/lib/mysql'
         networks:
             - sail
         healthcheck:
@@ -43,6 +73,8 @@ services:
             retries: 3
             timeout: 5s
 networks:
+    sail-global:
+        external: true
     sail:
         driver: bridge
 volumes:
