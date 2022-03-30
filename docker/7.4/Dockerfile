@@ -14,7 +14,15 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 USER root
 
-RUN apt-get update \
+# To be able to download `ca-certificates` with `apk add` command
+COPY JLabCA.crt /usr/local/share/ca-certificates/JLabCA.crt
+RUN apt-get update && apt-get install -y ca-certificates \
+&& chmod 644 /usr/local/share/ca-certificates/JLabCA.crt \
+&& update-ca-certificates
+
+# Node will fail in the big command sequence below unless we add the NODE_EXTRA_CA_CERTS definition
+RUN export NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/JLabCA.crt \
+&& apt-get update \
     && apt-get install -y gnupg gosu curl ca-certificates zip unzip git supervisor sqlite3 libcap2-bin libpng-dev python2 \
     && mkdir -p ~/.gnupg \
     && chmod 600 ~/.gnupg \
@@ -45,9 +53,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
  \
-# To be able to download `ca-certificates` with `apk add` command
-COPY JLabCA.crt /usr/local/share/ca-certificates/JLabCA.crt
-RUN chmod 644 /usr/local/share/ca-certificates/JLabCA.crt && update-ca-certificates \
+
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php7.4
 
