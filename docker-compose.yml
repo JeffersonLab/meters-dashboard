@@ -37,6 +37,7 @@ services:
                 WWWGROUP: '${WWWGROUP}'
         image: sail-7.4/app
         hostname: webserver
+        container_name: meters-app
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
@@ -55,6 +56,8 @@ services:
             - mysql
     mysql:
         image: 'mysql/mysql-server:8.0'
+        hostname: mysql
+        container_name: meters-db
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
         environment:
