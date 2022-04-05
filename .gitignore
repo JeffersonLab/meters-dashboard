@@ -8,7 +8,6 @@
 /public/js/
 /public/mix-manifest.json
 /public/select2-dist/
-
 /storage/*.key
 /vendor
 .env
