@@ -13,8 +13,8 @@ services:
             - "5064:5064/udp"
             - "5065:5065/udp"
         volumes:
-            - ./softioc/db:/db
-            - ./softioc/scripts:/scripts
+            - ./run/softioc/db:/db
+            - ./run/softioc/scripts:/scripts
         networks:
             - sail
     epics2web:
@@ -68,7 +68,7 @@ services:
             MYSQL_PASSWORD: '${DB_PASSWORD}'
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         volumes:
-            - './sail-mysql:/var/lib/mysql'
+            - './run/var/mysql:/var/lib/mysql'
         networks:
             - sail
         healthcheck:
