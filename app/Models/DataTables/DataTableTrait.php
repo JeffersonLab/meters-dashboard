@@ -70,12 +70,12 @@ trait DataTableTrait
     /**
      * Return the datetime of most recent data table row
      */
-    public function lastDataDate()
+    public function lastDataDate($col = 'date')
     {
         return $this->dataTable()
             ->where($this->dataTableFk(), $this->id)
-            ->latest()->first();
-
+            ->latest($col)       // specify column else defaults to 'created_at'
+            ->first();
     }
 
 
