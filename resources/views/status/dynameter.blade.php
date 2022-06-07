@@ -22,7 +22,8 @@
         the same interval.  Meters without non-zero data for the past three days are not shown.</p>
     <div class="row">
         @foreach($meters as $meter)
-
+            {{var_dump($meter->epics_name)}}
+            {{var_dump($meter->currentStatistics())}}
             @if(isset($meter->epics_name) && $meter->hasData())
                 <?php $stats = $meter->currentStatistics(); ?>
                 @if($stats != null && $stats->max > 0)

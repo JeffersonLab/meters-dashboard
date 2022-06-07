@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-
 use App\Models\Meters\Meter;
 use Illuminate\Console\Command;
 
