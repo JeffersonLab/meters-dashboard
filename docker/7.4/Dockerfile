@@ -15,9 +15,12 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 USER root
 
 # To be able to download `ca-certificates` with `apk add` command
-COPY JLabCA.crt /usr/local/share/ca-certificates/JLabCA.crt
+COPY JLabCA.crt /usr/local/share/ca-certificates/ \
+COPY acc-ca.crt /usr/local/share/ca-certificates/
+
 RUN apt-get update && apt-get install -y ca-certificates \
 && chmod 644 /usr/local/share/ca-certificates/JLabCA.crt \
+&& chmod 644 /usr/local/share/ca-certificates/acc-ca.crt \
 && update-ca-certificates
 
 # Node will fail in the big command sequence below unless we add the NODE_EXTRA_CA_CERTS definition

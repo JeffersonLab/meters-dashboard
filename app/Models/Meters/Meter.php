@@ -491,9 +491,14 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         //      STDDEV($field) as stddev
         // If we actually need it, perhaps
         // @see https://stackoverflow.com/questions/2298339/standard-deviation-for-sqlite/24423341
+        if (config('database.default') == 'sqlite'){
+            $selectStr = DB::raw("AVG($field) as avg, MIN($field) as min, MAX($field) as max");
+        }else{
+            $selectStr = DB::raw("AVG($field) as avg, STDDEV($field) as stddev, MIN($field) as min, MAX($field) as max");
+        }
 
         $query = $this->dataTable()
-            ->select(DB::raw("AVG($field) as avg,  MIN($field) as min, MAX($field) as max"))
+            ->select($selectStr)
             ->where('meter_id', $this->id)
             ->where('date', '>=', $fromDate)
             ->where('date', '<=', $toDate)

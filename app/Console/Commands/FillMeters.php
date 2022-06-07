@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Meters\Meter;
+use App\Models\Meters\Meter;
 use Illuminate\Console\Command;
 
 class FillMeters extends Command
@@ -12,8 +12,8 @@ class FillMeters extends Command
      *
      * @var string
      */
-    protected $signature = 'meters:fill 
-                {--meter= : Specify the id of a specific meter } 
+    protected $signature = 'meters:fill
+                {--meter= : Specify the id of a specific meter }
                 {--type=  : Specify a meter type (water, gas, power) }';
 
     /**
