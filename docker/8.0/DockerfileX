@@ -13,6 +13,8 @@ ENV TZ=UTC
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+USER root
+
 # To be able to download `ca-certificates` with `apk add` command
 COPY JLabCA.crt /usr/local/share/ca-certificates/
 COPY acc-ca.crt /usr/local/share/ca-certificates/
@@ -22,6 +24,7 @@ RUN apt-get update && apt-get install -y ca-certificates \
 && chmod 644 /usr/local/share/ca-certificates/acc-ca.crt \
 && update-ca-certificates
 
+# Node will fail in the big command sequence below unless we add the NODE_EXTRA_CA_CERTS definition
 RUN export NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/JLabCA.crt \
     && apt-get update \
     && apt-get install -y gnupg gosu curl ca-certificates zip unzip git supervisor sqlite3 libcap2-bin libpng-dev python2 \
@@ -32,7 +35,6 @@ RUN export NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/JLabCA.crt \
     && gpg --recv-key 0x14aa40ec0831756756d7f66c4f4ea0aae5267a6c \
     && gpg --export 0x14aa40ec0831756756d7f66c4f4ea0aae5267a6c > /usr/share/keyrings/ppa_ondrej_php.gpg \
     && echo "deb [signed-by=/usr/share/keyrings/ppa_ondrej_php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu focal main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
-    && apt-get update \
     && apt-get install -y php8.0-cli php8.0-dev \
        php8.0-pgsql php8.0-sqlite3 php8.0-gd \
        php8.0-curl php8.0-memcached \
@@ -44,6 +46,7 @@ RUN export NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/JLabCA.crt \
     && php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
     && curl -sLS https://deb.nodesource.com/setup_$NODE_VERSION.x | bash - \
     && apt-get install -y nodejs \
+    && npm config set cafile $NODE_EXTRA_CA_CERTS --global \
     && npm install -g npm \
     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null \
     && echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \

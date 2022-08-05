@@ -31,11 +31,11 @@ services:
             - sail
     laravel.test:
         build:
-            context: ./docker/7.4
+            context: ./docker/8.0
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
-        image: sail-7.4/app
+        image: sail-8.0/app
         hostname: webserver
         container_name: meters-app
         extra_hosts:
