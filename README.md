@@ -34,6 +34,9 @@ $ export NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/JLabCA.crt
 $ npm install bootstrap-vue # or whatever
 
 ```
+### Interact with mySQL container
+
+
 
 ### Interact with the softIOC 
 It is configured by default to mimic bldg 87 data.
