@@ -1,23 +1,47 @@
 record(ao,"channel1") {
         field(DTYP,"Soft Channel")
         field(HHSV,MAJOR)
-        field(HIHI,1)
+        field(HIHI,5)
+        field(HSV,MINOR)
+        field(HIGH,2)
 }
-record(ao,"channel2") {
+record(ao,"87-L1:llVolt") {
         field(DTYP,"Soft Channel")
+        field(VAL,480)
         field(HHSV,MAJOR)
-        field(HIHI,1)
+        field(HIHI,500)
+        field(HSV,MINOR)
+        field(HIGH,490)
+        field(LLSV,MAJOR)
+        field(LOLO,460)
+        field(LSV,MINOR)
+        field(LOW,470)
 }
-record(calc,"counter_HELLO") {
-  field(SCAN, ".2 second")
-  field(CALC, "(A+1)%17")
-  field(INPA, "counter_HELLO.VAL")
-  field(FLNK, "HELLO.PROC")
-  field(VAL, "0")
+record(ao,"87-L1:totkW") {
+        field(DTYP,"Soft Channel")
+        field(VAL,10)
 }
-record(calc,"HELLO") {
-  field(SCAN, "Passive")
-  field(CALC, "(A<=8)*(2**A)+(A>8)*(2**(17-A))")
-  field(INPA, "counter_HELLO.VAL")
-  field(VAL, "0")
+record(ao,"87-L1:commErr") {
+        field(DTYP,"Soft Channel")
+        field(VAL, "0")
+}
+record(ao,"87-L2:llVolt") {
+        field(DTYP,"Soft Channel")
+        field(VAL,480)
+        field(HHSV,MAJOR)
+        field(HIHI,500)
+        field(HSV,MINOR)
+        field(HIGH,490)
+        field(LLSV,MAJOR)
+        field(LOLO,460)
+        field(LSV,MINOR)
+        field(LOW,470)
+}
+record(ao,"87-L2:totkW") {
+        field(DTYP,"Soft Channel")
+        field(VAL,13)
+}
+record(ao,"87-L2:commErr") {
+        field(DTYP,"Soft Channel")
+        field(VAL, "0")
 }
