@@ -30,24 +30,24 @@ export default {
     props: ['meters', 'epicsData'],
     data() {
         return {
-            fields:[
-                {
+            fields: {
+                meter: {
                     key: 'Meter',
                 },
-                {
+                comms: {
                     key: 'Comms',
                     class: 'comms-status'
                 },
-                {
+                volt: {
                     key: 'Volt',
                     class: 'readout',
                 },
-                {
+                power: {
                     key: 'Power',
                     class: 'readout',
                     label: 'Power (kW)'
                 }
-            ]
+            }
         }
     },
     computed: {

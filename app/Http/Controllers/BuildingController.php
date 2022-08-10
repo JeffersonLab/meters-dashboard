@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Buildings\Building;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
 use Laracasts\Utilities\JavaScript\JavaScriptFacade as JavaScript;
 
@@ -41,10 +42,25 @@ class BuildingController extends Controller
                 'ends' => $building->reporter()->endsAt(),
             ],
             'currentModel' => $building,
+            'metersData' => $this->meterData($building->meters()->get()),
         ]);
 
         return View::make('buildings.item')
             ->with('building', $building);
 
+    }
+
+    protected function meterData(Collection $meters){
+        $data = [];
+        foreach ($meters as $meter){
+            $data[] = [
+                'id' => $meter->id,
+                'type' => $meter->type,
+                'epics_name' => $meter->epics_name,
+                'pvs' => $meter->pvFields(),
+
+            ];
+        }
+        return $data;
     }
 }
