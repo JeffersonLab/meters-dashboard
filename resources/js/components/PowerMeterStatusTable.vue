@@ -22,41 +22,40 @@
 </template>
 
 <script>
-import CommsLight from "./CommsLight";
-import AlarmedReadback from "./AlarmedReadback";
+
+import meterStatusTableMixin from "./meter-status-table-mixin";
 export default {
     name: "PowerMeterStatusTable",
-    components: {AlarmedReadback, CommsLight},
-    props: ['meters', 'epicsData'],
+    mixins: [meterStatusTableMixin],
     data() {
         return {
-            fields: {
-                meter: {
-                    key: 'Meter',
+            fields: [
+                {
+                    key: 'meter',
                 },
-                comms: {
-                    key: 'Comms',
-                    class: 'comms-status'
+                {
+                    key: 'comms',
+                    class :'comms-status'
                 },
-                volt: {
-                    key: 'Volt',
+                {
+                    key: 'volt',
                     class: 'readout',
                 },
-                power: {
-                    key: 'Power',
+                {
+                    key: 'power',
                     class: 'readout',
                     label: 'Power (kW)'
                 }
-            }
+            ]
         }
     },
     computed: {
         meterItems() {
             return this.meters.map(item => {return {
-                Meter: item.epics_name,
-                Comms: this.commErr(item.epics_name),
-                Volt: this.voltage(item.epics_name),
-                Power: this.power(item.epics_name),
+                meter: item.epics_name,
+                comms: this.commErr(item.epics_name),
+                volt: this.voltage(item.epics_name),
+                power: this.power(item.epics_name),
             }})
         }
     },
@@ -67,36 +66,6 @@ export default {
         power(meterName){
             return this.pvState(meterName+'_totkW')
         },
-        pvState(pvKey){
-            if (this.epicsData[pvKey]){
-                return {
-                    value: this.round(this.epicsData[pvKey].value).toFixed(1),
-                    alarmState: this.alarmState(pvKey+'.STAT')
-                }
-            }
-            return 'N/A'
-        },
-        alarmState(stat){
-            let alarmData =  this.epicsData[stat]
-            if (alarmData){
-                if (alarmData.value === 0) return 'NO_ALARM'
-                if (alarmData.value === 3) return 'HIHI'
-                if (alarmData.value === 4) return 'HIGH'
-                if (alarmData.value === 5) return 'LOLO'
-                if (alarmData.value === 6) return 'LOW'
-                if (alarmData.value === 17) return 'UDF'
-                return alarmData.value
-            }
-            return null
-        },
-        commErr(meterName){
-            return this.epicsData[meterName+'_commErr'] ? this.epicsData[meterName+'_commErr'].value : 'NA'
-        },
-        round(value, precision=1) {
-            // from https://stackoverflow.com/questions/7342957/how-do-you-round-to-1-decimal-place-in-javascript
-            let multiplier = Math.pow(10, precision || 0);
-            return Math.round(value * multiplier) / multiplier;
-        }
     }
 }
 </script>

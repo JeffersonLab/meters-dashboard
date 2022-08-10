@@ -20,6 +20,14 @@
         }
     </style>
 
+    <script type="text/javascript" src="{!! asset('js/epics2web.js') !!}"></script>
+    <script>
+        window.epicsOptions = {
+            "url" : "{!! env('EPICSWEB') !!}"
+        };
+        window.epicsCon = new jlab.epics2web.ClientConnection(epicsOptions);
+    </script>
+
     <div class="row">
 
         <div class="col-lg-4">
@@ -32,7 +40,11 @@
             ])
         </div>
         <div class="col-lg-4">
-            @include('box.meter_links')
+            <div id="building-monitor"></div>
+            <div class="power-meter-status-table"></div>
+            <div class="water-meter-status-table"></div>
+{{--            @include('box.meter_links')--}}
+
         </div>
     </div>
 
@@ -98,6 +110,7 @@
 @section('js')
 
     @include('partials.jsvars')
+    <script src="{{asset('js/building.js')}}"></script>
 
     <script>
         $(document).ready(function(){

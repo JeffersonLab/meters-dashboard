@@ -8,18 +8,10 @@ import CommsLight from "./CommsLight";
 export default {
     props: ['meters', 'epicsData'],
     components: {AlarmedReadback, CommsLight},
-    data() {
-        return {
-            fields: {
-                meter: {
-                    key: 'meter',
-                },
-                comms: {
-                    key: 'comms',
-                    class :'comms-status'
-                }
-            }
-        }
+    computed: {
+      fieldList(){
+          return Object.values(this.fields)
+      }
     },
     methods: {
         pvState(pvKey) {

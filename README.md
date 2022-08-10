@@ -35,7 +35,19 @@ $ npm install bootstrap-vue # or whatever
 
 ```
 ### Interact with mySQL container
+```shell
+# Obtain a shell
+docker exec -it meters-db bash
 
+# Clean out existing database
+drop database laravel;
+create database laravel;
+grant all privileges on laravel.* to 'sail'@'%';
+
+# Import a file into mysql
+cd /var/lib/mysql  
+mysql -u root -p laravel < 2022-08-10_13.meters.bak
+```
 
 
 ### Interact with the softIOC 

@@ -28,18 +28,25 @@ export default {
     mixins: [meterStatusTableMixin],
     data() {
         return {
-            fields: {
-                flow: {
+            fields: [
+                {
+                    key: 'meter',
+                },
+                {
+                    key: 'comms',
+                    class :'comms-status'
+                },
+                {
                     key: 'flow',
                     class: 'readout',
                     label: 'Flow (ccfpm)'
                 },
-                volume: {
+                {
                     key: 'volume',
                     class: 'readout',
                     label: 'Volume (ccf)'
                 }
-            }
+            ]
         }
     },
     computed: {
