@@ -7,6 +7,10 @@ record(ao,"channel1") {
 }
 record(ao,"87-L1:llVolt") {
         field(DTYP,"Soft Channel")
+        # The DOL and OMSL fields go together to link this record
+        # to the 480Meter VAL field.  The CP makes this record update
+        # synchronously with 480Meter rather than having a local
+        # scan task within this record.
         field(DOL,"480Meter.VAL CP")
         field(OMSL,"closed_loop")
         #field(VAL,480)
@@ -19,17 +23,11 @@ record(ao,"87-L1:llVolt") {
         field(LSV,MINOR)
         field(LOW,470)
 }
-record(calc,"counter_HELLO") {
-  field(SCAN, ".2 second")
-  field(CALC, "(A+1)%17")
-  field(INPA, "counter_HELLO.VAL")
-  field(FLNK, "HELLO.PROC")
-  field(VAL, "0")
-}
+# A record that cycles through the gamut of LOLO->NORMAL->HIHI values
 record(calc,"480Meter") {
-        field(VAL,100)
+        field(VAL,450)
         field(INPA,"480Meter.VAL")
-        field(CALC,"(A=255)?0:A+1")
+        field(CALC,"(A=510)?450:A+1")
         field(SCAN,"1 second")
 }
 record(ao,"87-L1:totkW") {
