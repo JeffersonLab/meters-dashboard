@@ -46,6 +46,7 @@ class SyncMeters extends Command
      * Create a new command instance.
      *
      * @param CEDTypeData $cedTypeData
+     * @param CEDElemData $cedElemData
      */
     public function __construct(CEDTypeData $cedTypeData, CEDElemData $cedElemData)
     {
