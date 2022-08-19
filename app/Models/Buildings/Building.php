@@ -33,7 +33,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
 
     );
 
-    public $fillable = array('name','abbreviation','building_num','square_footage','jlab_name');
+    public $fillable = array('name','element_id','type','abbreviation','building_num','square_footage','jlab_name');
 
     /**
      * The attributes that should be mutated to dates.

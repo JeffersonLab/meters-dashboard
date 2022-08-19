@@ -8,18 +8,20 @@
 
 namespace App\Utilities;
 
+use Exception;
 use GuzzleHttp\Client;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 abstract class CEDData implements DataFetchContract
 {
 
     protected $webClient;
+    protected $workspace;
 
     function __construct()
     {
-        $this->webClient = new Client(['base_uri'=>env('CED_URL')]);
+        $this->workspace = config('ced.workspace');
+        $this->webClient = new Client(['base_uri'=>config('ced.url')]);
     }
 
     /**
