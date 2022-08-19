@@ -112,7 +112,24 @@ class MenuServiceProvider extends ServiceProvider
                     ]
                 ]
             );
+            $event->menu->add(['header' => 'SUBSTATIONS']);
+            $event->menu->add(
+                [
+                    'text' => 'Substation Summary',
+                    'icon' => config('meters.icons.power.symbol'),
+                    'icon_color' => config('meters.icons.power.color'),
+                    'url' => route('buildings.substation_summary'),
+                ]);
 
+//            $items = $this->substationMenuItems();
+//            $event->menu->add(
+//                [
+//                    'text' => 'Building List',
+//                    'icon' => 'fas fa-fw fa-building',
+//                    'label' => $items->count(),
+//                    'submenu' => $items->toArray()
+//                ]
+//            );
             $event->menu->add(['header' => 'BUILDINGS']);
 
             $items = $this->buildingMenuItems();
@@ -134,15 +151,16 @@ class MenuServiceProvider extends ServiceProvider
      * @return \Illuminate\Support\Collection|mixed|static
      */
     protected function buildingMenuItems(){
-        if (Cache::has('menu-building-items')) {
-            return Cache::get('menu-building-items');
-        }
+//        if (Cache::has('menu-building-items')) {
+//            return Cache::get('menu-building-items');
+//        }
 
-        $buildings = Building::with('meters')->get();
+//        $buildings = Building::with('meters')->get();
+        $buildings = Building::all();
         $items = $buildings->sortBy('building_num')->map(function (Building $building) {
             return $this->buildingMenuItem($building);
         });
-        Cache::put('menu-building-items', $items, $this->ttl);
+//        Cache::put('menu-building-items', $items, $this->ttl);
         return $items;
 
     }
@@ -151,39 +169,36 @@ class MenuServiceProvider extends ServiceProvider
     {
         $item = [
             'text' => $building->getPresenter()->menuLabel(),
-            'submenu' => [
-                [   'text' => $building->getPresenter()->reportLabel(),
-                    'icon' => 'fas fa-fw fa-building',
-                    'url' => route('buildings.show', $building->name)]
-            ]
+//            'icon' => 'fas fa-fw fa-building',
+            'url' => route('buildings.show', $building->name)
         ];
 
-        foreach ($building->powerMeters()->get()->all() as $meter){
-            $item['submenu'][] = [
-                'icon' => config('meters.icons.power.symbol'),
-                'icon_color' => config('meters.icons.power.color'),
-                'text' => $meter->epics_name,
-                'url' => route('meters.show', $meter->id),
-            ];
-        }
-
-        foreach ($building->waterMeters()->get()->all() as $meter){
-            $item['submenu'][] = [
-                'icon' => config('meters.icons.water.symbol'),
-                'icon_color' => config('meters.icons.water.color'),
-                'text' => $meter->epics_name,
-                'url' => route('meters.show', $meter->id),
-            ];
-        }
-
-        foreach ($building->gasMeters()->get()->all() as $meter){
-            $item['submenu'][] = [
-                'icon' => config('meters.icons.gas.symbol'),
-                'icon_color' => config('meters.icons.gas.color'),
-                'text' => $meter->epics_name,
-                'url' => route('meters.show', $meter->id),
-            ];
-        }
+//        foreach ($building->powerMeters()->get()->all() as $meter){
+//            $item['submenu'][] = [
+//                'icon' => config('meters.icons.power.symbol'),
+//                'icon_color' => config('meters.icons.power.color'),
+//                'text' => $meter->epics_name,
+//                'url' => route('meters.show', $meter->id),
+//            ];
+//        }
+//
+//        foreach ($building->waterMeters()->get()->all() as $meter){
+//            $item['submenu'][] = [
+//                'icon' => config('meters.icons.water.symbol'),
+//                'icon_color' => config('meters.icons.water.color'),
+//                'text' => $meter->epics_name,
+//                'url' => route('meters.show', $meter->id),
+//            ];
+//        }
+//
+//        foreach ($building->gasMeters()->get()->all() as $meter){
+//            $item['submenu'][] = [
+//                'icon' => config('meters.icons.gas.symbol'),
+//                'icon_color' => config('meters.icons.gas.color'),
+//                'text' => $meter->epics_name,
+//                'url' => route('meters.show', $meter->id),
+//            ];
+//        }
         return $item;
     }
 

@@ -61,28 +61,34 @@ Route::get('/buildings',[
     'uses' => 'BuildingController@index'
 ]);
 
+Route::get('/buildings/substation-summary',[
+    'as' => 'buildings.substation_summary',
+    'uses' => 'BuildingController@substationSummary'
+]);
+
 Route::get('/buildings/{building}',[
     'as' => 'buildings.show',
     'uses' => 'BuildingController@show'
 ]);
 
-//Route::get('/test', function () {
+Route::get('/test', function () {
+//    dd(file_get_contents('http://epics2web:8080/epics2web/caget?pv=87-L1%3AllVolt'));
+    return view('Test');
+
+//    $c = new \App\Utilities\FacilitiesClimateData();
+//    $c->setDate('2019-01-29');
+//    var_dump($c->heatingDegreeDays());
+//    var_dump($c->coolingDegreeDays());
+//    dd($c->data());
+
+
+//    $vm = new \App\Meters\VirtualMeter();
+//    $vm->setMeters(Meter::whereIn('id',[49,50])->get());
+//    $chart = new \App\Charts\MultiMeter($vm);
 //
-//
-////    $c = new \App\Utilities\FacilitiesClimateData();
-////    $c->setDate('2019-01-29');
-////    var_dump($c->heatingDegreeDays());
-////    var_dump($c->coolingDegreeDays());
-////    dd($c->data());
-//
-//
-////    $vm = new \App\Meters\VirtualMeter();
-////    $vm->setMeters(Meter::whereIn('id',[49,50])->get());
-////    $chart = new \App\Charts\MultiMeter($vm);
-////
-////    dd($chart->toArray());
-//
-//});
+//    dd($chart->toArray());
+
+});
 
 
 Auth::routes();

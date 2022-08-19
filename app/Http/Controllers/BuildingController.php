@@ -50,6 +50,10 @@ class BuildingController extends Controller
 
     }
 
+    public function substationSummary(){
+        return view('buildings.substation_summary');
+    }
+
     protected function meterData(Collection $meters){
         $data = [];
         foreach ($meters as $meter){
@@ -58,7 +62,6 @@ class BuildingController extends Controller
                 'type' => $meter->type,
                 'epics_name' => $meter->epics_name,
                 'pvs' => $meter->pvFields(),
-
             ];
         }
         return $data;
