@@ -58,7 +58,7 @@ export default {
                 this.$set(this.values, this.pvKey(pv), {
                     type: 'init',
                     pv: pv,
-                    value: 0.0,
+                    value:null,
                     date: Date.now()
                 });
             })
