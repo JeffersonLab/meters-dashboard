@@ -1,5 +1,8 @@
 <template>
-<b-card header="Power Meters">
+<b-card>
+    <template #header>
+        <h4 class="mb-0"><i class="fas fa-fw fa-bolt text-red"></i>Power Meters</h4>
+    </template>
     <b-table class="meter-data" small :items="meterItems" :fields="fields">
         <!-- A custom formatted column -->
         <template #cell(comms)="data">
