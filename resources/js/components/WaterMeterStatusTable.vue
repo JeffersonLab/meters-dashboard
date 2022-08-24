@@ -1,5 +1,8 @@
 <template>
-<b-card header="Water Meters">
+<b-card>
+    <template #header>
+        <h4 class="mb-0"><i class="fas fa-fw fa-tint text-aqua"></i>Water Meters</h4>
+    </template>
     <b-table class="meter-data" small :items="meterItems" :fields="fields">
         <!-- A custom formatted column -->
         <template #cell(comms)="data">
