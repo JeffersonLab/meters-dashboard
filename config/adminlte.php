@@ -63,6 +63,30 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Preloader Animation
+    |--------------------------------------------------------------------------
+    |
+    | Here you can change the preloader animation configuration.
+    |
+    | For detailed instructions you can look the preloader section here:
+    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
+    |
+    */
+
+    'preloader' => [
+        'enabled' => true,
+        'img' => [
+            'path' => '/img/volts.png',
+            'alt' => 'AdminLTE Preloader Image',
+            'effect' => 'animation__shake',
+//            'effect' => 'animation__wobble',
+            'width' => 96,
+            'height' => 96,
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | User Menu
     |--------------------------------------------------------------------------
     |

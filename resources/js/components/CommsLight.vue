@@ -10,6 +10,11 @@ export default {
     components: {BIcon, BIconCircleFill},
     computed: {
         variant() {
+            // First check for the uninitialized status
+            if (this.status === null || this.status === ""){
+                return 'secondary'
+            }
+            // Otherwise a count of zero comm errors is good
             return this.status === 0 ? 'success' : 'danger'
         }
     }

@@ -1,5 +1,5 @@
 <template>
-<span :class="alarmState" >{{pvData.value}}</span>
+<span :class="alarmState" >{{readout}}</span>
 </template>
 
 <script>
@@ -7,6 +7,9 @@ export default {
     name: "AlarmedReadback",
     props: ['pvData'],
     computed: {
+        readout(){
+          return this.pvData.value !== null ? this.pvData.value : 'N/A'
+        },
         alarmState(){
             if (this.pvData.alarmState){
                 if(this.pvData.alarmState === 'HIHI') return 'text-danger'

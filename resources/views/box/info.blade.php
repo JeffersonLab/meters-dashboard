@@ -1,5 +1,5 @@
-<div class="card card-solid card-info">
-    <div class="card-header with-border">
+<div class="card">
+    <div class="card-header">
         <h3 class="card-title">Properties</h3>
 
     </div>

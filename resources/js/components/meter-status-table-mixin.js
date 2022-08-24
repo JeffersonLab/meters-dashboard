@@ -16,8 +16,12 @@ export default {
     methods: {
         pvState(pvKey) {
             if (this.epicsData[pvKey]) {
+                let value = null
+                if (this.epicsData[pvKey].value !== null){
+                    value = this.round(this.epicsData[pvKey].value).toFixed(1)
+                }
                 return {
-                    value: this.round(this.epicsData[pvKey].value).toFixed(1),
+                    value,
                     alarmState: this.alarmState(pvKey + '.STAT')
                 }
             }
