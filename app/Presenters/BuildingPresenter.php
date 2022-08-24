@@ -56,7 +56,7 @@ class BuildingPresenter extends Presenter implements BoxInterface
 
     function icon()
     {
-        return "<i class=\"fa fa-fw fa-building-o\"></i>";
+        return "<i class=\"fa fa-fw fa-building\"></i>";
     }
 
     /**
