@@ -2,9 +2,9 @@
 
 @section('title', 'Substations Summary')
 
-{{--@section('content_header')--}}
-{{--    <h1>{!! $building->icon() !!}{{$building->menuLabel()}}</h1>--}}
-{{--@stop--}}
+@section('content_header')
+    <h1>Substation Summary</h1>
+@stop
 
 @section('content')
 <style>

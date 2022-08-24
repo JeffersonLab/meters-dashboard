@@ -20,6 +20,9 @@ $fa-font-path: "../webfonts";
 // AdminLTE
 @import '../../vendor/almasaeed2010/adminlte/dist/css/adminlte.css';
 
-
+// Local Styles
+.content-header h1 {
+    text-align: center;
+}
 
 

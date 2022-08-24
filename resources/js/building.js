@@ -17,6 +17,7 @@ import Vue from 'vue';
 import VueAxios from 'vue-axios';
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
 import BuildingMonitor from "./components/BuildingMonitor";
+import MeterChartTabs from "./components/MeterChartTabs";
 
 Vue.use(VueAxios, axios);
 Vue.use(BootstrapVue);
@@ -38,4 +39,19 @@ const buildingVue = new Vue({
                         :epics-con="epicsCon"
                        >
                 </building-monitor>`
+});
+
+/**
+ * Create the Vue Component that will let user plot consumption per-meter
+ */
+const meterChartTabsVue = new Vue({
+    el: '#meter-chart-tabs',
+    components: {MeterChartTabs},
+    data: {
+        metersData: jlab.metersData,
+    },
+    template: `<meter-chart-tabs
+                        :meters="metersData"
+                       >
+                </meter-chart-tabs>`
 });
