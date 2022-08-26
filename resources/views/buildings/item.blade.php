@@ -50,7 +50,7 @@
     <div class="row">
 
         <div class="col-lg-12">
-            <div id="meter-chart-tabs"></div>
+            <div id="building-charts"></div>
         </div>
 
 
