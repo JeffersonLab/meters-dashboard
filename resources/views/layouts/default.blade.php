@@ -1,4 +1,5 @@
 @extends('adminlte::page')
+@routes()
 
 
 @push('js')

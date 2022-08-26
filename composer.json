@@ -12,6 +12,8 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
+        "ext-json": "*",
+        "ext-pdo": "*",
         "doctrine/dbal": "^3.3",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -25,8 +27,7 @@
         "laravelcollective/html": "^6.2",
         "maatwebsite/excel": "^3.1",
         "robclancy/presenter": "^2.0",
-        "ext-pdo": "*",
-        "ext-json": "*"
+        "tightenco/ziggy": "^1.4"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

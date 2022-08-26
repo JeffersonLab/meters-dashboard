@@ -5,7 +5,8 @@ var epicsOptions = window.epicsOptions;
 let jlab = window.jlab;
 let epicsCon = window.epicsCon;
 
-console.log(jlab.metersData);
+// console.log(jlab.metersData);
+// console.log('current', jlab.currentModel);
 
 //let metersData = jlab.powerMonitor;
 
@@ -15,13 +16,15 @@ console.log(jlab.metersData);
  */
 import Vue from 'vue';
 import VueAxios from 'vue-axios';
+
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
 import BuildingMonitor from "./components/BuildingMonitor";
-import MeterChartTabs from "./components/MeterChartTabs";
+import BuildingCharts from "./components/BuildingCharts";
 
 Vue.use(VueAxios, axios);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
+
 
 /**
  * Create the Vue Component that will monitor a building's meter data via epicsWeb
@@ -45,13 +48,15 @@ const buildingVue = new Vue({
  * Create the Vue Component that will let user plot consumption per-meter
  */
 const meterChartTabsVue = new Vue({
-    el: '#meter-chart-tabs',
-    components: {MeterChartTabs},
+    el: '#building-charts',
+    components: {BuildingCharts},
     data: {
         metersData: jlab.metersData,
+        building: jlab.currentModel
     },
-    template: `<meter-chart-tabs
+    template: `<building-charts
+                        :building="building"
                         :meters="metersData"
                        >
-                </meter-chart-tabs>`
+                </building-charts>`
 });
