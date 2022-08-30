@@ -9,11 +9,12 @@ export default {
             values: {},
         }
     },
-    mounted(){
+    async mounted(){
         this.initPvs();
         this.initValues();
-        this.initEpics();
-        this.epicsCon.monitorPvs(this.pvs);
+        this.initEpics();        
+        await new Promise(resolve => setTimeout(resolve, 1000));       
+        this.epicsCon.monitorPvs(this.pvs);	
     },
     computed: {
         gasMeters()   { return this.meters.filter(meter => meter.type === 'gas') },
