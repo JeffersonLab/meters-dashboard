@@ -68,13 +68,13 @@ export default {
                 {
                     key: 'flow',
                     class: 'readout',
-                    label: 'Flow (gpm)',
+                    label: 'Flow (ccfpm)',
                     sortable: true,
                 },
                 {
                     key: 'volume',
                     class: 'readout',
-                    label: 'Volume (gal)',
+                    label: 'Volume (ccf)',
                     sortable: true,
                 }
             ]
