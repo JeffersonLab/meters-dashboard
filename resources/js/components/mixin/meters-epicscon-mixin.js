@@ -64,6 +64,9 @@ export default {
             epicsCon.onclose = function (e) {
                 console.log('epicsCon closed', e);
             };
+            epicsCon.onPong = function (e) {
+                console.log('Ponged', e);
+            };
             // It appears redundant to make the call below.
             // epicsCon.monitorPvs(this.pvs);
         },
