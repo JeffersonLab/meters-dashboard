@@ -63,8 +63,8 @@ export default {
             epicsCon.onclose = function (e) {
                 console.log('epicsCon closed', e);
             };
-            console.log('start monitoring now');
-            epicsCon.monitorPvs(this.pvs);
+            // It appears redundant to make the call below.
+            // epicsCon.monitorPvs(this.pvs);
         },
         // The callback handler invoked when a monitored PV receives a value change.
         updateValues(epicsData) {

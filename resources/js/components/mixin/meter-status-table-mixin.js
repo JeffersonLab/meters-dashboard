@@ -47,6 +47,12 @@ export default {
             // from https://stackoverflow.com/questions/7342957/how-do-you-round-to-1-decimal-place-in-javascript
             let multiplier = Math.pow(10, precision || 0);
             return Math.round(value * multiplier) / multiplier;
+        },
+        buildingLink(building){
+            return route('buildings.show',[building], false)
+        },
+        meterLink(meter){
+            return route('meters.show',[meter], false)
         }
     }
 }
