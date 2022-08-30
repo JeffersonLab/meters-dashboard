@@ -13,6 +13,7 @@ export default {
         this.initPvs();
         this.initValues();
         this.initEpics();
+        this.epicsCon.monitorPvs(this.pvs);
     },
     computed: {
         gasMeters()   { return this.meters.filter(meter => meter.type === 'gas') },
@@ -55,10 +56,10 @@ export default {
 
             let pvs = this.pvs;     // for access inside the onopen closure
             // console.log('inside initEPCS', pvs);
-            epicsCon.onopen = function () {
-                // console.log('onopen');
-                epicsCon.monitorPvs(pvs);
-            };
+            // epicsCon.onopen = function () {
+            //     // console.log('onopen');
+            //     epicsCon.monitorPvs(pvs);
+            // };
             epicsCon.onupdate = this.updateValues;
             epicsCon.onclose = function (e) {
                 console.log('epicsCon closed', e);
