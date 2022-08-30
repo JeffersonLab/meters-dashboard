@@ -39,80 +39,16 @@
         </div>
 
         <div class="col-lg-6">
-            <div id="building-monitor"></div>
-            <div class="power-meter-status-table"></div>
-            <div class="water-meter-status-table"></div>
-            {{--            @include('box.meter_links')--}}
+            <div id="building-status"></div>
 
         </div>
     </div>
 
     <div class="row">
-
         <div class="col-lg-12">
             <div id="building-charts"></div>
         </div>
-
-
     </div>
-
-{{--    <div class="row">--}}
-{{--        <div class="col-lg-12">--}}
-{{--            <hr/>--}}
-{{--            @include('box.monthyear_selection')--}}
-{{--        </div>--}}
-
-{{--    </div>--}}
-
-{{--    @if ($building->hasMeterType('power'))--}}
-{{--        <div class="row">--}}
-{{--            <div class="col-lg-12">--}}
-{{--                @include('box.chart',[--}}
-{{--                'title' => 'Power Consumption',--}}
-{{--                'handle' => $building->name."-1",--}}
-{{--                'chartOptions' => ['dailykwh'=>'kWh','dailymbtu' => 'MBTU','readingskw'=>'kW'],--}}
-{{--                'chartType' => 'dailykwh'--}}
-{{--                ])--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    @endif--}}
-
-{{--    @if ($building->hasMeterType('water'))--}}
-{{--        <div class="row">--}}
-{{--            <div class="col-lg-12">--}}
-{{--                @include('box.chart',[--}}
-{{--                'title' => 'Water Consumption',--}}
-{{--                'handle' => $building->name."-2",--}}
-{{--                'chartOptions' => ['dailygallons' => 'Gallons','readingsgpm'=>'Flow Rate (GPM)'],--}}
-{{--                'chartType' => 'dailyGallons'--}}
-{{--                ])--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    @endif--}}
-
-{{--    <div class="row">--}}
-{{--        <div class="col-lg-12">--}}
-{{--            @include('box.meter_data',[--}}
-{{--                'title' => 'Building Data',--}}
-{{--                'headings' => ['date'=>'Date','totkWh'=>'totkWh','totMBTU'=>'totMBTU','gal'=>'Gallons', 'src'=>'Source'],--}}
-{{--                'data' => $building->reporter()->dateRangeQuery()->get(),--}}
-{{--                ])--}}
-{{--        </div>--}}
-{{--    </div>--}}
-
-@stop
-
-@section('css')
-    <style>
-        .box select {
-            color: black;
-        }
-
-        .chart-card {
-            min-width: 600px;
-            min-height: 400px;
-        }
-    </style>
 @stop
 
 
@@ -122,8 +58,5 @@
     @include('partials.jsvars')
     <script src="{{asset('js/building.js')}}"></script>
 
-    <script>
-
-    </script>
 @stop
 

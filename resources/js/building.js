@@ -18,7 +18,7 @@ import Vue from 'vue';
 import VueAxios from 'vue-axios';
 
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
-import BuildingMonitor from "./components/BuildingMonitor";
+import BuildingStatus from "./components/BuildingStatus";
 import BuildingCharts from "./components/BuildingCharts";
 
 Vue.use(VueAxios, axios);
@@ -31,17 +31,17 @@ Vue.use(BootstrapVueIcons);
  * @type {Vue | CombinedVueInstance<Vue, {epicsCon: *, metersData: (*|[{epics_name: string, id: number, pvs: string[]},{epics_name: string, id: number, pvs: string[]}]|[])}, object, object, Record<never, any>>}
  */
 const buildingVue = new Vue({
-    el: '#building-monitor',
-    components: {BuildingMonitor},
+    el: '#building-status',
+    components: {BuildingStatus},
     data: {
         epicsCon,
         metersData: jlab.metersData,
     },
-    template: `<building-monitor
+    template: `<building-status
                         :meters="metersData"
                         :epics-con="epicsCon"
                        >
-                </building-monitor>`
+                </building-status>`
 });
 
 /**

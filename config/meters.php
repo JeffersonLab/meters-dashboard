@@ -31,10 +31,10 @@ return [
                'description' => 'Total real energy',
                'units'      =>  'kWh'
            ],
-            ':totMBTU' => [
-                'description' => 'Total real energy',
-                'units'      =>  'MBTU'
-            ],
+//            ':totMBTU' => [
+//                'description' => 'Total real energy',
+//                'units'      =>  'MBTU'
+//            ],
             ':llVolt' => [
                 'description' => 'Average Voltage',
                 'units'      =>  'V'

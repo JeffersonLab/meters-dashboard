@@ -7,11 +7,11 @@
 </template>
 
 <script>
-import PowerMeterStatusTable from "./PowerMeterStatusTable";
-import WaterMeterStatusTable from "./WaterMeterStatusTable";
-import GasMeterStatusTable from "./GasMeterStatusTable";
+import PowerMeterStatusTable from "./table/PowerMeterStatusTable";
+import WaterMeterStatusTable from "./table/WaterMeterStatusTable";
+import GasMeterStatusTable from "./table/GasMeterStatusTable";
 export default {
-    name: "BuildingMonitor",
+    name: "BuildingStatus",
     props: {
         meters: {type: Array, required: true},
         epicsCon: {type: Object, required: true},

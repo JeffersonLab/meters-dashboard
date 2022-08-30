@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Meters\Meter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
 use Laracasts\Utilities\JavaScript\JavaScriptFacade as JavaScript;
 
@@ -62,6 +63,7 @@ class MeterController extends Controller
      */
     public function monitor($type) {
         switch ($type){
+            case 'power' : return $this->powerStatus();
             case 'power-kwh' : return $this->powerStatusKwh();
             case 'power-kw' : return $this->powerStatusKw();
             case 'power-volt-avg' : return $this->powerStatusVoltAverage();
@@ -71,6 +73,31 @@ class MeterController extends Controller
             case 'gas-ccfpm' : return $this->gasStatusCcfpm();
 
         }
+
+    }
+
+    public function powerStatus()
+    {
+        $meters = Meter::where('type','power')->orderBy('epics_name')->get();
+        JavaScript::put([
+            'metersData' => $this->meterData($meters),
+        ]);
+        return View::make('status.power')
+            ->with('meters', $this->meterData($meters));
+    }
+
+    protected function meterData(Collection $meters){
+        return $meters->map(function ($item) {
+            return [
+              'id' => $item->id,
+              'type' => $item->type,
+              'epics_name' => $item->epics_name,
+              'building' => $item->housed_by,
+              'modelNumber' => $item->model_number,
+              'pvs' => $item->pvFields(),
+
+            ];
+        });
 
     }
 

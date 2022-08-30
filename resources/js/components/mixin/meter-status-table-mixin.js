@@ -2,8 +2,8 @@
 Mixin with code common to the *MeterStatusTable components
 */
 
-import AlarmedReadback from "./AlarmedReadback";
-import CommsLight from "./CommsLight";
+import AlarmedReadback from "../table/AlarmedReadback";
+import CommsLight from "../table/CommsLight";
 
 export default {
     props: ['meters', 'epicsData'],
