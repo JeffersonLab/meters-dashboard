@@ -11,7 +11,7 @@
 
             <!-- A custom formatted column -->
             <template #cell(building)="data">
-                <b-link target="_blank" :href="buildingLink(data.value)">data.value</b-link>
+                <b-link target="_blank" :href="buildingLink(data.value)">{{data.value}}</b-link>
             </template>
 
             <!-- A custom formatted column -->

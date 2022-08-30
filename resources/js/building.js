@@ -18,8 +18,9 @@ import Vue from 'vue';
 import VueAxios from 'vue-axios';
 
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
-import BuildingStatus from "./components/BuildingStatus";
+import MeterStatus from "./components/MeterStatus";
 import BuildingCharts from "./components/BuildingCharts";
+import MeterMonitor from "./components/MeterMonitor";
 
 Vue.use(VueAxios, axios);
 Vue.use(BootstrapVue);
@@ -32,16 +33,16 @@ Vue.use(BootstrapVueIcons);
  */
 const buildingVue = new Vue({
     el: '#building-status',
-    components: {BuildingStatus},
+    components: {MeterStatus},
     data: {
         epicsCon,
         metersData: jlab.metersData,
     },
-    template: `<building-status
+    template: `<meter-status
                         :meters="metersData"
                         :epics-con="epicsCon"
                        >
-                </building-status>`
+                </meter-status>`
 });
 
 /**
@@ -59,4 +60,21 @@ const meterChartTabsVue = new Vue({
                         :meters="metersData"
                        >
                 </building-charts>`
+});
+
+/**
+ * Create the Vue Component that will let user plot consumption per-meter
+ */
+const meterMontiorVue = new Vue({
+    el: '#meter-monitor',
+    components: {MeterMonitor},
+    data: {
+        epicsCon,
+        metersData: jlab.metersData
+    },
+    template: `<meter-monitor
+                        :meters="metersData"
+                        :epics-con="epicsCon"
+                       >
+              </meter-monitor>`
 });
