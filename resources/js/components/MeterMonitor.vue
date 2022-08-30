@@ -18,17 +18,21 @@
             </b-input-group>
         </b-form-group>
         <power-meter-monitor-table v-if="hasPowerMeters" :meters="this.powerMeters" :epics-data="this.values" :filter="filter"/>
+        <water-meter-monitor-table v-if="hasWaterMeters" :meters="this.waterMeters" :epics-data="this.values" :filter="filter"/>
+        <gas-meter-monitor-table v-if="hasGasMeters" :meters="this.gasMeters" :epics-data="this.values" :filter="filter"/>
     </div>
 </template>
 
 <script>
 import MetersEpicsconMixin from "./mixin/meters-epicscon-mixin";
 import PowerMeterMonitorTable from "./table/PowerMeterMonitorTable";
+import WaterMeterMonitorTable from "./table/WaterMeterMonitorTable";
+import GasMeterMonitorTable from "./table/GasMeterMonitorTable";
 
 export default {
     name: "MeterMonitor",
     mixins: [MetersEpicsconMixin],
-    components: {PowerMeterMonitorTable},
+    components: {GasMeterMonitorTable, PowerMeterMonitorTable, WaterMeterMonitorTable},
     data() {
         return {
             filter: '',
