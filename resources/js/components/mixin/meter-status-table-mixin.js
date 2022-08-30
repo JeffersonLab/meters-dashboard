@@ -49,10 +49,10 @@ export default {
             return Math.round(value * multiplier) / multiplier;
         },
         buildingLink(building){
-            return route('buildings.show',[building], false)
+            return route('buildings.show',[building], true)
         },
         meterLink(meter){
-            return route('meters.show',[meter], false)
+            return route('meters.show',[meter], true)
         }
     }
 }
