@@ -63,7 +63,9 @@ class MeterController extends Controller
      */
     public function monitor($type) {
         switch ($type){
-            case 'power' : return $this->powerStatus();
+            case 'power' : return $this->meterStatus('power');
+            case 'water' : return $this->meterStatus('water');
+            case 'gas' : return $this->meterStatus('gas');
             case 'power-kwh' : return $this->powerStatusKwh();
             case 'power-kw' : return $this->powerStatusKw();
             case 'power-volt-avg' : return $this->powerStatusVoltAverage();
@@ -76,15 +78,29 @@ class MeterController extends Controller
 
     }
 
-    public function powerStatus()
-    {
-        $meters = Meter::where('type','power')->orderBy('epics_name')->get();
+    public function meterStatus($type){
+        $meters = Meter::where('type',$type)->orderBy('epics_name')->get();
         JavaScript::put([
             'metersData' => $this->meterData($meters),
         ]);
-        return View::make('status.power')
+        return View::make('status.meters')
             ->with('meters', $this->meterData($meters));
     }
+//
+//    public function powerStatus()
+//    {
+//        return $this->meterStatus('power');
+//    }
+//
+//    public function waterStatus()
+//    {
+//        return $this->meterStatus('water');
+//    }
+//
+//    public function gasStatus()
+//    {
+//        return $this->meterStatus('gas');
+//    }
 
     protected function meterData(Collection $meters){
         return $meters->map(function ($item) {
