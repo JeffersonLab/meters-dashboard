@@ -1,8 +1,11 @@
 <template>
 <div>
-    <power-meter-status-table v-if="hasPowerMeters" :meters="this.powerMeters" :epics-data="this.values" />
-    <water-meter-status-table v-if="hasWaterMeters" :meters="this.waterMeters" :epics-data="this.values"/>
-    <gas-meter-status-table v-if="hasGasMeters" :meters="this.gasMeters" :epics-data="this.values"/>
+    <power-meter-status-table v-if="hasPowerMeters" :meters="this.powerMeters"
+                              :epics-data="this.values" :epics-web-status="status"/>
+    <water-meter-status-table v-if="hasWaterMeters" :meters="this.waterMeters"
+                              :epics-data="this.values" :epics-web-status="status"/>
+    <gas-meter-status-table v-if="hasGasMeters" :meters="this.gasMeters"
+                            :epics-data="this.values" :epics-web-status="status"/>
 </div>
 </template>
 

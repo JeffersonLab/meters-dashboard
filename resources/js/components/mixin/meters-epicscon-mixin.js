@@ -7,16 +7,21 @@ export default {
         return {
             pvs: [],
             values: {},
+            status: 'disconnected'  // [disconnected, connected, connecting]
         }
     },
     async mounted(){
         this.initPvs();
         this.initValues();
-        this.initEpics();        
-        await new Promise(resolve => setTimeout(resolve, 1000));       
-        this.epicsCon.monitorPvs(this.pvs);	
+        this.initEpics();
+        // A pause to let the screen draw before opening the websocket firehose
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        this.epicsCon.monitorPvs(this.pvs);
     },
     computed: {
+        isConnected() { return this.status === 'connected'},
+        isConnecting() { return this.status === 'connecting'},
+        isDisconnected() { return this.status === 'disconnected'},
         gasMeters()   { return this.meters.filter(meter => meter.type === 'gas') },
         hasGasMeters() { return this.gasMeters && this.gasMeters.length > 0},
         powerMeters() { return this.meters.filter(meter => meter.type === 'power') },
@@ -37,7 +42,7 @@ export default {
                     this.pvs.push(pvName + '.STAT')
                 })
             })
-            console.log('initPvs', this.pvs);
+            //console.log('initPvs', this.pvs);
         },
         // Initialize the values array before handing it to epicsCon to start
         // receiving updates.
@@ -53,28 +58,58 @@ export default {
         },
         // Tell the epicsCon to starting monitoring our list of PVs and supplying updates to values
         initEpics() {
-            // console.log(epicsCon);
+            this.epicsCon.onupdate = this.updateValues;
 
-            let pvs = this.pvs;     // for access inside the onopen closure
-            // console.log('inside initEPCS', pvs);
-            // epicsCon.onopen = function () {
-            //     // console.log('onopen');
-            //     epicsCon.monitorPvs(pvs);
-            // };
-            epicsCon.onupdate = this.updateValues;
-            epicsCon.onclose = function (e) {
-                console.log('epicsCon closed', e);
-            };
-            epicsCon.onPong = function (e) {
+            this.epicsCon.onpong = function (e) {
                 console.log('Ponged', e);
             };
+
+            this.epicsCon.onerror = function (e) {
+                console.log('onerror', e);
+            };
+
+            this.epicsCon.onclose = function (e) {
+                console.log('onclose', e);
+            }
+
+            this.epicsCon.onclosing = function (e) {
+                console.log('onclosing', e);
+            }
+
+            this.epicsCon.addEventListener('error', function (event) {
+                console.log('error event')
+                this.status = 'disconnected'
+            }.bind(this));
+            this.epicsCon.addEventListener('connecting', function (event) {
+                console.log('connecting event')
+               this.status = 'connecting'
+            }.bind(this));
+            this.epicsCon.addEventListener('open', function (event) {
+                console.log('open event')
+                this.status = 'connected'
+            }.bind(this));
+            this.epicsCon.addEventListener('close', function (event) {
+                console.log('close event')
+                this.status = 'disconnected'
+            }.bind(this));
+            this.epicsCon.addEventListener('closing', function (event) {
+                console.log('closing event')
+                this.status = 'disconnected'
+            }.bind(this));
             // It appears redundant to make the call below.
             // epicsCon.monitorPvs(this.pvs);
         },
+        updateStatus(status){
+
+        },
+
         // The callback handler invoked when a monitored PV receives a value change.
         updateValues(epicsData) {
             if (epicsData.detail.type === 'update') {
                 Object.assign(this.values[this.pvKey(epicsData.detail.pv)], epicsData.detail);
+                this.status = 'connected'
+            }else{
+                console.log(epicsData.detail.type)
             }
             //this.values[this.pvKey(epicsData.detail.pv)] = epicsData.detail;
             console.log(epicsData.detail);
