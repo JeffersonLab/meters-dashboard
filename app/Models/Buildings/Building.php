@@ -117,8 +117,8 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
             // until we are all caught up.
             while (strtotime($this->nextDataDate()) < time()) {
                 $mySampler = new MySamplerData($this->nextDataDate(), $this->channels());
-                var_dump($this->nextDataDate());
-                var_dump($inserted);
+                //var_dump($this->nextDataDate());
+                //var_dump($inserted);
                 $items = $mySampler->getData();
                 if ($items->isEmpty()){
                     break;  // must escape the while loop when no more data
@@ -136,7 +136,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
             Log::error($e->getMessage());
             //throw ($e);
         }
-        var_dump('inserted '.$inserted);
+        //var_dump('inserted '.$inserted);
         return $inserted;
     }
 
