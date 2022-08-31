@@ -17,9 +17,15 @@
                 ></b-form-input>
             </b-input-group>
         </b-form-group>
-        <power-meter-monitor-table v-if="hasPowerMeters" :meters="this.powerMeters" :epics-data="this.values" :filter="filter"/>
-        <water-meter-monitor-table v-if="hasWaterMeters" :meters="this.waterMeters" :epics-data="this.values" :filter="filter"/>
-        <gas-meter-monitor-table v-if="hasGasMeters" :meters="this.gasMeters" :epics-data="this.values" :filter="filter"/>
+        <power-meter-monitor-table v-if="hasPowerMeters" :meters="this.powerMeters"
+                                   :epics-data="this.values" :epics-web-status="status"
+                                   :filter="filter"/>
+        <water-meter-monitor-table v-if="hasWaterMeters" :meters="this.waterMeters"
+                                   :epics-data="this.values" :epics-web-status="status"
+                                   :filter="filter"/>
+        <gas-meter-monitor-table v-if="hasGasMeters" :meters="this.gasMeters"
+                                 :epics-data="this.values" :epics-web-status="status"
+                                 :filter="filter"/>
     </div>
 </template>
 

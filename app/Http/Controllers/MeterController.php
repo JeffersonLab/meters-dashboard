@@ -63,7 +63,7 @@ class MeterController extends Controller
      */
     public function monitor($type) {
         switch ($type){
-            case 'power' : return $this->meterStatus('power');
+            case 'power' : return $this->powerStatus();
             case 'water' : return $this->meterStatus('water');
             case 'gas' : return $this->meterStatus('gas');
             case 'power-kwh' : return $this->powerStatusKwh();
@@ -80,27 +80,30 @@ class MeterController extends Controller
 
     public function meterStatus($type){
         $meters = Meter::where('type',$type)->orderBy('epics_name')->get();
+        return $this->meterStatusView($meters);
+    }
+
+    protected function meterStatusView(Collection $meters){
         JavaScript::put([
             'metersData' => $this->meterData($meters),
         ]);
         return View::make('status.meters')
             ->with('meters', $this->meterData($meters));
     }
-//
-//    public function powerStatus()
-//    {
-//        return $this->meterStatus('power');
-//    }
-//
-//    public function waterStatus()
-//    {
-//        return $this->meterStatus('water');
-//    }
-//
-//    public function gasStatus()
-//    {
-//        return $this->meterStatus('gas');
-//    }
+
+    // Special handling for building the list of power meters so that we exclude substation meters
+    public function powerStatus()
+    {
+        $meters = Meter::with('building')
+            ->where('type','power')
+            ->orderBy('epics_name')
+            ->get()
+            ->filter(function($meter){
+                return $meter->building && strtolower($meter->building->type) == 'building';
+            })->values();
+        return $this->meterStatusView($meters);
+    }
+
 
     protected function meterData(Collection $meters){
         return $meters->map(function ($item) {

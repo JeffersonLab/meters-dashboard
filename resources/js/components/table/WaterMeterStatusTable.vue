@@ -1,7 +1,11 @@
 <template>
 <b-card>
     <template #header>
-        <h4 class="mb-0"><i class="fas fa-fw fa-tint text-aqua"></i>Water Meters</h4>
+        <h4 class="mb-0">
+            <i class="fas fa-fw fa-tint text-blue"></i>
+            Water Meters
+            <epics-web-status-icon style="float:right" :epics-web-status="epicsWebStatus"></epics-web-status-icon>
+        </h4>
     </template>
     <b-table class="meter-data" small :items="meterItems" :fields="fields">
         <!-- A custom formatted column -->

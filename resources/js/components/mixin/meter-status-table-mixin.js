@@ -4,10 +4,11 @@ Mixin with code common to the *MeterStatusTable components
 
 import AlarmedReadback from "../table/AlarmedReadback";
 import CommsLight from "../table/CommsLight";
+import epicsWebStatusIcon from "../table/EpicsWebStatusIcon";
 
 export default {
-    props: ['meters', 'epicsData'],
-    components: {AlarmedReadback, CommsLight},
+    props: ['meters', 'epicsData','epicsWebStatus','epicsWebStatus'],
+    components: {AlarmedReadback, CommsLight, epicsWebStatusIcon},
     computed: {
       fieldList(){
           return Object.values(this.fields)
