@@ -22,6 +22,17 @@ export default {
     mounted() {
         this.getData()
     },
+    watch: {
+        // When the selected date range changes, we need to fetch fresh data
+        startDate(newState, oldState){
+            console.log('start date changed.  Get new data');
+            this.data = []
+            this.getData()
+        },
+        endDate(newState, oldState){
+            console.log('end date changed.  Get new data');
+        }
+    },
     computed: {
         chartId(){
           return this.chartType + '_' + this.model.id
