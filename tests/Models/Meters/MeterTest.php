@@ -2,6 +2,7 @@
 
 namespace Tests\Models\Meters;
 
+use App\Models\Buildings\Building;
 use App\Models\DataTables\DataTableReporter;
 use App\Models\Meters\Meter;
 use App\Models\Meters\MeterLimit;
@@ -59,6 +60,17 @@ class MeterTest extends TestCase
         $this->assertContains(':totMBTU', $meter->pvFields());
         $this->assertContains(':llVolt', $meter->pvFields());
     }
+
+    /**
+     * @test
+     */
+    public function it_relates_to_building()
+    {
+        $building = Building::factory()->create();
+        $meter = Meter::factory()->create(['building_id' => $building->id]);
+        $this->assertEquals($building->name, $meter->building->name);
+    }
+
 
     /**
      * @test

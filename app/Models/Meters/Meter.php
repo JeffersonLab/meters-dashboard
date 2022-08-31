@@ -5,6 +5,7 @@ namespace App\Models\Meters;
 use App\Exceptions\MeterDataException;
 use App\Exceptions\ModelValidationException;
 use App\Models\BaseModel;
+use App\Models\Buildings\Building;
 use App\Models\DataTables\DataTableCreator;
 use App\Models\DataTables\DataTableInterface;
 use App\Models\DataTables\DataTableReporter;
@@ -73,6 +74,10 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
                 return 'gas';
         }
         return null;
+    }
+
+    public function building(){
+        return $this->belongsTo(Building::class);
     }
 
     public function findByPv($pv)
