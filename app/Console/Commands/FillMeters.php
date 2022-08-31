@@ -45,6 +45,7 @@ class FillMeters extends Command
      */
     public function handle()
     {
+        ini_set("memory_limit", "1G");
         if ($this->option('meter') && $this->option('type')){
             $this->error("Please specify either meter OR type, not both!");
             return false;
