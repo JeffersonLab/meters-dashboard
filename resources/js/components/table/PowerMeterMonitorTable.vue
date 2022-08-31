@@ -10,8 +10,9 @@
         <b-table class="meter-data" small
                  :filter="filter"
                  filter-debounce="100"
-                 :sort-by.sync="sortBy"
-                 :sort-desc.sync="sortDesc"
+                 :sort-by="sortBy"
+                 :sort-desc="sortDesc"
+                 :sort-compare="sortCompare"
                  :items="meterItems"
                  :fields="fields">
             <!-- A custom formatted column -->
@@ -118,6 +119,17 @@ export default {
         consumed(meterName) {
             return this.pvState(meterName + '_totkWh')
         },
+        sortCompare(aRow, bRow, key, sortDesc, formatter, compareOptions, compareLocale) {
+            // The default sort algorithm will not properly sort alarm readback fields
+            // because it sorts them as stringified objects rather than by their value fields.
+            // So here we will sort such fields properly by their numeric values.
+            if (key === 'volt' || key === 'power' || key === 'consumed'){
+                const a = aRow[key].value // or use Lodash `_.get()`
+                const b = bRow[key].value
+                return a < b ? -1 : a > b ? 1 : 0
+            }
+            return null;  // falls back to default sort function
+        }
     },
 }
 </script>

@@ -59,45 +59,21 @@ export default {
         // Tell the epicsCon to starting monitoring our list of PVs and supplying updates to values
         initEpics() {
             this.epicsCon.onupdate = this.updateValues;
-
-            this.epicsCon.onpong = function (e) {
-                console.log('Ponged', e);
-            };
-
-            this.epicsCon.onerror = function (e) {
-                console.log('onerror', e);
-            };
-
-            this.epicsCon.onclose = function (e) {
-                console.log('onclose', e);
-            }
-
-            this.epicsCon.onclosing = function (e) {
-                console.log('onclosing', e);
-            }
-
+            // Note that the events below such as error occur when the
+            // epicsweb server communication is interrupted, established, etc.
+            // and not by the softioc coming or going.
             this.epicsCon.addEventListener('error', function (event) {
-                console.log('error event')
                 this.status = 'disconnected'
             }.bind(this));
             this.epicsCon.addEventListener('connecting', function (event) {
-                console.log('connecting event')
                this.status = 'connecting'
             }.bind(this));
             this.epicsCon.addEventListener('open', function (event) {
-                console.log('open event')
                 this.status = 'connected'
             }.bind(this));
             this.epicsCon.addEventListener('close', function (event) {
-                console.log('close event')
                 this.status = 'disconnected'
             }.bind(this));
-            this.epicsCon.addEventListener('closing', function (event) {
-                console.log('closing event')
-                this.status = 'disconnected'
-            }.bind(this));
-            // It appears redundant to make the call below.
-            // epicsCon.monitorPvs(this.pvs);
         },
         updateStatus(status){
 
@@ -112,7 +88,7 @@ export default {
                 console.log(epicsData.detail.type)
             }
             //this.values[this.pvKey(epicsData.detail.pv)] = epicsData.detail;
-            console.log(epicsData.detail);
+            //console.log(epicsData.detail);
         },
         // Replaces problematic characters found in epics PV names to make them usable as
         // javascript variable names.
