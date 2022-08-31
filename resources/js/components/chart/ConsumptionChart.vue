@@ -4,7 +4,7 @@
 
 <script>
 
-var CanvasJS = require('../canvasjs-3.6.6.min');
+var CanvasJS = require('../../canvasjs-3.6.6.min');
 CanvasJS = CanvasJS.Chart ? CanvasJS : window.CanvasJS;
 
 export default {

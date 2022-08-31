@@ -67,17 +67,7 @@ class MenuServiceProvider extends ServiceProvider
                     'text' => 'Power',
                     'icon' => config('meters.icons.power.symbol'),
                     'icon_color' => config('meters.icons.power.color'),
-                    'submenu' => [
-                        [   'text' => 'kWh',
-                            'url' => route('monitor', ['power-kwh']),
-                        ],
-                        [   'text' => 'kW',
-                            'url' => route('monitor', ['power-kw']),
-                        ],
-                        [   'text' => 'Voltage',
-                            'url' => route('monitor', ['power-volt-avg']),
-                        ],
-                    ]
+                    'url' => route('monitor', ['power']),
                 ]
             );
 
@@ -86,14 +76,7 @@ class MenuServiceProvider extends ServiceProvider
                     'text' => 'Water',
                     'icon' => config('meters.icons.water.symbol'),
                     'icon_color' => config('meters.icons.water.color'),
-                    'submenu' => [
-                        [   'text' => 'Cumulative (gal)',
-                            'url' => route('monitor', ['water-gal']),
-                        ],
-                        [   'text' => 'Current (gpm)',
-                            'url' => route('monitor', ['water-gpm']),
-                        ],
-                    ]
+                    'url' => route('monitor', ['water']),
                 ]
             );
 
@@ -102,14 +85,7 @@ class MenuServiceProvider extends ServiceProvider
                     'text' => 'Gas',
                     'icon' => config('meters.icons.gas.symbol'),
                     'icon_color' => config('meters.icons.gas.color'),
-                    'submenu' => [
-                        [   'text' => 'Cumulative (ccf)',
-                            'url' => route('monitor', ['gas-ccf']),
-                        ],
-                        [   'text' => 'Current (ccfpm)',
-                            'url' => route('monitor', ['gas-ccfpm']),
-                        ],
-                    ]
+                    'url' => route('monitor', ['gas']),
                 ]
             );
             $event->menu->add(['header' => 'SUBSTATIONS']);

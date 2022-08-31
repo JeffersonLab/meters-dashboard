@@ -20,53 +20,53 @@ Route::get('/',[
 ]);
 
 
-Route::get('/meters/{meter}',[
+Route::get('meters/{meter}',[
     'as' => 'meters.show',
     'uses' => 'MeterController@show'
 ]);
 
-Route::get('/meters',[
+Route::get('meters',[
     'as' => 'meters.index',
     'uses' => 'MeterController@index'
 ]);
 
-Route::get('/monitor/{type}',[
+Route::get('monitor/{type}',[
     'as' => 'monitor',
     'uses' => 'MeterController@monitor'
 ]);
 
-Route::get('/reports/{report}',[
+Route::get('reports/{report}',[
     'as' => 'reports.item',
     'uses' => 'ReportController@show'
 ]);
 
-Route::get('/reports/{report}/excel',[
+Route::get('reports/{report}/excel',[
     'as' => 'reports.excel',
     'uses' => 'ReportController@excel'
 ]);
 
-Route::get('/alerts',[
+Route::get('alerts',[
     'as' => 'alerts.index',
     'uses' => 'AlertController@index'
 ]);
 
-Route::get('/reports',[
+Route::get('reports',[
     'as' => 'reports.index',
     'uses' => 'ReportController@index'
 ]);
 
 
-Route::get('/buildings',[
+Route::get('buildings',[
     'as' => 'buildings.index',
     'uses' => 'BuildingController@index'
 ]);
 
-Route::get('/buildings/substation-summary',[
+Route::get('buildings/substation-summary',[
     'as' => 'buildings.substation_summary',
     'uses' => 'BuildingController@substationSummary'
 ]);
 
-Route::get('/buildings/{building}',[
+Route::get('buildings/{building}',[
     'as' => 'buildings.show',
     'uses' => 'BuildingController@show'
 ]);

@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import meterStatusTableMixin from "./meter-status-table-mixin";
+import meterStatusTableMixin from "../mixin/meter-status-table-mixin";
 export default {
     name: "GasMeterStatusTable",
     mixins: [meterStatusTableMixin],

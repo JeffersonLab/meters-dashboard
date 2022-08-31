@@ -25,8 +25,8 @@ mix.js('resources/js/app.js', 'public/js').vue()
 mix.js('resources/js/voltage.js', 'public/js').vue()
     .sourceMaps();
 
-mix.js('resources/js/test.js', 'public/js').vue()
-    .sourceMaps();
+// mix.js('resources/js/test.js', 'public/js').vue()
+//     .sourceMaps();
 
 mix.js('resources/js/building.js', 'public/js').vue()
     .sourceMaps();

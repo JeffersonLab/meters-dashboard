@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import ConsumptionChart from "./ConsumptionChart";
+import ConsumptionChart from "./chart/ConsumptionChart";
 export default {
     name: "ConsumptionViewer",
     props: {

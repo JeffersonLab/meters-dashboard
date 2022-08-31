@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Meters\Meter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
 use Laracasts\Utilities\JavaScript\JavaScriptFacade as JavaScript;
 
@@ -62,6 +63,9 @@ class MeterController extends Controller
      */
     public function monitor($type) {
         switch ($type){
+            case 'power' : return $this->meterStatus('power');
+            case 'water' : return $this->meterStatus('water');
+            case 'gas' : return $this->meterStatus('gas');
             case 'power-kwh' : return $this->powerStatusKwh();
             case 'power-kw' : return $this->powerStatusKw();
             case 'power-volt-avg' : return $this->powerStatusVoltAverage();
@@ -71,6 +75,45 @@ class MeterController extends Controller
             case 'gas-ccfpm' : return $this->gasStatusCcfpm();
 
         }
+
+    }
+
+    public function meterStatus($type){
+        $meters = Meter::where('type',$type)->orderBy('epics_name')->get();
+        JavaScript::put([
+            'metersData' => $this->meterData($meters),
+        ]);
+        return View::make('status.meters')
+            ->with('meters', $this->meterData($meters));
+    }
+//
+//    public function powerStatus()
+//    {
+//        return $this->meterStatus('power');
+//    }
+//
+//    public function waterStatus()
+//    {
+//        return $this->meterStatus('water');
+//    }
+//
+//    public function gasStatus()
+//    {
+//        return $this->meterStatus('gas');
+//    }
+
+    protected function meterData(Collection $meters){
+        return $meters->map(function ($item) {
+            return [
+              'id' => $item->id,
+              'type' => $item->type,
+              'epics_name' => $item->epics_name,
+              'building' => $item->housed_by,
+              'modelNumber' => $item->model_number,
+              'pvs' => $item->pvFields(),
+
+            ];
+        });
 
     }
 

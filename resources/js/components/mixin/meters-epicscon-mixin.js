@@ -1,32 +1,20 @@
-<template>
-<div>
-    <power-meter-status-table v-if="hasPowerMeters" :meters="this.powerMeters" :epics-data="this.values"/>
-    <water-meter-status-table v-if="hasWaterMeters" :meters="this.waterMeters" :epics-data="this.values"/>
-    <gas-meter-status-table v-if="hasGasMeters" :meters="this.gasMeters" :epics-data="this.values"/>
-</div>
-</template>
-
-<script>
-import PowerMeterStatusTable from "./PowerMeterStatusTable";
-import WaterMeterStatusTable from "./WaterMeterStatusTable";
-import GasMeterStatusTable from "./GasMeterStatusTable";
 export default {
-    name: "BuildingMonitor",
     props: {
         meters: {type: Array, required: true},
         epicsCon: {type: Object, required: true},
     },
-    components: {PowerMeterStatusTable, WaterMeterStatusTable, GasMeterStatusTable},
     data() {
         return {
             pvs: [],
             values: {},
         }
     },
-    mounted(){
+    async mounted(){
         this.initPvs();
         this.initValues();
-        this.initEpics();
+        this.initEpics();        
+        await new Promise(resolve => setTimeout(resolve, 1000));       
+        this.epicsCon.monitorPvs(this.pvs);	
     },
     computed: {
         gasMeters()   { return this.meters.filter(meter => meter.type === 'gas') },
@@ -36,13 +24,13 @@ export default {
         waterMeters() { return this.meters.filter(meter => meter.type === 'water') },
         hasWaterMeters() { return this.waterMeters && this.waterMeters.length > 0},
     },
-    methods:{
+    methods: {
         // Build the list of PVs to be monitored including the
         // .STAT alarm status fields and per-meter commErr signal
-        initPvs(){
+        initPvs() {
             this.pvs = [];
             this.meters.forEach(item => {
-                this.pvs.push(item.epics_name+':commErr')
+                this.pvs.push(item.epics_name + ':commErr')
                 item.pvs.forEach(pv => {
                     let pvName = item.epics_name + pv
                     this.pvs.push(pvName)
@@ -53,36 +41,36 @@ export default {
         },
         // Initialize the values array before handing it to epicsCon to start
         // receiving updates.
-        initValues(){
-            _.each(this.pvs, (pv)=>{
+        initValues() {
+            _.each(this.pvs, (pv) => {
                 this.$set(this.values, this.pvKey(pv), {
                     type: 'init',
                     pv: pv,
-                    value:null,
+                    value: null,
                     date: Date.now()
                 });
             })
         },
         // Tell the epicsCon to starting monitoring our list of PVs and supplying updates to values
-        initEpics(){
+        initEpics() {
             // console.log(epicsCon);
 
             let pvs = this.pvs;     // for access inside the onopen closure
             // console.log('inside initEPCS', pvs);
-            epicsCon.onopen = function () {
-                // console.log('onopen');
-                epicsCon.monitorPvs(pvs);
-            };
+            // epicsCon.onopen = function () {
+            //     // console.log('onopen');
+            //     epicsCon.monitorPvs(pvs);
+            // };
             epicsCon.onupdate = this.updateValues;
-            epicsCon.onclose = function(e) {
+            epicsCon.onclose = function (e) {
                 console.log('epicsCon closed', e);
             };
-            console.log('start monitoring now');
-            epicsCon.monitorPvs(this.pvs);
+            // It appears redundant to make the call below.
+            // epicsCon.monitorPvs(this.pvs);
         },
         // The callback handler invoked when a monitored PV receives a value change.
-        updateValues(epicsData){
-            if (epicsData.detail.type === 'update'){
+        updateValues(epicsData) {
+            if (epicsData.detail.type === 'update') {
                 Object.assign(this.values[this.pvKey(epicsData.detail.pv)], epicsData.detail);
             }
             //this.values[this.pvKey(epicsData.detail.pv)] = epicsData.detail;
@@ -90,14 +78,8 @@ export default {
         },
         // Replaces problematic characters found in epics PV names to make them usable as
         // javascript variable names.
-        pvKey(pv){
-            return pv.replace(':','_');
+        pvKey(pv) {
+            return pv.replace(':', '_');
         },
-    },
-
+    }
 }
-</script>
-
-<style scoped>
-
-</style>
