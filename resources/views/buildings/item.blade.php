@@ -8,18 +8,6 @@
 
 @section('content')
 
-    <style>
-
-        .meter-links li {
-            list-style-type: none;
-        }
-
-        ul.links.meter-links {
-            list-style: none;
-            padding-left: 20px;
-        }
-    </style>
-
     <script type="text/javascript" src="{!! asset('js/epics2web.js') !!}"></script>
     <script>
         window.epicsOptions = {
@@ -40,7 +28,6 @@
 
         <div class="col-lg-6">
             <div id="building-status"></div>
-
         </div>
     </div>
 

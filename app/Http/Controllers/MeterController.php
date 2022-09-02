@@ -46,9 +46,10 @@ class MeterController extends Controller
                     'ends' => $meter->reporter()->endsAt(),
                 ],
                 'currentModel' => $meter,
+                'metersData' => $this->meterData(collect()->push($meter)),
         ]);
 
-
+        //dd());
 
         return View::make('meters.item')
             ->with('meter', $meter);
