@@ -54,16 +54,19 @@ class BuildingController extends Controller
         return view('buildings.substation_summary');
     }
 
-    protected function meterData(Collection $meters){
-        $data = [];
-        foreach ($meters as $meter){
-            $data[] = [
-                'id' => $meter->id,
-                'type' => $meter->type,
-                'epics_name' => $meter->epics_name,
-                'pvs' => $meter->pvFields(),
+    // TODO consolidate this with meterData in MeterController
+    protected function meterData(Collection $meters)
+    {
+        return $meters->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'type' => $item->type,
+                'epics_name' => $item->epics_name,
+                'building' => $item->housed_by,
+                'modelNumber' => $item->model_number,
+                'pvs' => $item->pvFields(),
+
             ];
-        }
-        return $data;
+        });
     }
 }

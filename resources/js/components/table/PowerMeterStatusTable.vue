@@ -8,6 +8,12 @@
         </h4>
     </template>
     <b-table class="meter-data" small :items="meterItems" :fields="fields">
+
+        <!-- A custom formatted meter name column -->
+        <template #cell(meter)="data">
+            <b-link target="_blank" :href="meterLink(data.item.id)">{{data.value}}</b-link>
+        </template>
+
         <!-- A custom formatted column -->
         <template #cell(comms)="data">
             <comms-light :status="data.value" />
@@ -60,6 +66,7 @@ export default {
     computed: {
         meterItems() {
             return this.meters.map(item => {return {
+                id: item.id,
                 meter: item.epics_name,
                 comms: this.commErr(item.epics_name),
                 volt: this.voltage(item.epics_name),
