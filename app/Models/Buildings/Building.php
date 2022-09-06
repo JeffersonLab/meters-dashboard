@@ -129,6 +129,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
                         $inserted++;
                     } catch (\PDOException $e) {
                         Log::error($e);
+                        throw $e;
                     }
                 }
             }
