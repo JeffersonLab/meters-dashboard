@@ -3,15 +3,6 @@
 return [
 
     /*
-     * IMPORTANT NOTE
-     * In order to make the sidebar search work while waiting for the real fix in adminlte 3.2,
-     * we have to edit the public/vendor/adminlte/dist/js/adminlte.min.js file
-     *   search for escape(a.link) -> it will probably be in line 6, column 32987, position 33174
-     *   replace escape(a.link) by just a.link
-     * @see https://github.com/jeroennoten/Laravel-AdminLTE/issues/900
-     */
-
-    /*
     |--------------------------------------------------------------------------
     | Title
     |--------------------------------------------------------------------------
@@ -264,16 +255,16 @@ return [
 //            'text'         => 'search',
 //            'topnav_right' => true,
 //        ],
-        [
-            'type'         => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
+//        [
+//            'type'         => 'fullscreen-widget',
+//            'topnav_right' => true,
+//        ],
 
         // Sidebar items:
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
+//        [
+//            'type' => 'sidebar-menu-search',
+//            'text' => 'search',
+//        ],
         [   'text' => 'Reports',
             'url' => '/reports',
             'icon' => 'area-chart',
