@@ -2,6 +2,7 @@ export default {
     props: {
         meters: {type: Array, required: true},
         epicsCon: {type: Object, required: true},
+        withCommErrs: {type: Boolean, default: true}
     },
     data() {
         return {
@@ -35,14 +36,17 @@ export default {
         initPvs() {
             this.pvs = [];
             this.meters.forEach(item => {
-                this.pvs.push(item.epics_name + ':commErr')
                 item.pvs.forEach(pv => {
                     let pvName = item.epics_name + pv
                     this.pvs.push(pvName)
                     this.pvs.push(pvName + '.STAT')
                 })
+                if (this.withCommErrs){
+                    this.pvs.push(item.epics_name + ':commErr')
+                }
+
             })
-            //console.log('initPvs', this.pvs);
+            console.log('initPvs', this.pvs);
         },
         // Initialize the values array before handing it to epicsCon to start
         // receiving updates.
@@ -88,7 +92,7 @@ export default {
                 console.log(epicsData.detail.type)
             }
             //this.values[this.pvKey(epicsData.detail.pv)] = epicsData.detail;
-            //console.log(epicsData.detail);
+            console.log(epicsData.detail);
         },
         // Replaces problematic characters found in epics PV names to make them usable as
         // javascript variable names.

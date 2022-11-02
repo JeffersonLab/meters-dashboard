@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/',[
     'as' => 'home',
-    'uses' => 'BuildingController@index'
+    'uses' => 'BuildingController@siteMap'
 ]);
 
 
@@ -59,6 +59,11 @@ Route::get('reports',[
 Route::get('buildings',[
     'as' => 'buildings.index',
     'uses' => 'BuildingController@index'
+]);
+
+Route::get('map',[
+    'as' => 'buildings.map',
+    'uses' => 'BuildingController@siteMap'
 ]);
 
 Route::get('buildings/substation-summary',[

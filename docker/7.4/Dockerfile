@@ -1,4 +1,4 @@
-FROM ubuntu:21.04
+FROM ubuntu:20.04
 
 LABEL maintainer="Taylor Otwell"
 
@@ -55,7 +55,6 @@ RUN export NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/JLabCA.crt \
     && apt-get -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
- \
 
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php7.4
@@ -69,7 +68,5 @@ COPY php.ini /etc/php/7.4/cli/conf.d/99-sail.ini
 RUN chmod +x /usr/local/bin/start-container
 
 EXPOSE 8000
-
-
 
 ENTRYPOINT ["start-container"]

@@ -56,9 +56,15 @@ class MenuServiceProvider extends ServiceProvider
                 [
                     'text' => 'Site Map',
                     'icon' => 'fas fa-fw fa-map',
-                    'url' => route('buildings.index'),
+                    'url' => route('buildings.map'),
                 ]);
 
+            $event->menu->add(
+                [
+                    'text' => 'Building Status',
+                    'icon' => 'fas fa-fw fa-building',
+                    'url' => route('buildings.index'),
+                ]);
 
             $event->menu->add(['header' => 'READOUTS']);
 
@@ -145,7 +151,7 @@ class MenuServiceProvider extends ServiceProvider
     {
         $item = [
             'text' => $building->getPresenter()->menuLabel(),
-//            'icon' => 'fas fa-fw fa-building',
+            'icon' => 'fas fa-fw fa-building',
             'url' => route('buildings.show', $building->name)
         ];
 
