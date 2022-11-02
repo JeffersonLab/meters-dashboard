@@ -24,7 +24,7 @@
 
             <!-- A custom formatted column -->
             <template #cell(status)="data">
-                <alarm-light :status="data.value" />
+                <alarm-light :status="data.item.status" />
             </template>
 
 
@@ -56,6 +56,10 @@ export default {
                 {
                     key: 'status',
                     sortable: true,
+                    formatter: (value, key, item) => {
+                        return Math.floor(value.value)  // 0, 1, 2 for no, minor, major alarm of :alrmSum
+                    },
+                    sortByFormatted: true,
                 },
             ]
         }
