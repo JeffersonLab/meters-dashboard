@@ -21,8 +21,11 @@ export default {
             if (this.status.alarmState === 'HIGH' || this.status.alarmState === 'LOW'){
                 return 'warning'
             }
+            if (this.status.alarmState === 'NO_ALARM'){
+                return 'success'
+            }
             // Otherwise a count of zero comm errors is good
-            return this.status.value === 0 ? 'success' : 'secondary'
+            return Math.floor(this.status.value) === 0 ? 'success' : 'secondary'
         }
     }
 }
