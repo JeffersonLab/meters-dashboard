@@ -18,7 +18,19 @@ class BuildingController extends Controller
      * @return \Illuminate\Contracts\View\View
      */
     public function index() {
+        JavaScript::put([
+            'buildingsData' => $this->buildingStatusData(Building::all()),
+        ]);
         return View::make('buildings.index');
+    }
+
+    /**
+     * Display the buildings index page
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function siteMap() {
+        return View::make('buildings.map');
     }
 
     /**
@@ -52,6 +64,21 @@ class BuildingController extends Controller
 
     public function substationSummary(){
         return view('buildings.substation_summary');
+    }
+
+    // TODO consolidate this with meterData in MeterController
+    protected function buildingStatusData(Collection $buildings)
+    {
+        return $buildings->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'type' => $item->type,
+                'epics_name' => $item->name,
+                'building' => $item->name,
+                'buildingNumber' => $item->building_num,
+                'pvs' => [':alrmSum'],
+            ];
+        });
     }
 
     // TODO consolidate this with meterData in MeterController

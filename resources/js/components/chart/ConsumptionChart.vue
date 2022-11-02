@@ -1,10 +1,10 @@
 <template>
-    <div :id="id" style="height: 360px; width: 100%;"></div>
+    <div :id="id" style="min-height: 360px; width: 100%;"></div>
 </template>
 
 <script>
 
-var CanvasJS = require('../../canvasjs-3.6.6.min');
+let CanvasJS = require('../../canvasjs-3.6.6.min');
 CanvasJS = CanvasJS.Chart ? CanvasJS : window.CanvasJS;
 
 export default {
@@ -16,8 +16,8 @@ export default {
     },
     watch:{
         // When the data changes, we need to re-render the chart.
-        data(v) {
-            this.chart = new CanvasJS.Chart(this.id, this.chartOptions);
+        data() {
+            this.chart = new CanvasJS.Chart(this.id, this.chartOptions, null);
             this.chart.render()
         },
     },
@@ -38,7 +38,7 @@ export default {
         }
     },
     mounted: function () {
-        this.chart = new CanvasJS.Chart(this.id, this.chartOptions);
+        this.chart = new CanvasJS.Chart(this.id, this.chartOptions, null);
         this.chart.render()
         // Code below is so that a graph that was initially hidden in a tab can be drawn to correct size
         // relative to its container once it becomes visible.
@@ -53,7 +53,6 @@ export default {
     },
     methods: {
         onWindowResized(){
-            console.log('howdy from onWindowResize '+this.id)
             if (this.chart) {
                 this.chart.render()
             }

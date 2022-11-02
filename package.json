@@ -18,7 +18,7 @@
         "datatables.net-bs4": "^1.11.4",
         "flatpickr": "^4.5.2",
         "jquery": "^3.2",
-        "laravel-mix": "^6.0.6",
+        "laravel-mix": "^6.0.43",
         "lodash": "^4.17.19",
         "moment": "^2.24.0",
         "popper.js": "^1.14.7",

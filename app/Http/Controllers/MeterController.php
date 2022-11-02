@@ -30,26 +30,10 @@ class MeterController extends Controller
      */
     public function show(Meter $meter, Request $request) {
 
-
-
-        if ($request->has('month') && $request->has('year')){
-            $date = Carbon::create($request->input('year'), $request->input('month'),1,0,0,0);
-            $meter->reporter()->beginning($date);
-            $meter->reporter()->ending($date->addMonth());
-        }
-
-
         JavaScript::put([
-                'currentApiUrl' => route('meters.chart_data'),
-                'currentDateRange' => [
-                    'begins' => $meter->reporter()->beginsAt(),
-                    'ends' => $meter->reporter()->endsAt(),
-                ],
                 'currentModel' => $meter,
                 'metersData' => $this->meterData(collect()->push($meter)),
         ]);
-
-        //dd());
 
         return View::make('meters.item')
             ->with('meter', $meter);

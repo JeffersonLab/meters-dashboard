@@ -7,7 +7,7 @@ import CommsLight from "../table/CommsLight";
 import epicsWebStatusIcon from "../table/EpicsWebStatusIcon";
 
 export default {
-    props: ['meters', 'epicsData','epicsWebStatus','epicsWebStatus'],
+    props: ['meters', 'epicsData','epicsWebStatus'],
     components: {AlarmedReadback, CommsLight, epicsWebStatusIcon},
     computed: {
       fieldList(){
