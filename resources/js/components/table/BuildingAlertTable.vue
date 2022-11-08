@@ -57,6 +57,9 @@ export default {
                     key: 'status',
                     sortable: true,
                     formatter: (value, key, item) => {
+                        if (value.value === null || value.value === undefined || value.value === ''){
+                            return -1
+                        }
                         return Math.floor(value.value)  // 0, 1, 2 for no, minor, major alarm of :alrmSum
                     },
                     sortByFormatted: true,

@@ -1,31 +1,30 @@
 <template>
-    <b-icon-circle-fill scale="1" :variant="variant"></b-icon-circle-fill>
+    <b-icon-Square-fill scale="1" :variant="variant"></b-icon-Square-fill>
 </template>
 
 <script>
-import {BIcon, BIconCircleFill} from "bootstrap-vue";
+import {BIcon, BIconSquareFill} from "bootstrap-vue";
 
 export default {
     name: "AlarmLight",
     props: ['status'],
-    components: {BIcon, BIconCircleFill},
+    components: {BIcon, BIconSquareFill},
     computed: {
         variant() {
             // First check for the uninitialized status
             if (this.status.alarmState === null || this.status.alarmState === ""){
-                return 'secondary'   // gray for indeterminate
+                return 'light'   // gray for indeterminate
             }
-            if (this.status.alarmState === 'HIHI' || this.status.alarmState === 'LOLO'){
+            if (this.status.alarmState === 'HIHI' || Math.floor(this.status.value) === 2){
                 return 'danger'
             }
-            if (this.status.alarmState === 'HIGH' || this.status.alarmState === 'LOW'){
+            if (this.status.alarmState === 'HIGH' || Math.floor(this.status.value) === 1){
                 return 'warning'
             }
-            if (this.status.alarmState === 'NO_ALARM'){
+            if (this.status.alarmState === 'NO_ALARM' || Math.floor(this.status.value) === 0){
                 return 'success'
             }
-            // Otherwise a count of zero comm errors is good
-            return Math.floor(this.status.value) === 0 ? 'success' : 'secondary'
+            return 'light'  // white for no data
         }
     }
 }
