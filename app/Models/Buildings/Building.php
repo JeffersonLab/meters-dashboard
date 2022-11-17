@@ -29,7 +29,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
         'abbreviation' => 'max:20',
         'building_num' => 'max:20',
         'jlab_name' => 'max:80',
-        'square_footage' => 'numeric | min:0',
+        'square_footage' => 'nullable | numeric | min:0',
 
     );
 
