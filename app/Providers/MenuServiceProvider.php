@@ -95,6 +95,7 @@ class MenuServiceProvider extends ServiceProvider
                 ]
             );
             $event->menu->add(['header' => 'SUBSTATIONS']);
+
             $event->menu->add(
                 [
                     'text' => 'Substation Summary',
@@ -103,15 +104,11 @@ class MenuServiceProvider extends ServiceProvider
                     'url' => route('buildings.substation_summary'),
                 ]);
 
-//            $items = $this->substationMenuItems();
-//            $event->menu->add(
-//                [
-//                    'text' => 'Building List',
-//                    'icon' => 'fas fa-fw fa-building',
-//                    'label' => $items->count(),
-//                    'submenu' => $items->toArray()
-//                ]
-//            );
+            foreach ($this->substationMenuItems()->all() as $substation){
+                $event->menu->add($substation);
+            }
+
+
             $event->menu->add(['header' => 'BUILDINGS']);
 
             $items = $this->buildingMenuItems();
@@ -123,78 +120,108 @@ class MenuServiceProvider extends ServiceProvider
                     'submenu' => $items->toArray()
                 ]
             );
+
+            $event->menu->add(['header' => 'COOLING TOWERS']);
+            foreach ($this->coolingTowerMenuItems()->all() as $tower){
+                $event->menu->add($tower);
+            }
+
         });
     }
 
     /**
-     * Return the collection of items to build the menu containing
-     * buildings with their meters nested below.
+     * Return the collection of items for the Buildings menu.
      *
      * @return \Illuminate\Support\Collection|mixed|static
      */
     protected function buildingMenuItems(){
-//        if (Cache::has('menu-building-items')) {
-//            return Cache::get('menu-building-items');
-//        }
-
-//        $buildings = Building::with('meters')->get();
-        $buildings = Building::all();
-        $items = $buildings->sortBy('building_num')->map(function (Building $building) {
-            return $this->buildingMenuItem($building);
-        });
-//        Cache::put('menu-building-items', $items, $this->ttl);
-        return $items;
-
+        return $this->buildingsOfType('Building')->sortBy('building_num')
+            ->map(function (Building $building) {
+                return $this->buildingMenuItem($building);
+            });
     }
 
+    /**
+     * Return the collection of items for the Substations menu.
+     *
+     * @return \Illuminate\Support\Collection|mixed|static
+     */
+    protected function substationMenuItems(){
+        return $this->buildingsOfType('Substation')->sortBy('building_num')
+            ->map(function (Building $building) {
+                return $this->substationMenuItem($building);
+            });
+    }
+
+    /**
+     * Return the collection of items for the Cooling Towers menu.
+     *
+     * @return \Illuminate\Support\Collection|mixed|static
+     */
+    protected function coolingTowerMenuItems(){
+        return $this->buildingsOfType('CoolingTower')->sortBy('building_num')
+            ->map(function (Building $building) {
+                return $this->coolingTowerMenuItem($building);
+        });
+    }
+
+    /**
+     * Return a collection of buildings of specified type .
+     *
+     * @return \Illuminate\Support\Collection|mixed|static
+     */
+    protected function buildingsOfType($type){
+        return Building::where('type',$type)->get();
+    }
+
+    /**
+     * Return array representation of a substation menu item.
+     *
+     * @param Building $substation  - substations are a type of building
+     * @return array
+     */
+    public function substationMenuItem(Building $substation)
+    {
+        return [
+            'text' => $substation->name,
+            'icon' => 'fas fa-fw fa-gopuram',
+            'url' => route('buildings.show', $substation->name)
+        ];
+    }
+
+    /**
+     * Return array representation of a building menu item.
+     *
+     * @param Building $building
+     * @return array
+     */
     public function buildingMenuItem(Building $building)
     {
-        $item = [
+        return [
             'text' => $building->getPresenter()->menuLabel(),
             'icon' => 'fas fa-fw fa-building',
             'url' => route('buildings.show', $building->name)
         ];
-
-//        foreach ($building->powerMeters()->get()->all() as $meter){
-//            $item['submenu'][] = [
-//                'icon' => config('meters.icons.power.symbol'),
-//                'icon_color' => config('meters.icons.power.color'),
-//                'text' => $meter->epics_name,
-//                'url' => route('meters.show', $meter->id),
-//            ];
-//        }
-//
-//        foreach ($building->waterMeters()->get()->all() as $meter){
-//            $item['submenu'][] = [
-//                'icon' => config('meters.icons.water.symbol'),
-//                'icon_color' => config('meters.icons.water.color'),
-//                'text' => $meter->epics_name,
-//                'url' => route('meters.show', $meter->id),
-//            ];
-//        }
-//
-//        foreach ($building->gasMeters()->get()->all() as $meter){
-//            $item['submenu'][] = [
-//                'icon' => config('meters.icons.gas.symbol'),
-//                'icon_color' => config('meters.icons.gas.color'),
-//                'text' => $meter->epics_name,
-//                'url' => route('meters.show', $meter->id),
-//            ];
-//        }
-        return $item;
     }
 
-    public function meterMenuItem(Meter $meter)
+
+    /**
+     * Return array representation of a substation menu item.
+     *
+     * @param Building $tower  - substations are a type of building
+     * @return array
+     */
+    public function coolingTowerMenuItem(Building $tower)
     {
         return [
-            'text' => $meter->epics_name,
-            'url' => route('meters.show', $meter->id)
+            'text' => $tower->name,
+            'icon' => 'fas fa-fw fa-gopuram',
+            'url' => route('buildings.show', $tower->name)
         ];
     }
 
-
     public function getAlertLabel(){
-        if (env('APP_ENV') == 'testing'){
+        if (config('app.env') == 'testing' || config('app.env') == 'local'){
             return 'X';
         }
         if (Cache::has('menu-alert-label')) {
