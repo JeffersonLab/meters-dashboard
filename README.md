@@ -56,13 +56,21 @@ It is configured by default to mimic bldg 87 data.
 ```shell
 % docker exec meters-softioc caget 87-L2:commErr
 87-L2:commErr                  0
+
 % docker exec meters-softioc caget 87-L2:totkW
 87-L2:totkW                    13
+
 % docker exec meters-softioc caget 87-L2:llVolt
 87-L2:llVolt                   480
+
+% docker exec meters-softioc camonitor ioc:heartbeat
+ioc:heartbeat                  2022-12-01 19:05:24.634038 22
+ioc:heartbeat                  2022-12-01 19:05:25.634782 23
+
 % docker exec meters-softioc caput 87-L2:llVolt 501
 Old : 87-L2:llVolt                   480
 New : 87-L2:llVolt                   501
+
 % docker exec meters-softioc caget 87-L2:llVolt.STAT
 87-L2:llVolt.STAT              HIHI
 
