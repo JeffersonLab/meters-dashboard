@@ -29,9 +29,9 @@ class ReportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($name, Request $request) {
-
         $report = ReportFactory::make($name, $request);
         $view = $report->view();
+
         if ($report->hasExcel()){
             $view->with('excelUrl', $this->excelUrl($name, $request));
         }

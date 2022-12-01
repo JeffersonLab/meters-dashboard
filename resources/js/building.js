@@ -21,10 +21,33 @@ import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
 import MeterStatus from "./components/MeterStatus";
 import BuildingCharts from "./components/BuildingCharts";
 import MeterMonitor from "./components/MeterMonitor";
+import BuildingAlerts from "./components/BuildingAlerts";
 
 Vue.use(VueAxios, axios);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
+
+
+/**
+ * Create the Vue Component that will show epics status for a building's overall meter alarms status
+ */
+if (document.getElementById("building-alerts") !== null) {
+    const buildingVue = new Vue({
+        el: '#building-alerts',
+        components: {BuildingAlerts},
+        data: {
+            epicsCon,
+            metersData: jlab.buildingsData,
+            withCommErrs: false
+        },
+        template: `
+            <building-alerts
+                :meters="metersData"
+                :epics-con="epicsCon"
+            >
+            </building-alerts>`
+    });
+}
 
 
 /**

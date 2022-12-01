@@ -58,3 +58,11 @@ record(ao,"87-L2:commErr") {
         field(DTYP,"Soft Channel")
         field(VAL, "0")
 }
+record(ao,"AcceleratorMaintenanceSupport:alrmSum") {
+        field(DTYP,"Soft Channel")
+        field(VAL,"0")
+        field(HHSV,MAJOR)
+        field(HIHI,2)
+        field(HSV,MINOR)
+        field(HIGH,1)
+}

@@ -23,10 +23,12 @@ mix.js('resources/js/app.js', 'public/js')
     .vue()
     .sourceMaps();
 
-mix.js('resources/js/voltage.js', 'public/js').vue()
+mix.js('resources/js/voltage.js', 'public/js')
+    .vue()
     .sourceMaps();
 
-mix.js('resources/js/building.js', 'public/js').vue()
+mix.js('resources/js/building.js', 'public/js')
+    .vue()
     .sourceMaps();
 
 mix.copy('resources/js/meters.js','public/js/meters.js');

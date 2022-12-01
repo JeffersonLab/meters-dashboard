@@ -27,5 +27,8 @@ $fa-font-path: "../webfonts";
 .content-header h1 {
     text-align: center;
 }
-
+// Hide the top navbar of adminlte
+.navbar-expand {
+    display: none;
+}
 
