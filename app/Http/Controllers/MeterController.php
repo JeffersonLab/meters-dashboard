@@ -90,21 +90,6 @@ class MeterController extends Controller
     }
 
 
-    protected function meterData(Collection $meters){
-        return $meters->map(function ($item) {
-            return [
-              'id' => $item->id,
-              'type' => $item->type,
-              'epics_name' => $item->epics_name,
-              'building' => $item->housed_by,
-              'modelNumber' => $item->model_number,
-              'pvs' => $item->pvFields(),
-
-            ];
-        });
-
-    }
-
     public function powerStatusKwh()
     {
 

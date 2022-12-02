@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ConsumptionReportExport;
+use App\Models\Buildings\Building;
+use App\Models\Meters\Meter;
 use App\Reports\ReportFactory;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\View;
+use Laracasts\Utilities\JavaScript\JavaScriptFacade as JavaScript;
 use Maatwebsite\Excel\Facades\Excel;
-use \View;
-
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 
 class ReportController extends Controller
@@ -15,7 +21,7 @@ class ReportController extends Controller
     /**
      * Display the buildings index page
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function index() {
         return View::make('reports.index');
@@ -26,7 +32,7 @@ class ReportController extends Controller
      *
      * @param string $name - the name of the report to return
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Application|Factory|\Illuminate\Contracts\View\View|Collection|\Illuminate\View\View
      */
     public function show($name, Request $request) {
         $report = ReportFactory::make($name, $request);
@@ -35,7 +41,29 @@ class ReportController extends Controller
         if ($report->hasExcel()){
             $view->with('excelUrl', $this->excelUrl($name, $request));
         }
+
+        //TODO limit meters to relevant type for the report
+        JavaScript::put([
+            'reportTitle' => $report->title(),
+            'metersData' => $this->meterData(Meter::all()),
+            'buildingsData' => $this->buildingData(Building::all()),
+        ]);
+
         return $view->with('request', $request);
+    }
+
+    protected function buildingData(Collection $buildings)
+    {
+        return $buildings->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'type' => $item->type,
+                'name' => $item->name,
+                'epics_name' => $item->name,
+                'building' => $item->name,
+                'building_num' => $item->building_num,
+            ];
+        });
     }
 
 
@@ -44,7 +72,8 @@ class ReportController extends Controller
      *
      * @param string $name - the name of the report to return
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return BinaryFileResponse
+     * @throws \Exception
      */
     public function excel($name, Request $request) {
 

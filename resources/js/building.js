@@ -6,9 +6,7 @@ let jlab = window.jlab;
 let epicsCon = window.epicsCon;
 
 // console.log(jlab.metersData);
-// console.log('current', jlab.currentModel);
 
-//let metersData = jlab.powerMonitor;
 
 /**
  * And now we pull in Vue as the basis for our front-end components

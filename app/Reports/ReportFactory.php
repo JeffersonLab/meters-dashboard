@@ -19,6 +19,7 @@ class ReportFactory
     static function make($name, Request $request){
 
         switch ($name){
+            case 'power-consumption' : $report = new PowerConsumption(); break;
             case 'meter-power-consumption' : $report = new MeterPowerConsumption(); break;
             case 'building-power-consumption' : $report = new BuildingPowerConsumption(); break;
             case 'meter-water-consumption' : $report = new MeterWaterConsumption(); break;

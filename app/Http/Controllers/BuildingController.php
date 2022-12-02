@@ -66,34 +66,4 @@ class BuildingController extends Controller
         return view('buildings.substation_summary');
     }
 
-    // TODO consolidate this with meterData in MeterController
-    protected function buildingStatusData(Collection $buildings)
-    {
-        return $buildings->map(function ($item) {
-            return [
-                'id' => $item->id,
-                'type' => $item->type,
-                'epics_name' => $item->name,
-                'building' => $item->name,
-                'buildingNumber' => $item->building_num,
-                'pvs' => [':alrmSum'],
-            ];
-        });
-    }
-
-    // TODO consolidate this with meterData in MeterController
-    protected function meterData(Collection $meters)
-    {
-        return $meters->map(function ($item) {
-            return [
-                'id' => $item->id,
-                'type' => $item->type,
-                'epics_name' => $item->epics_name,
-                'building' => $item->housed_by,
-                'modelNumber' => $item->model_number,
-                'pvs' => $item->pvFields(),
-
-            ];
-        });
-    }
 }
