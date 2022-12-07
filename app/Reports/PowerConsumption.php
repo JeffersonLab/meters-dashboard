@@ -11,11 +11,13 @@ namespace App\Reports;
 
 
 use App\Models\Meters\Meter;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 /**
- * Class Consumption
+ * Class PowerConsumption
  *
- * Report on resource consumption for a set of meters between two dates.
+ * Report on power consumption for a set of meters between two dates.
  *
  * @package App\Reports
  */
@@ -24,21 +26,6 @@ class PowerConsumption extends Consumption
 
     protected $title = 'Power Consumption';
     protected $description = 'This report details electricity consumption on a per-meter basis over a user-specified time interval';
-    protected $pv = 'totkWh';  // default
-    protected $pvOptions = ['totkWh'=>'kWh','totMBTU'=>'MBTU'];
+    protected $pv = 'totkWh';
 
-    public function initItems()
-    {
-        $this->items = Meter::where('type', 'power')->get();
-        $this->itemType = 'meter';
-    }
-
-    /**
-     * Returns the view that should be used to render the report.
-     *
-     */
-    public function view(){
-        return view('reports.consumption')
-            ->with('report', $this);
-    }
 }
