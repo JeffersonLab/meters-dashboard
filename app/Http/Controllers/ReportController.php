@@ -46,13 +46,25 @@ class ReportController extends Controller
             $view->with('excelUrl', $this->excelUrl($name, $request));
         }
 
-        //TODO limit meters to relevant type for the report
+        // If the incoming request didn't provide begin and end date, we'll
+        // add them to the request now to indicate to the client what dates
+        // are being reported.
+        if (! $request->has('begin')){
+            $request->merge(['begin' => $report->beginsAt()]);
+        }
+        if (! $request->has('end')){
+            $request->merge(['end' => $report->endsAt()]);
+        }
+
+        // Export data for javascript client-side
         JavaScript::put([
             'request' => $request->all(),
             'reportTitle' => $report->title(),
             'metersData' => $this->getMeterData($report),
             'buildingsData' => $this->buildingData(Building::all()),
         ]);
+
+        // Return view with data for blade template.
         return $view->with('request', $request)->with('report', $report);
     }
 
