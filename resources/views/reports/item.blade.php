@@ -175,7 +175,7 @@
     <script>
         $(document).ready(function () {
             //$('.date-range input').datepicker({dateFormat: 'yy-mm-dd'});
-            $('.date-range input').flatpickr({ enableTime: true,  dateFormat: "Y-m-d H:i"});
+            // $('.date-range input').flatpickr({ enableTime: true,  dateFormat: "Y-m-d H:i"});
             $('.chart-select').on('change', jlab.meters.changeChart);
             $('.chart-box').each(jlab.meters.makeChart);
             $('table.meter-data').DataTable({
