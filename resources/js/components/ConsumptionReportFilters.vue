@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h1>{{ title }}</h1>
         <b-card>
         <b-form @submit="onSubmit" @reset="onReset">
             <b-form-row>
@@ -32,6 +31,7 @@
                                   v-model="selectedBuildings"
                                   :options="buildingOptions"
                                   placeholder="No building selected" />
+                        <template v-slot:description>Note: options are limited to buildings with appropriate meter type</template>
                     </b-form-group>
                 </b-col>
             </b-form-row>
@@ -59,8 +59,8 @@
 <script>
 
 export default {
-    name: "ConsumptionReport",
-    props: ['title', 'meters', 'buildings'],
+    name: "ConsumptionReportFilters",
+    props: ['request', 'title', 'meters', 'buildings'],
     data: function () {
         return {
             validated: false,
@@ -69,6 +69,13 @@ export default {
             selectedBuildings: [],   // buildings selected by the user
             selectedMeters: [],      // meters selected by the user
         }
+    },
+    // Upon creating we want to initialize the form fields with data from the request
+    created(){
+        this.beginDate = this.request.begin ? this.request.begin : null
+        this.endDate = this.request.end ? this.request.end : null
+        this.selectedMeters = this.requestedMeters
+        this.initSelectedBuildings()
     },
     watch: {
         // When a change happens to the selectedBuildings property, we will compare new and old values
@@ -87,6 +94,17 @@ export default {
         }
     },
     computed: {
+        requestedMeters(){
+          if (this.request.meters){
+              // Use the meter names from the request to lookup
+              // and return matching meter objects.
+              let items = this.request.meters.split(',')
+              return this.meterOptions.filter( meter => {
+                  return items.includes(meter.epics_name)
+              })
+          }
+          return []
+        },
         validBeginDate(){
             if (this.validated){
                 return this.beginDate != null
@@ -110,7 +128,12 @@ export default {
         },
         // Available buildings to select
         buildingOptions() {
-            return this.buildings.map(item => {
+            return this.buildings
+                .filter(item => {
+                    // Only include buildings with meters available
+                    return this.meterOptions.map( meter => meter.building).includes(item.name)
+                })
+                .map(item => {
                 return {
                     label: item.building_num + ' ' + item.name,
                     id: item.id,
@@ -118,6 +141,7 @@ export default {
                 }
             })
         },
+
         // Have any buildings been selected?
         hasSelectedBuildings() {
             return this.selectedBuildings.length > 0
@@ -161,6 +185,15 @@ export default {
         }
     },
     methods: {
+        initSelectedBuildings(){
+            // Only meters are included in a request, so to initialize which buildings are selected
+            // we must extract them from the attributes of the selected meters.
+            this.selectedBuildings = this.buildingOptions.filter( building => {
+                return this.selectedMeters.find( meter => {
+                    return meter.building === building.name
+                })
+            })
+        },
         // Returns the array of meters for buildingName
         metersOf(buildingName) {
             return this.meterOptions.filter(item => {
@@ -171,7 +204,7 @@ export default {
         selectMetersOf(buildingName) {
             let currentNames = this.selectedMeterNames.slice()       // make a copy before we start updating original
             this.metersOf(buildingName).forEach(item => {
-                if (!currentNames.includes(item.name)) {
+                if (!currentNames.includes(item.epics_name)) {
                     console.log('push ', item)
                     this.selectedMeters.push(item)
                 }
@@ -186,8 +219,7 @@ export default {
             this.validated = true
             if (this.hasValidForm){
                 const searchParams = new URLSearchParams(this.formData);
-                alert(searchParams.toString())
-                window.location.search += searchParams;
+                window.location.search = searchParams.toString();
             }
 
         },
