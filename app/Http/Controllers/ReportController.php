@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Exports\ConsumptionReportExport;
 use App\Models\Buildings\Building;
 use App\Models\Meters\Meter;
+use App\Reports\GasConsumption;
+use App\Reports\PowerConsumption;
 use App\Reports\ReportFactory;
+use App\Reports\ReportInterface;
+use App\Reports\WaterConsumption;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
@@ -44,14 +48,37 @@ class ReportController extends Controller
 
         //TODO limit meters to relevant type for the report
         JavaScript::put([
+            'request' => $request->all(),
             'reportTitle' => $report->title(),
-            'metersData' => $this->meterData(Meter::all()),
+            'metersData' => $this->getMeterData($report),
             'buildingsData' => $this->buildingData(Building::all()),
         ]);
-
-        return $view->with('request', $request);
+        return $view->with('request', $request)->with('report', $report);
     }
 
+    /**
+     * Return meter data for the types of meters that are appropriate for the report type.
+     * @param ReportInterface $report
+     * @return Collection|void
+     */
+    protected function getMeterData(ReportInterface $report)
+    {
+        if (is_a($report, PowerConsumption::class)){
+            return $this->meterData(Meter::where('type','power')->get());
+        }
+        if (is_a($report, WaterConsumption::class)){
+            return $this->meterData(Meter::where('type','water')->get());
+        }
+        if (is_a($report, GasConsumption::class)){
+            return $this->meterData(Meter::where('type','gas')->get());
+        }
+        $this->meterData(Meter::all());
+    }
+
+    /**
+     * @param Collection $buildings
+     * @return Collection
+     */
     protected function buildingData(Collection $buildings)
     {
         return $buildings->map(function ($item) {
@@ -63,7 +90,7 @@ class ReportController extends Controller
                 'building' => $item->name,
                 'building_num' => $item->building_num,
             ];
-        });
+        })->sortBy('building_num')->values();
     }
 
 
