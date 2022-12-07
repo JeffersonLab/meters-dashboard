@@ -12,7 +12,7 @@ import Vue from 'vue';
 import VueAxios from 'vue-axios';
 
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
-import ConsumptionReport from "./components/ConsumptionReport";
+import ConsumptionReportFilters from "./components/ConsumptionReportFilters";
 import vSelect from 'vue-select'
 
 Vue.use(VueAxios, axios);
@@ -23,19 +23,20 @@ Vue.component('v-select', vSelect)
 /**
  * Create the Vue Component that will show report data
  */
-if (document.getElementById("consumption-report") !== null) {
+if (document.getElementById("consumption-report-filters") !== null) {
     const consumptionReportVue = new Vue({
-        el: '#consumption-report',
-        components: {ConsumptionReport},
+        el: '#consumption-report-filters',
+        components: {ConsumptionReportFilters},
         data: {
             jlab,
         },
         template: `
-            <consumption-report
+            <consumption-report-filters
+                :request="jlab.request"
                 :title="jlab.reportTitle"
                 :meters="jlab.metersData"
                 :buildings="jlab.buildingsData"
             >
-            </consumption-report>`
+            </consumption-report-filters>`
     });
 }
