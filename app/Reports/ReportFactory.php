@@ -7,8 +7,6 @@
  */
 
 namespace App\Reports;
-
-
 use Illuminate\Http\Request;
 
 class ReportFactory
