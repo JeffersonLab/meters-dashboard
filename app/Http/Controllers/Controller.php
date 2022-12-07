@@ -23,7 +23,7 @@ class Controller extends BaseController
                 'pvs' => $item->pvFields(),
 
             ];
-        });
+        })->sortBy('epics_name')->values();
 
     }
 
