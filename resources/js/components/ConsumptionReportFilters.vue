@@ -31,7 +31,11 @@
                                   v-model="selectedBuildings"
                                   :options="buildingOptions"
                                   placeholder="No building selected" />
-                        <template v-slot:description>Note: options are limited to buildings with appropriate meter type</template>
+                        <template v-slot:description>
+                            Note: options are limited to buildings with appropriate meter type.
+                            Selecting or deselecting a building adds or removes all building meters from the
+                            Meter control below.
+                        </template>
                     </b-form-group>
                 </b-col>
             </b-form-row>
@@ -49,7 +53,8 @@
             </b-form-row>
             <b-form-row>
                 <b-button type="submit" variant="primary">Submit</b-button>
-                <b-button type="reset" variant="danger">Reset</b-button>
+                <b-button type="reset" variant="secondary">Reset</b-button>
+                <b-button @click="onClear" type="button" variant="danger">Clear</b-button>
             </b-form-row>
         </b-form>
         </b-card>
@@ -72,10 +77,7 @@ export default {
     },
     // Upon creating we want to initialize the form fields with data from the request
     created(){
-        this.beginDate = this.request.begin ? this.request.begin : null
-        this.endDate = this.request.end ? this.request.end : null
-        this.selectedMeters = this.requestedMeters
-        this.initSelectedBuildings()
+        this.initFromRequest()
     },
     watch: {
         // When a change happens to the selectedBuildings property, we will compare new and old values
@@ -185,6 +187,12 @@ export default {
         }
     },
     methods: {
+        initFromRequest(){
+            this.beginDate = this.request.begin ? this.request.begin : null
+            this.endDate = this.request.end ? this.request.end : null
+            this.selectedMeters = this.requestedMeters
+            this.initSelectedBuildings()
+        },
         initSelectedBuildings(){
             // Only meters are included in a request, so to initialize which buildings are selected
             // we must extract them from the attributes of the selected meters.
@@ -221,11 +229,16 @@ export default {
                 const searchParams = new URLSearchParams(this.formData);
                 window.location.search = searchParams.toString();
             }
-
         },
         onReset(event) {
             event.preventDefault()
             // Reset our form values
+            this.validated = false
+            this.initFromRequest()
+        },
+        onClear(event){
+            event.preventDefault()
+            // clear our form values
             this.validated = false,
             this.beginDate = null,
             this.endDate = null,
