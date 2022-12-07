@@ -24,6 +24,20 @@ class BuildingController extends Controller
         return View::make('buildings.index');
     }
 
+    protected function buildingStatusData(Collection $buildings)
+    {
+        return $buildings->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'type' => $item->type,
+                'epics_name' => $item->name,
+                'building' => $item->name,
+                'buildingNumber' => $item->building_num,
+                'pvs' => [':alrmSum'],
+            ];
+        });
+    }
+
     /**
      * Display the buildings index page
      *
