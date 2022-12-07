@@ -457,21 +457,68 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      */
     function firstDataOnOrBefore($field, Carbon $atDate)
     {
-        $query = $this->dataTable()
-            ->select(['date', $field])
-            ->where('meter_id', $this->id)
-            ->where('date', '<=', $atDate)
-            ->whereNotNull($field)
-            ->orderBy('date', 'desc')
-            ->limit(1);
+        $query = $this->lastDataQuery($field)
+            ->where('date', '<=', $atDate);
         $datum = $query->first();
-        //dd($query->toSql());
         if (isset($datum->date)) {
             $datum->date = Carbon::createFromFormat('Y-m-d H:i:s', $datum->date);
         }
         return $datum;
     }
 
+    /**
+     * Get the earliest available non-null data for the meter.
+     * Optionally restrict the context to a specific PV field.
+     * @param null $field
+     * @return Builder
+     * @throws \Exception
+     */
+    public function firstDataQuery($field = null)
+    {
+        // base query
+        $query = $this->baseFirstOrLastQuery(false);
+        // include a field in the select or just the date?
+        if ($field){
+            $query->addSelect($field)->whereNotNull($field);
+        }
+        // Return the prepared query object
+        return $query;
+    }
+
+    /**
+     * Get the earliest available non-null data for the meter.
+     * Optionally restrict the context to a specific PV field.
+     * @param null $field
+     * @return Builder
+     * @throws \Exception
+     */
+    public function lastDataQuery($field = null)
+    {
+        $query = $this->baseFirstOrLastQuery(true);
+        if ($field){
+            $query->addSelect($field);
+        }
+        return $query;
+    }
+
+    /**
+     * Returns a query to select the first or last date
+     * @param $last
+     * @return Builder
+     * @throws \Exception
+     */
+    protected function baseFirstOrLastQuery($last = false){
+        $query = $this->dataTable()
+            ->select('date')
+            ->where('meter_id', $this->id)
+            ->limit(1);
+        if ($last){
+            $query->orderBy('date', 'desc');
+        }else{
+            $query->orderBy('date');
+        }
+        return $query;
+    }
 
     /**
      * Return the timestamp and value of the first data value available
@@ -482,20 +529,53 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      */
     function firstDataOnOrAfter($field, Carbon $atDate)
     {
-        $query = $this->dataTable()
-            ->select(['date', $field])
-            ->where('meter_id', $this->id)
-            ->where('date', '>=', $atDate)
-            ->whereNotNull($field)
-            ->orderBy('date', 'asc')
-            ->limit(1);
+        $query = $this->firstDataQuery($field)
+            ->where('date', '>=', $atDate);
         $datum = $query->first();
-        //dd($query->toSql());
         if (isset($datum->date)) {
             $datum->date = Carbon::createFromFormat('Y-m-d H:i:s', $datum->date);
         }
         return $datum;
     }
+
+
+    /**
+     * Return the timestamp and value of the first data value available
+     * between two dates.
+     * @param $field
+     * @param Carbon $atDate
+     * @throws \Exception
+     */
+    function firstDataBetween($field, Carbon $beginDate, Carbon $endDate)
+    {
+        $query = $this->firstDataQuery($field)
+            ->whereBetween('date', [$beginDate, $endDate]);
+        $datum = $query->first();
+        if (isset($datum->date)) {
+            $datum->date = Carbon::createFromFormat('Y-m-d H:i:s', $datum->date);
+        }
+        return $datum;
+    }
+
+    /**
+     * Return the timestamp and value of the first data value available
+     * between two dates.
+     * @param $field
+     * @param Carbon $atDate
+     * @throws \Exception
+     */
+    function lastDataBetween($field, Carbon $beginDate, Carbon $endDate)
+    {
+        $query = $this->lastDataQuery($field)
+            ->whereBetween('date', [$beginDate, $endDate]);
+        $datum = $query->first();
+        if (isset($datum->date)) {
+            $datum->date = Carbon::createFromFormat('Y-m-d H:i:s', $datum->date);
+        }
+        return $datum;
+    }
+
+
 
     /**
      * Returns statistics for the given interval
