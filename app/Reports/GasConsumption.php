@@ -24,7 +24,7 @@ use Illuminate\Support\Collection;
 class GasConsumption extends Consumption
 {
 
-    protected $title = 'Water Consumption';
+    protected $title = 'Gas Consumption';
     protected $description = 'This report details gas consumption on a per-meter basis over a user-specified time interval';
     protected $pv = 'ccf';
 
