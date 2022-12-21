@@ -27,14 +27,6 @@ window._ = require('lodash');
 window.$ = window.jQuery = require('jquery');
 require('overlayscrollbars');
 require('bootstrap');
-require('datatables.net-bs4');
-
 require('../../vendor/almasaeed2010/adminlte/dist/js/adminlte');
 
-// let jlab = window.jlab;
-
-/**
- *  Finally, the app itself
- */
-
-
+require('datatables.net-bs4');
