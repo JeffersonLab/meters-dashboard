@@ -16,7 +16,7 @@ class SyncBuildings extends Command
      *
      * @var string
      */
-    protected $signature = 'meters:sync-buildings';
+    protected $signature = 'buildings:sync';
 
     /**
      * The console command description.

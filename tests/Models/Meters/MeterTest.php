@@ -217,7 +217,7 @@ class MeterTest extends TestCase
     /**
      * @test
      */
-    public function test_it_respects_major_and_minir_limits()
+    public function test_it_respects_major_and_minor_limits()
     {
         $meter = Meter::factory()->create(['type' => 'water', 'name' => 'm1', 'epics_name' => 'en1']);
         $limit = new MeterLimit([
@@ -243,6 +243,17 @@ class MeterTest extends TestCase
         $this->assertFalse($meter->withinLimits('gal', 10)); // less than minor low
         $this->assertFalse($meter->withinLimits('gal', 90)); // more than minor high
 
+    }
+
+    function test_it_performs_first_and_last_data_queries(){
+        $meter = Meter::factory()->create(['type' => 'water', 'begins_at' => Carbon::yesterday()->subDay(5)]);
+
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(9), 'gal' => 100]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(8), 'gal' => 200]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(1), 'gal' => 900]);
+
+        $this->assertEquals(100, $meter->firstDataQuery('gal')->first()->gal);
+        $this->assertEquals(900, $meter->lastDataQuery('gal')->first()->gal);
     }
 
 
@@ -319,6 +330,37 @@ class MeterTest extends TestCase
 
 
     }
+
+
+    /**
+     * @test
+     */
+    function test_it_returns_first_or_last_between()
+    {
+        $meter = Meter::factory()->create(['type' => 'water', 'begins_at' => Carbon::yesterday()->subDay(5)]);
+
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(9), 'gal' => 100]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(8), 'gal' => 200]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(7), 'gal' => 300]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(6), 'gal' => 400]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(5), 'gal' => 500]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(4), 'gal' => 600]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(3), 'gal' => 700]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(2), 'gal' => 800]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(1), 'gal' => 900]);
+
+        $data = $meter->firstDataBetween('gal', Carbon::today()->subDay(7), Carbon::today()->subDay(5));
+        $this->assertEquals(Carbon::today()->subDays(7), $data->date);
+        $this->assertEquals(300, $data->gal);
+
+        $data = $meter->lastDataBetween('gal', Carbon::today()->subDay(7), Carbon::today()->subDay(5));
+        $this->assertEquals(Carbon::today()->subDays(5), $data->date);
+        $this->assertEquals(500, $data->gal);
+
+    }
+
+
+
 
 
 }

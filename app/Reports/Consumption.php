@@ -12,6 +12,7 @@ namespace App\Reports;
 
 use App\Exports\ConsumptionReportExport;
 use App\Models\DataTables\DateRangeTrait;
+use App\Models\Meters\Meter;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -41,10 +42,6 @@ abstract class Consumption implements ReportInterface
      */
     protected $items;
 
-    /**
-     * @var string
-     */
-    protected $itemType;
 
     /**
      * The process variable being report upon (ex: totkWh, gal, etc.)
@@ -64,15 +61,9 @@ abstract class Consumption implements ReportInterface
 
     public function __construct()
     {
-        $this->initItems();
+        $this->items = new Collection();
         $this->defaultDates();
     }
-
-    /**
-     * Initialize the items collection.
-     * @return mixed
-     */
-    abstract function initItems();
 
 
     public function __get($var){
@@ -94,12 +85,13 @@ abstract class Consumption implements ReportInterface
     public function applyRequest(Request $request)
     {
         foreach ($request->all() as $filterName => $value) {
-
             $this->applyNamedFilter($filterName, $value);
-
         }
+        $this->updateItems();
         return $this;
     }
+
+
 
     /**
      * Uses the provided name and value to set up a report filter.
@@ -111,11 +103,22 @@ abstract class Consumption implements ReportInterface
     public function applyNamedFilter($filterName, $value)
     {
         switch ($filterName){
-            case 'start' : $this->beginning($value); break;
+            case 'begin' : $this->beginning($value); break;
             case 'end' : $this->ending($value); break;
             case 'pv'  : $this->pv = $value; break;
-            case 'names' : $this->makeNameFilter($value);
+            case 'meters' : $this->makeNameFilter($value);
         }
+    }
+
+    /**
+     * Update items property with fresh data from the database.
+     * For example after applying updated filters.
+     * @return void
+     */
+    protected function updateItems(){
+        $this->items = Meter::whereIn('epics_name',$this->nameFilter)
+            ->with('building')
+            ->orderBy('epics_name')->get();
     }
 
 
@@ -124,7 +127,7 @@ abstract class Consumption implements ReportInterface
      *
      */
     public function view(){
-        return view('reports.item')
+        return view('reports.consumption')
             ->with('report', $this);
     }
 
@@ -155,14 +158,6 @@ abstract class Consumption implements ReportInterface
         return $this->description;
     }
 
-    /**
-     * The type of item being reported (building, meter, etc.)
-     * @return mixed
-     */
-    public function itemType()
-    {
-        return $this->itemType;
-    }
 
     public function pvOptions(){
         return $this->pvOptions;
@@ -173,53 +168,27 @@ abstract class Consumption implements ReportInterface
      *
      * @return Collection
      */
-    public function data()
-    {
-        if ($this->hasFilters()){
-            return $this->filteredData();
-        }
-        return $this->allData();
-
-    }
-
-    /**
-     * Returns the data for all items.
-     *
-     * @return Collection
-     */
-    public function allData(){
+    public function data(){
         $data = new Collection();
         foreach ($this->items as $item) {
             $data->push($this->makeDataItem($item));
         }
-        return $data->sortBy(function ($item, $key) {
-            return $item->label;
+        return $data;
+    }
+
+    /**
+     * Return report data grouped by building.
+     * @return Collection
+     */
+    public function dataByBuilding(){
+        return $this->data()->sortBy('epics_name')->groupBy(function ($item, $key){
+            return $item->meter->building->building_num .' '. $item->meter->building->name;
         });
     }
 
 
     /**
-     * Returns the data for the filtered subset items.
-     *
-     * @return Collection
-     */
-    protected function filteredData(){
-        $data = new Collection();
-        foreach ($this->nameFilter as $name){
-            $found = $this->findItemByName($name);
-            if ($found){
-                $data->push($this->makeDataItem($found, $name));
-            }else{
-                $data->push($this->makeDataPlaceholder($name));
-            }
-        }
-        return $data;
-    }
-
-
-    /**
-     * Parses the provided string into an array of names to be used for filtering
-     * which items get reported.
+     * Parses the provided string into an array of meter names and stores it in nameFilter property
      *
      * @param $string
      */
@@ -242,7 +211,7 @@ abstract class Consumption implements ReportInterface
      * The provided name is tested against the name_alias, epics_name, and name
      * fields of the item in that order.
      *
-     * @param $name
+     * @param string $name
      * @return mixed
      */
     protected function findItemByName($name){
@@ -257,27 +226,24 @@ abstract class Consumption implements ReportInterface
 
     /**
      * Returns a record structure useful for outputting the report
-     *   item:  The model (meter, building) being reported upon.
+     *   meter:  The meter being reported upon.
      *   label: The label to be used in the report
      *   first: The first (value at initial date-time)
      *   last:  The first (value at final date-time)
-     *   url:   A URL to the itme's detail page
+     *   url:   A URL to the item's detail page
      *   consumed: The difference between last and first values
      *   isComplete: whether the data time span matches the requested time span
      *
-     * @param $model
-     * @param string $label -- specify non-standard label
+     * @param Meter $meter
      * @return object
      */
-    protected function makeDataItem($model, $label = ''){
-        $model->reporter()->beginning($this->begins_at);
-        $model->reporter()->ending($this->ends_at);
+    protected function makeDataItem(Meter $meter){
         $dataItem = [
-            'item' => $model,
-            'label' => ($label ? $label : $model->getPresenter()->reportLabel()),
-            'first' => $model->reporter()->firstData(),
-            'last' => $model->reporter()->lastData(),
-            'url' => $model->getPresenter()->url(),
+            'meter' => $meter,
+            'label' => $meter->epics_name,
+            'first' => $meter->firstDataBetween($this->pv, $this->begins_at, $this->ends_at),
+            'last' => $meter->lastDataBetween($this->pv, $this->begins_at, $this->ends_at),
+            'url' => $meter->getPresenter()->url(),
         ];
 
         // We set the items below after initializeing $dataItem so that we won't have
@@ -286,27 +252,6 @@ abstract class Consumption implements ReportInterface
         $dataItem['consumed'] = $this->consumed($dataItem['first'], $dataItem['last']);
         $dataItem['isComplete'] = $this->isComplete($dataItem['first'], $dataItem['last']);
         return (object) $dataItem;
-    }
-
-    /**
-     * Returns a mostly empty record with fields identical to those of makeDataItem().
-     *
-     * With the exception of label, all values are null.
-     *
-     * @param $label
-     * @return object
-     */
-    protected function makeDataPlaceholder($label){
-        $placeHolder = [
-            'item' => null,
-            'label' => $label,
-            'first' => null,
-            'last' => null,
-            'url' => null,
-            'consumed' => null,
-            'isComplete' => false,
-        ];
-        return (object) $placeHolder;
     }
 
 
@@ -327,7 +272,7 @@ abstract class Consumption implements ReportInterface
     }
 
     /**
-     * Returns true if the dates of first and last match
+     * Returns true if the dates of first and last data values match
      * the dates of the report beginning and ending.
      * @param object $first {date}
      * @param object $last {date}
@@ -343,7 +288,13 @@ abstract class Consumption implements ReportInterface
         return false;
     }
 
-    public function initialValue($item, $pv)
+    /**
+     * The initial value of the report PV at the beginning of the time interval.
+     * @param Meter $item
+     * @param string $pv
+     * @return null
+     */
+    public function initialValue(Meter $item, $pv)
     {
         $data = $item->reporter()->firstData();
         if (isset($data->$pv)) {
@@ -365,6 +316,7 @@ abstract class Consumption implements ReportInterface
 
     public function getExcelExport()
     {
+        //TODO verify the excel export still works.
         return new ConsumptionReportExport($this);
     }
 

@@ -30,6 +30,22 @@ record(calc,"480Meter") {
         field(CALC,"(A=510)?450:A+1")
         field(SCAN,"1 second")
 }
+record(ao,"ioc:heartbeat") {
+        field(DTYP,"Soft Channel")
+        # The DOL and OMSL fields go together to link this record
+        # to the Heartbeat VAL field.  The CP argument makes this record update
+        # synchronously with 480Meter rather than having a local
+        # scan task within this record.
+        field(DOL,"Heartbeat.VAL CP")
+        field(OMSL,"closed_loop")
+}
+# A record that constantly increments to mimic an ioc:heartbeat signal
+record(calc,"Heartbeat") {
+        field(VAL,1)
+        field(INPA,"Heartbeat.VAL")
+        field(CALC,"A+1")
+        field(SCAN,"1 second")
+}
 record(ao,"87-L1:totkW") {
         field(DTYP,"Soft Channel")
         field(VAL,10)

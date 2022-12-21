@@ -31,6 +31,10 @@ mix.js('resources/js/building.js', 'public/js')
     .vue()
     .sourceMaps();
 
+mix.js('resources/js/report.js', 'public/js')
+    .vue()
+    .sourceMaps();
+
 mix.copy('resources/js/meters.js','public/js/meters.js');
 mix.copy('resources/js/epics2web.js','public/js/epics2web.js');
 mix.copy('resources/js/odometer.min.js','public/js/odometer.min.js');
