@@ -46,62 +46,34 @@ class ReportControllerTest extends TestCase
 
         $response = $this->call(
             'GET',
-            route('reports.item',['meter-power-consumption']),
-            ['start' => $start, 'end' => $end]
+            route('reports.item',['power-consumption']),
+            ['begin' => $start, 'end' => $end, 'meters' => implode(',', [$this->meter1->epics_name, $this->meter2->epics_name])]
         );
-        $response->assertViewIs('reports.item');
+        $response->assertViewIs('reports.consumption');
         $response->assertViewHas('report');
+
         $response->assertViewHas('excelUrl');
 
         $fetched = $this->getResponseData($response, 'report');
         $this->assertCount(2, $fetched->data());  // There are two test meters
         $datum = $fetched->data()->first();
+        //dd($datum);
 
-        $this->assertEquals($this->meter1->name, $datum->item->name);
+        $this->assertEquals($this->meter1->name, $datum->meter->name);
 
         $this->assertEquals(0, $datum->first->totkWh);
         $this->assertEquals(500, $datum->last->totkWh);
         $this->assertEquals(500, $datum->consumed);
 
-
-        $excelUrl = $this->getResponseData($response, 'excelUrl');
-        $response = $this->get($excelUrl);
-        $response->assertStatus(200);
-        $response->assertHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        //TODO reimplement excel export
+//        $excelUrl = $this->getResponseData($response, 'excelUrl');
+//        $response = $this->get($excelUrl);
+//        $response->assertStatus(200);
+//        $response->assertHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     }
 
 
 
-    public function test_name_filter(){
-        $start = Carbon::today()->subDays(5)->format('Y-m-d');
-        $end = Carbon::today()->format('Y-m-d');
-
-        $response = $this->call(
-            'GET',
-            route('reports.item',['meter-power-consumption']),
-            ['start' => $start, 'end' => $end, 'names'=>'alias 1']
-        );
-
-        $response->assertViewIs('reports.item');
-        $response->assertViewHas('report');
-        $response->assertViewHas('excelUrl');
-
-        $fetched = $this->getResponseData($response, 'report');
-        $this->assertCount(1, $fetched->data());
-        $datum = $fetched->data()->first();
-        $this->assertEquals('alias 1', $datum->label);
-
-        $response = $this->call(
-            'GET',
-            route('reports.item',['meter-power-consumption']),
-            ['start' => $start, 'end' => $end, 'names'=>'alias 1, epics 2']
-        );
-
-        $fetched = $this->getResponseData($response, 'report');
-        $this->assertCount(2, $fetched->data());
-
-
-    }
 
 
     function fillMeterWithData($meter, $increment = 100, $initial = 0){

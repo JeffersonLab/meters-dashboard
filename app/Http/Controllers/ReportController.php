@@ -46,15 +46,11 @@ class ReportController extends Controller
             $view->with('excelUrl', $this->excelUrl($name, $request));
         }
 
-        // If the incoming request didn't provide begin and end date, we'll
-        // add them to the request now to indicate to the client what dates
-        // are being reported.
-        if (! $request->has('begin')){
-            $request->merge(['begin' => $report->beginsAt()]);
-        }
-        if (! $request->has('end')){
-            $request->merge(['end' => $report->endsAt()]);
-        }
+        // Force the request timestamps we tell the client to match what the report uses.
+        // NOTE: Always include time! If time is present then javascript will parse as local time
+        // whereas it will parse date only in UTC.
+        $request->merge(['begin' => $report->begins_at->format('Y-m-d H:i')]);
+        $request->merge(['end' => $report->ends_at->format('Y-m-d H:i')]);
 
         // Export data for javascript client-side
         JavaScript::put([

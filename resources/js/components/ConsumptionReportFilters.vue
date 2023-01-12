@@ -9,6 +9,7 @@
                                            v-model="beginDate" :state="validBeginDate"
                                            :date-format-options="{year: 'numeric', month: 'short', day: '2-digit'}"
                                            class="mb-2"/>
+                        <b-form-timepicker required id="begin-time" v-model="beginTime" />
                     </b-form-group>
                 </b-col>
                 <b-col>
@@ -17,10 +18,8 @@
                                            v-model="endDate" :state="validEndDate"
                                            :date-format-options="{year: 'numeric', month: 'short', day: '2-digit'}"
                                            class="mb-2" />
+                        <b-form-timepicker required id="end-time" v-model="endTime" />
                     </b-form-group>
-                </b-col>
-                <b-col>
-
                 </b-col>
             </b-form-row>
 
@@ -70,7 +69,9 @@ export default {
         return {
             validated: false,
             beginDate: null,
+            beginTime: null,
             endDate: null,
+            endTime: null,
             selectedBuildings: [],   // buildings selected by the user
             selectedMeters: [],      // meters selected by the user
         }
@@ -180,18 +181,29 @@ export default {
         //
         formData(){
             return {
-                begin: this.beginDate,
-                end: this.endDate,
+                begin: this.beginDate + ' ' + this.beginTime,
+                end: this.endDate + ' ' + this.endTime,
                 meters: this.selectedMeterNames.join(',')
             }
         }
     },
     methods: {
         initFromRequest(){
-            this.beginDate = this.request.begin ? this.request.begin : null
-            this.endDate = this.request.end ? this.request.end : null
+            this.beginDate = this.request.begin ? this.dateOnly(this.request.begin) : null
+            this.beginTime = this.request.begin ? this.timeOnly(this.request.begin) : null
+            this.endDate = this.request.end ? this.dateOnly(this.request.end) : null
+            this.endTime = this.request.end ? this.timeOnly(this.request.end) : null
             this.selectedMeters = this.requestedMeters
             this.initSelectedBuildings()
+        },
+        // Return the date portion of YYYY-MM-DD HH:MM string
+        dateOnly(dateTimeStr){
+            return dateTimeStr.split(' ')[0]
+        },
+        // Return the time portion of YYYY-MM-DD HH:MM string
+        timeOnly(dateTimeStr){
+            let time = dateTimeStr.split(' ')[1]
+            return time ? time : '00:00'
         },
         initSelectedBuildings(){
             // Only meters are included in a request, so to initialize which buildings are selected

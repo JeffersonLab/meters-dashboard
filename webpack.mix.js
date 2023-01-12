@@ -52,7 +52,7 @@ mix.copy('resources/css/odometer-theme-plaza.css','public/css/odometer-theme-pla
 // Directories
 mix.copy('resources/font-awesome-4.7.0','public/font-awesome-4.7.0');
 mix.copy('resources/img','public/img');
-mix.copy('resources/dt-1.10.15','public/dt-1.10.15');
+// mix.copy('resources/dt-1.10.15','public/dt-1.10.15');
 //mix.copy('node_modules/flatpickr/dist', 'public/flatpickr-dist');
 //mix.copy('node_modules/jquery-ui-dist', 'public/jquery-ui-dist');
-mix.copy('node_modules/select2/dist', 'public/select2-dist');
+// mix.copy('node_modules/select2/dist', 'public/select2-dist');

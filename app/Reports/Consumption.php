@@ -9,10 +9,10 @@
 namespace App\Reports;
 
 
-
 use App\Exports\ConsumptionReportExport;
 use App\Models\DataTables\DateRangeTrait;
 use App\Models\Meters\Meter;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -63,14 +63,31 @@ abstract class Consumption implements ReportInterface
     {
         $this->items = new Collection();
         $this->defaultDates();
+        $this->setDayStartHour();
     }
 
+    /**
+     * Updates begins_at and ends_at properties to use a specific hour of the day for reporting.
+     * For example to report on daily consumption from 8am - 8am as many utilities do rather than
+     * midnight - midnight.
+     * @param int $hour hour to use -- defaults to day_start_hour of reports config.
+     * @return void
+     */
+    protected function setDayStartHour(int $hour = null){
+        $hour = $hour ?: config('reports.day_start_hour');
+        $this->begins_at->hour = $hour;
+        $this->ends_at->hour = $hour;
+    }
 
-    public function __get($var){
-        switch($var){
-            case 'begins_at' : return $this->begins_at;
-            case 'ends_at' : return $this->ends_at;
-            case 'pv'       : return $this->pv;
+    public function __get($var)
+    {
+        switch ($var) {
+            case 'begins_at' :
+                return $this->begins_at;
+            case 'ends_at' :
+                return $this->ends_at;
+            case 'pv'       :
+                return $this->pv;
         }
         throw new \Exception('property not available');
     }
@@ -92,7 +109,6 @@ abstract class Consumption implements ReportInterface
     }
 
 
-
     /**
      * Uses the provided name and value to set up a report filter.
      *
@@ -102,12 +118,54 @@ abstract class Consumption implements ReportInterface
      */
     public function applyNamedFilter($filterName, $value)
     {
-        switch ($filterName){
-            case 'begin' : $this->beginning($value); break;
-            case 'end' : $this->ending($value); break;
-            case 'pv'  : $this->pv = $value; break;
-            case 'meters' : $this->makeNameFilter($value);
+        switch ($filterName) {
+            case 'begin' :
+                $this->beginning($value);
+                break;
+            case 'end' :
+                $this->ending($value);
+                break;
+            case 'pv'  :
+                $this->pv = $value;
+                break;
+            case 'meters' :
+                $this->makeNameFilter($value);
         }
+    }
+
+    /**
+     * Chainable method to set the beginning of the reporting date range.
+     * Overrides DateRangeTrait method of same name.
+     * @param string $date
+     * @return static
+     */
+    function beginning($date)
+    {
+        $this->begins_at = Carbon::parse($date);
+        if (! $this->dateStringIncludesTime($date)){
+              $this->begins_at->hour(config('reports.day_start_hour'));
+        }
+        return $this;
+    }
+
+    /**
+     * Chainable method to set the beginning of the reporting date range.
+     * Overrides DateRangeTrait method of same name.
+     * @param string $date
+     * @return static
+     */
+    function ending($date)
+    {
+        $this->ends_at = Carbon::parse($date);
+        if (! $this->dateStringIncludesTime($date)){
+            $this->ends_at->hour(config('reports.day_start_hour'));
+        }
+        return $this;
+    }
+
+
+    protected function dateStringIncludesTime(string $date){
+        return preg_match('/^(\d\d\d\d-\d\d-\d\d)\s(\d\d:\d\d).*$/', $date);
     }
 
     /**
@@ -115,8 +173,9 @@ abstract class Consumption implements ReportInterface
      * For example after applying updated filters.
      * @return void
      */
-    protected function updateItems(){
-        $this->items = Meter::whereIn('epics_name',$this->nameFilter)
+    protected function updateItems()
+    {
+        $this->items = Meter::whereIn('epics_name', $this->nameFilter)
             ->with('building')
             ->orderBy('epics_name')->get();
     }
@@ -126,7 +185,8 @@ abstract class Consumption implements ReportInterface
      * Returns the view that should be used to render the report.
      *
      */
-    public function view(){
+    public function view()
+    {
         return view('reports.consumption')
             ->with('report', $this);
     }
@@ -136,7 +196,8 @@ abstract class Consumption implements ReportInterface
      * The item names used to filter report output.
      * @return string
      */
-    public function names(){
+    public function names()
+    {
         return implode(",", $this->nameFilter);
     }
 
@@ -154,12 +215,14 @@ abstract class Consumption implements ReportInterface
      *
      * @return string
      */
-    public function description(){
+    public function description()
+    {
         return $this->description;
     }
 
 
-    public function pvOptions(){
+    public function pvOptions()
+    {
         return $this->pvOptions;
     }
 
@@ -168,7 +231,8 @@ abstract class Consumption implements ReportInterface
      *
      * @return Collection
      */
-    public function data(){
+    public function data()
+    {
         $data = new Collection();
         foreach ($this->items as $item) {
             $data->push($this->makeDataItem($item));
@@ -180,9 +244,10 @@ abstract class Consumption implements ReportInterface
      * Return report data grouped by building.
      * @return Collection
      */
-    public function dataByBuilding(){
-        return $this->data()->sortBy('epics_name')->groupBy(function ($item, $key){
-            return $item->meter->building->building_num .' '. $item->meter->building->name;
+    public function dataByBuilding()
+    {
+        return $this->data()->sortBy('epics_name')->groupBy(function ($item, $key) {
+            return $item->meter->building->building_num . ' ' . $item->meter->building->name;
         });
     }
 
@@ -192,7 +257,8 @@ abstract class Consumption implements ReportInterface
      *
      * @param $string
      */
-    protected function makeNameFilter($string){
+    protected function makeNameFilter($string)
+    {
         $this->nameFilter = array_filter(preg_split('/[,\r\n]+/', $string));
     }
 
@@ -200,8 +266,9 @@ abstract class Consumption implements ReportInterface
      * Have filters been specified?
      * @return bool
      */
-    protected function hasFilters(){
-        return ! empty($this->nameFilter);
+    protected function hasFilters()
+    {
+        return !empty($this->nameFilter);
     }
 
 
@@ -214,12 +281,13 @@ abstract class Consumption implements ReportInterface
      * @param string $name
      * @return mixed
      */
-    protected function findItemByName($name){
+    protected function findItemByName($name)
+    {
         return $this->items->first(function ($value, $key) use ($name) {
-            $key = trim($name, " \t\n\r\0\x0B," );
+            $key = trim($name, " \t\n\r\0\x0B,");
             return ($key == $value->getAttribute('name_alias')
-                    || $key == $value->getAttribute('epics_name')
-                    || $key == $value->getAttribute('name')
+                || $key == $value->getAttribute('epics_name')
+                || $key == $value->getAttribute('name')
             );
         });
     }
@@ -237,7 +305,8 @@ abstract class Consumption implements ReportInterface
      * @param Meter $meter
      * @return object
      */
-    protected function makeDataItem(Meter $meter){
+    protected function makeDataItem(Meter $meter)
+    {
         $dataItem = [
             'meter' => $meter,
             'label' => $meter->epics_name,
@@ -251,7 +320,7 @@ abstract class Consumption implements ReportInterface
         // using the local first and last values to compute consumption.
         $dataItem['consumed'] = $this->consumed($dataItem['first'], $dataItem['last']);
         $dataItem['isComplete'] = $this->isComplete($dataItem['first'], $dataItem['last']);
-        return (object) $dataItem;
+        return (object)$dataItem;
     }
 
 
