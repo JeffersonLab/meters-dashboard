@@ -216,7 +216,7 @@ class MenuServiceProvider extends ServiceProvider
         return [
             'text' => $tower->name,
             'icon' => 'fas fa-fw fa-gopuram',
-            'url' => route('buildings.show', $tower->name)
+            'url' => route('cooling_towers.show', $tower->name)
         ];
     }
 

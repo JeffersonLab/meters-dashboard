@@ -3,6 +3,7 @@
 namespace App\Models\Buildings;
 
 
+use App\Exceptions\ReportingException;
 use App\Models\BaseModel;
 use App\Models\DataTables\BuildingDataTableReporter;
 use App\Models\DataTables\DataTableCreator;
@@ -12,8 +13,10 @@ use App\Models\DataTables\DataTableTrait;
 use App\Models\Meters\Meter;
 use App\Presenters\BuildingPresenter;
 use App\Utilities\MySamplerData;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use phpDocumentor\Reflection\PseudoTypes\Numeric_;
 use Robbo\Presenter\PresentableInterface;
 
 class Building extends BaseModel implements PresentableInterface, DataTableInterface
@@ -85,6 +88,72 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
         return $this->metersOfType('water');
     }
 
+    public function waterSupplyMeters(){
+        return $this->waterMeters()->where('epics_name','LIKE', '%SUPPLY%');
+    }
+
+    public function waterDrainMeters(){
+        return $this->waterMeters()->where('epics_name', 'LIKE', '%DRAIN%');
+    }
+
+    /**
+     * The sum of the gallons through the building's water supply meters.
+     *
+     * @param Carbon $fromDate
+     * @param Carbon $toDate
+     * @return float
+     */
+    public function waterConsumption(Carbon $fromDate, Carbon $toDate): float{
+        $consumed = 0.0;
+        foreach ($this->waterSupplyMeters()->get() as $meter){
+            $consumed += $meter->consumedBetween('gal',$fromDate, $toDate);
+        }
+        return $consumed;
+    }
+
+    /**
+     * The sum of the gallons through the building's water drain meters.
+     *
+     * @param Carbon $fromDate
+     * @param Carbon $toDate
+     * @return float
+     */
+    public function waterToSewer(Carbon $fromDate, Carbon $toDate): float{
+        $consumed = 0.0;
+        foreach ($this->waterDrainMeters()->get() as $meter){
+            $consumed += $meter->consumedBetween('gal',$fromDate, $toDate);
+        }
+        return $consumed;
+    }
+
+    /**
+     * The sum of the gallons through the building's water drain meters.
+     *
+     * @param Carbon $fromDate
+     * @param Carbon $toDate
+     * @return float|null
+     */
+    public function waterToEvaporation(Carbon $fromDate, Carbon $toDate): float{
+        return $this->waterConsumption($fromDate, $toDate) - $this->waterToSewer($fromDate, $toDate);
+    }
+
+    /**
+     * The sum of the gallons through the building's water drain meters.
+     *
+     * @param Carbon $fromDate
+     * @param Carbon $toDate
+     * @return float|null
+     * @throws ReportingException
+     */
+    public function waterCyclesOfConcentration(Carbon $fromDate, Carbon $toDate): float{
+        $toSewer = $this->waterToSewer($fromDate, $toDate);
+        if ($toSewer != 0){
+            return $this->waterConsumption($fromDate, $toDate) / $toSewer;
+        }
+        throw new ReportingException('Divide by 0 error computing cycles of concentration');
+    }
+
+
     public function getPresenter()
     {
         return new BuildingPresenter($this);
@@ -117,8 +186,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
             // until we are all caught up.
             while (strtotime($this->nextDataDate()) < time()) {
                 $mySampler = new MySamplerData($this->nextDataDate(), $this->channels());
-                //var_dump($this->nextDataDate());
-                //var_dump($inserted);
                 $items = $mySampler->getData();
                 if ($items->isEmpty()){
                     break;  // must escape the while loop when no more data

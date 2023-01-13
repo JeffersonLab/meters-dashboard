@@ -9,20 +9,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
 use Laracasts\Utilities\JavaScript\JavaScriptFacade as JavaScript;
 
-class BuildingController extends Controller
+class CoolingTowerController extends Controller
 {
 
-    /**
-     * Display the buildings index page
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function index() {
-        JavaScript::put([
-            'buildingsData' => $this->buildingStatusData(Building::all()),
-        ]);
-        return View::make('buildings.index');
-    }
 
     protected function buildingStatusData(Collection $buildings)
     {
@@ -38,14 +27,6 @@ class BuildingController extends Controller
         });
     }
 
-    /**
-     * Display the buildings index page
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function siteMap() {
-        return View::make('buildings.map');
-    }
 
     /**
      * Display a building

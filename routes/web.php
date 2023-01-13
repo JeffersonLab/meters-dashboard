@@ -76,6 +76,11 @@ Route::get('buildings/{building}',[
     'uses' => 'BuildingController@show'
 ]);
 
+Route::get('cooling-towers/{building}',[
+    'as' => 'cooling_towers.show',
+    'uses' => 'CoolingTowerController@show'
+]);
+
 Route::get('/test', function () {
 //    dd(file_get_contents('http://epics2web:8080/epics2web/caget?pv=87-L1%3AllVolt'));
     return view('Test');

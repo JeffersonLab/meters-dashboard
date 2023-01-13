@@ -204,6 +204,10 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     public function save(array $options = [])
     {
         $saved = parent::save($options);
+        // Note that the presence if this DDL here means that save can't be called inside of a transaction
+        // because DDL statements implicitly close open transactions.  Calling this inside a transaction or
+        // inside saveOrFail (which creates a transaction to call save) will lead to error
+        // "There is no active transaction" because the DDL below closed it.
         if ($this->wasRecentlyCreated){
             (new DataTableCreator($this))->createTable();
         }
