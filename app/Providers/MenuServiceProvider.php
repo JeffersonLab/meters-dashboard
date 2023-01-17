@@ -135,7 +135,7 @@ class MenuServiceProvider extends ServiceProvider
      * @return \Illuminate\Support\Collection|mixed|static
      */
     protected function buildingMenuItems(){
-        return $this->buildingsOfType('Building')->sortBy('building_num')
+        return $this->buildingsOfType('Building')->sortBy('building_num',SORT_NATURAL)
             ->map(function (Building $building) {
                 return $this->buildingMenuItem($building);
             });
@@ -159,7 +159,7 @@ class MenuServiceProvider extends ServiceProvider
      * @return \Illuminate\Support\Collection|mixed|static
      */
     protected function coolingTowerMenuItems(){
-        return $this->buildingsOfType('CoolingTower')->sortBy('building_num')
+        return $this->buildingsOfType('CoolingTower')->sortBy('name',SORT_NATURAL)
             ->map(function (Building $building) {
                 return $this->coolingTowerMenuItem($building);
         });

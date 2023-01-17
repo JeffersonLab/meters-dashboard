@@ -261,7 +261,7 @@ abstract class Consumption implements ReportInterface
      */
     public function dataByBuilding()
     {
-        return $this->data()->sortBy('epics_name')->groupBy(function ($item, $key) {
+        return $this->data()->sortBy('epics_name',SORT_NATURAL)->groupBy(function ($item, $key) {
             return $item->meter->building->building_num . ' ' . $item->meter->building->name;
         });
     }

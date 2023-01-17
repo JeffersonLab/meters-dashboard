@@ -57,7 +57,7 @@ class ReportController extends Controller
             'request' => $request->all(),
             'reportTitle' => $report->title(),
             'metersData' => $this->getMeterData($report),
-            'buildingsData' => $this->buildingData(Building::all()),
+            'buildingsData' => $this->buildingData(Building::all()->sortBy('name',SORT_NATURAL)),
         ]);
 
         // Return view with data for blade template.
