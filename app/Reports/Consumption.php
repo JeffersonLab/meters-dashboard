@@ -252,6 +252,10 @@ abstract class Consumption implements ReportInterface
         return $data;
     }
 
+    public function warnings(){
+        return $this->warnings;
+    }
+
     /**
      * Return report data grouped by building.
      * @return Collection
