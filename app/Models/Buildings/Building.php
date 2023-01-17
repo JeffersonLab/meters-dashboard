@@ -150,7 +150,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
         if ($toSewer != 0){
             return $this->waterConsumption($fromDate, $toDate) / $toSewer;
         }
-        throw new ReportingException('Divide by 0 error computing cycles of concentration');
+        throw new ReportingException('Divide by 0 error computing cycles of concentration '.$this->id);
     }
 
 
