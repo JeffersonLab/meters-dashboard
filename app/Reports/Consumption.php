@@ -244,7 +244,7 @@ abstract class Consumption implements ReportInterface
             foreach ($this->items as $item) {
                 try{
                     $data->push($this->makeDataItem($item));
-                }catch (ReportingException $e){
+                }catch (\Exception $e){
                     $this->warnings->push($item->name . ' ' . $e->getMessage());
                 }
             }

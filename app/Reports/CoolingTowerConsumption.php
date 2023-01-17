@@ -32,7 +32,8 @@ class CoolingTowerConsumption extends Consumption
     public function __construct()
     {
         parent::__construct();
-        $this->nameFilter = Building::where('type','CoolingTower')->pluck('name')->all();
+        $this->nameFilter = Building::where('type','CoolingTower')
+        ->get()->pluck('name')->all();
     }
 
 
@@ -44,8 +45,8 @@ class CoolingTowerConsumption extends Consumption
     protected function updateItems()
     {
         $this->items = Building::whereIn('name', $this->nameFilter)
-            ->with('meters')
-            ->orderBy('name')->get();
+            ->with('meters')->get()
+            ->sortBy('name',SORT_NATURAL);
     }
 
     /**
