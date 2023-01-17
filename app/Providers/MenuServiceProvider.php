@@ -122,10 +122,16 @@ class MenuServiceProvider extends ServiceProvider
             );
 
             $event->menu->add(['header' => 'COOLING TOWERS']);
-            foreach ($this->coolingTowerMenuItems()->all() as $tower){
-                $event->menu->add($tower);
-            }
-
+            $items = $this->coolingTowerItems();
+            $event->menu->add(
+                [
+                    'text' => 'Cooling Tower List',
+                    'icon' => 'fas fa-fw fa-building',
+                    'label' => $items->count(),
+                    'submenu' => $items->toArray()
+                ]
+            );
+            
         });
     }
 
@@ -136,6 +142,18 @@ class MenuServiceProvider extends ServiceProvider
      */
     protected function buildingMenuItems(){
         return $this->buildingsOfType('Building')->sortBy('building_num',SORT_NATURAL)
+            ->map(function (Building $building) {
+                return $this->buildingMenuItem($building);
+            });
+    }
+
+    /**
+     * Return the collection of items for the Buildings menu.
+     *
+     * @return \Illuminate\Support\Collection|mixed|static
+     */
+    protected function coolingTowerItems(){
+        return $this->buildingsOfType('CoolingTower')->sortBy('name',SORT_NATURAL)
             ->map(function (Building $building) {
                 return $this->buildingMenuItem($building);
             });
