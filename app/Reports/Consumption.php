@@ -9,6 +9,7 @@
 namespace App\Reports;
 
 
+use App\Exceptions\ReportingException;
 use App\Exports\ConsumptionReportExport;
 use App\Models\DataTables\DateRangeTrait;
 use App\Models\Meters\Meter;
@@ -59,9 +60,15 @@ abstract class Consumption implements ReportInterface
     protected $pvOptions = array();
 
 
+    /**
+     * @var Collection
+     */
+    protected $warnings;
+
     public function __construct()
     {
         $this->items = new Collection();
+        $this->warnings = new Collection();
         $this->defaultDates();
         $this->setDayStartHour();
     }
@@ -234,9 +241,14 @@ abstract class Consumption implements ReportInterface
     public function data()
     {
         $data = new Collection();
-        foreach ($this->items as $item) {
-            $data->push($this->makeDataItem($item));
+        try{
+            foreach ($this->items as $item) {
+                $data->push($this->makeDataItem($item));
+            }
+        }catch (ReportingException $e){
+            $this->warnings->push($item->name . ' ' . $e->getMessage());
         }
+
         return $data;
     }
 
