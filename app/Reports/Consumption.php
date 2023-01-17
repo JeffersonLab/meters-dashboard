@@ -241,14 +241,13 @@ abstract class Consumption implements ReportInterface
     public function data()
     {
         $data = new Collection();
-        try{
             foreach ($this->items as $item) {
-                $data->push($this->makeDataItem($item));
+                try{
+                    $data->push($this->makeDataItem($item));
+                }catch (ReportingException $e){
+                    $this->warnings->push($item->name . ' ' . $e->getMessage());
+                }
             }
-        }catch (ReportingException $e){
-            $this->warnings->push($item->name . ' ' . $e->getMessage());
-        }
-
         return $data;
     }
 
