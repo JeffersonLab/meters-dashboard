@@ -246,7 +246,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
     /**
      * Removes from an array of field names those which do not apply to buildings.
      *
-     * The default assumption that a building has all of the
+     * The default assumption that a building has all the
      * pv fields of the meter types it houses may not be entirely
      * valid.  For example buildings with power meters do not
      * have an llVolt field.

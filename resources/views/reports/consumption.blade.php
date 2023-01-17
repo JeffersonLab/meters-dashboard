@@ -39,9 +39,7 @@
     <div id="consumption-report-filters"></div>
 
     <div class="card report">
-{{--        <div class="card-header">--}}
-{{--            <h3>{{$report->pv}}</h3>--}}
-{{--        </div>--}}
+
         <div class="card-body">
         {{--    {{dd($report->data())}}--}}
             <table class="meter-data table">

@@ -302,17 +302,17 @@ abstract class Consumption implements ReportInterface
      *   consumed: The difference between last and first values
      *   isComplete: whether the data time span matches the requested time span
      *
-     * @param Meter $meter
+     * @param Meter $model
      * @return object
      */
-    protected function makeDataItem(Meter $meter)
+    protected function makeDataItem($model)
     {
         $dataItem = [
-            'meter' => $meter,
-            'label' => $meter->epics_name,
-            'first' => $meter->firstDataBetween($this->pv, $this->begins_at, $this->ends_at),
-            'last' => $meter->lastDataBetween($this->pv, $this->begins_at, $this->ends_at),
-            'url' => $meter->getPresenter()->url(),
+            'meter' => $model,
+            'label' => $model->epics_name,
+            'first' => $model->firstDataBetween($this->pv, $this->begins_at, $this->ends_at),
+            'last' => $model->lastDataBetween($this->pv, $this->begins_at, $this->ends_at),
+            'url' => $model->getPresenter()->url(),
         ];
 
         // We set the items below after initializeing $dataItem so that we won't have

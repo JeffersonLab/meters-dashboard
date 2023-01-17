@@ -19,6 +19,9 @@
                         <li>{!! Html::meterIcon('power') !!} {!! link_to_route('reports.item','Power Consumption', ['power-consumption']) !!}</li>
                         <li>{!! Html::meterIcon('water') !!} {!! link_to_route('reports.item','Water Consumption', ['water-consumption']) !!}</li>
                         <li>{!! Html::meterIcon('gas') !!} {!! link_to_route('reports.item','Gas Consumption', ['gas-consumption']) !!}</li>
+                        <li>{!! Html::meterIcon('cooling-tower') !!}
+                            {!! link_to_route('reports.item','Cooling Tower Consumption', ['cooling-tower-consumption']) !!}
+                        </li>
                     </ul>
 
 {{--                    <h4>{!! Html::meterIcon('power') !!} Power</h4>--}}

@@ -20,6 +20,7 @@ class ReportFactory
             case 'power-consumption' : $report = new PowerConsumption(); break;
             case 'water-consumption' : $report = new WaterConsumption(); break;
             case 'gas-consumption' : $report = new GasConsumption(); break;
+            case 'cooling-tower-consumption' : $report = new CoolingTowerConsumption(); break;
             case 'multi-meter' : $report = new MultiMeter(); break;
             case 'mya-stats' : $report = new MyaStats(); break;
             default: $report = null;

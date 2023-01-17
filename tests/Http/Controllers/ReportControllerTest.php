@@ -21,7 +21,7 @@ class ReportControllerTest extends TestCase
             'epics_name' => 'epics 1',
             'name_alias' => 'alias 1',
             'type' => 'power',
-            'begins_at'=>Carbon::yesterday()->subDay(5),
+            'begins_at'=>Carbon::yesterday()->subDay(5)->hour(config('reports.day_start_hour')),
             'model_number' => 'ModelX',
         ]);
 
@@ -32,7 +32,7 @@ class ReportControllerTest extends TestCase
             'epics_name' => 'epics 2',
             'name_alias' => 'alias 2',
             'type' => 'power',
-            'begins_at'=>Carbon::yesterday()->subDay(4),
+            'begins_at'=>Carbon::yesterday()->subDay(4)->hour(config('reports.day_start_hour')),
             'model_number' => 'ModelX',
         ]);
 
@@ -41,6 +41,7 @@ class ReportControllerTest extends TestCase
 
     public function test_show()
     {
+//        dd(config('reports.day_start_hour'));
         $start = Carbon::today()->subDays(5)->format('Y-m-d');
         $end = Carbon::today()->format('Y-m-d');
 

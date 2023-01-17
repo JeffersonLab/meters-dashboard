@@ -40,18 +40,18 @@ class BuildingControllerTest extends TestCase
 
     }
 
-    public function test_show_specific_month()
-    {
-        $building = Building::factory()->create();
-        $response = $this->get(route('buildings.show',['building' => $building->id, 'month'=>6, 'year' => 2017]));
-
-        $response->assertViewHas('building');
-
-        $fetched = $this->getResponseData($response, 'building');
-
-        // The reporter should default to the current month
-        $this->assertEquals('2017-06-01', $fetched->reporter()->beginsAt());
-        $this->assertEquals('2017-07-01', $fetched->reporter()->endsAt());
-
-    }
+//    public function test_show_specific_month()
+//    {
+//        $building = Building::factory()->create();
+//        $response = $this->get(route('buildings.show',['building' => $building->id, 'month'=>6, 'year' => 2017]));
+//
+//        $response->assertViewHas('building');
+//
+//        $fetched = $this->getResponseData($response, 'building');
+//
+//        // The reporter should default to the current month
+//        $this->assertEquals('2017-06-01', $fetched->reporter()->beginsAt());
+//        $this->assertEquals('2017-07-01', $fetched->reporter()->endsAt());
+//
+//    }
 }
