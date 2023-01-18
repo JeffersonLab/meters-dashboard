@@ -31,11 +31,13 @@
         </div>
     </div>
 
+    @if ($building->type !== 'CoolingTower')
     <div class="row">
         <div class="col-lg-12">
             <div id="building-charts"></div>
         </div>
     </div>
+    @endif
 @stop
 
 
