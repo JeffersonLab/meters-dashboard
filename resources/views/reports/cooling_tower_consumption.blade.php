@@ -15,6 +15,7 @@
         }
     </style>
 
+    <div id="cooling-tower-report-filters"></div>
 
     <div class="card report">
 
@@ -67,4 +68,11 @@
 
         </div>
     </div>
+@stop
+
+@section('js')
+
+    @include('partials.jsvars')
+    <script src="{{asset('js/report.js')}}"></script>
+
 @stop

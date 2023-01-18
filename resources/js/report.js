@@ -13,6 +13,8 @@ import VueAxios from 'vue-axios';
 
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
 import ConsumptionReportFilters from "./components/ConsumptionReportFilters";
+import DateRangeFilterRow from "./components/DateRangeFilterRow.vue";
+import CoolingTowerReportFilters from "./components/CoolingTowerReportFilters.vue";
 import vSelect from 'vue-select'
 
 Vue.use(VueAxios, axios);
@@ -38,5 +40,21 @@ if (document.getElementById("consumption-report-filters") !== null) {
                 :buildings="jlab.buildingsData"
             >
             </consumption-report-filters>`
+    });
+}
+
+if (document.getElementById("cooling-tower-report-filters") !== null) {
+    const consumptionReportVue = new Vue({
+        el: '#cooling-tower-report-filters',
+        components: {CoolingTowerReportFilters},
+        data: {
+            jlab,
+        },
+        template: `
+            <cooling-tower-report-filters
+                :request="jlab.request"
+                :title="jlab.reportTitle"
+            >
+            </cooling-tower-report-filters>`
     });
 }
