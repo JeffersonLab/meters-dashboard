@@ -14,13 +14,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 
 Route::get('/meters/chart-data',[
     'as' => 'meters.chart_data',
     'uses' => 'ApiController@meterChartData'
+]);
+
+Route::get('/meters/table-data',[
+    'as' => 'meters.table_data',
+    'uses' => 'ApiController@meterTableData'
 ]);
 
 Route::get('/buildings/chart-data',[

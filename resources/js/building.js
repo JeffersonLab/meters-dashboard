@@ -20,6 +20,7 @@ import MeterStatus from "./components/MeterStatus";
 import BuildingCharts from "./components/BuildingCharts";
 import MeterMonitor from "./components/MeterMonitor";
 import BuildingAlerts from "./components/BuildingAlerts";
+import DataViewer from "./components/DataViewer.vue";
 
 Vue.use(VueAxios, axios);
 Vue.use(BootstrapVue);
@@ -83,6 +84,23 @@ if (document.getElementById("building-charts") !== null){
                         :meters="metersData"
                        >
                 </building-charts>`
+    });
+}
+
+/**
+ * Create the Vue Component that will let user plot charts of consumption data
+ */
+if (document.getElementById("data-viewer") !== null){
+    const dataViewerVue = new Vue({
+        el: '#data-viewer',
+        components: {DataViewer},
+        data: {
+            model: jlab.currentModel
+        },
+        template: `<data-viewer
+                        :model="model"
+                       >
+                </data-viewer>`
     });
 }
 

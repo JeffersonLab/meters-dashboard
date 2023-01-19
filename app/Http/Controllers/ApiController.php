@@ -7,6 +7,7 @@ use App\Http\Requests\ChartRequest;
 use App\Models\Buildings\Building;
 use App\Models\Meters\Meter;
 use App\Models\Meters\VirtualMeter;
+use Carbon\Carbon;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
@@ -23,6 +24,7 @@ class ApiController extends Controller
      */
     public function meterChartData(ChartRequest $request)
     {
+
         try{
             $meter = Meter::find($request->input('model_id'));
             $chart = ChartFactory::make($request->input('chart'), $meter, $request);
@@ -32,6 +34,33 @@ class ApiController extends Controller
         }
 
     }
+
+    /**
+     * Return data for a meter
+     *
+     * @param ChartRequest $request
+     * @return \Illuminate\Http\Response;
+     */
+    public function meterTableData(HttpRequest $request)
+    {
+
+        try{
+            $meter = Meter::find($request->input('model_id'));
+            return $this->response([
+                'request' => $request->all(),
+                'columns' => $meter->dataColumns(),
+                'data' => $meter->dataBetween(
+                    Carbon::parse($request->input('start')),
+                    Carbon::parse($request->input('end')),
+                    $request->input('granularity', 'daily'))->all()
+            ]);
+        }catch (\Exception $e){
+            return $this->error($e->getMessage());
+        }
+
+    }
+
+
 
 
     /**

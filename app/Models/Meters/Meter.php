@@ -16,6 +16,7 @@ use App\Presenters\GasMeterPresenter;
 use App\Utilities\MySamplerData;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Robbo\Presenter\PresentableInterface;
@@ -544,6 +545,47 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
 
 
     /**
+     * Columns to return for dataBetween queries
+     * @return array|string[]
+     */
+    public function dataColumns(){
+        return array_merge(['id','date'],$this->fields());
+    }
+
+    /**
+     *
+     * between two dates.
+     * @param Carbon $atDate
+     * @throws \Exception
+     */
+    function dataBetweenQuery(Carbon $beginDate, Carbon $endDate)
+    {
+        return $this->dataTable()
+            ->select($this->dataColumns())
+            ->where('meter_id', $this->id)
+            ->whereBetween('date', [$beginDate, $endDate])
+            ->orderBy('date');
+    }
+
+    function hourlyDataBetweenQuery(Carbon $beginDate, Carbon $endDate){
+        return $this->dataBetweenQuery($beginDate, $endDate)
+            ->whereRaw('minute(date) = 0');
+    }
+
+    function dailyDataBetweenQuery(Carbon $beginDate, Carbon $endDate){
+        return $this->hourlyDataBetweenQuery($beginDate, $endDate)
+            ->whereRaw('hour(date) = 0');
+    }
+
+    function dataBetween(Carbon $beginDate, Carbon $endDate, $granularity = null){
+        switch ($granularity){
+            case 'hourly': return $this->hourlyDataBetweenQuery($beginDate, $endDate)->get();
+            case 'daily' : return $this->dailyDataBetweenQuery($beginDate, $endDate)->get();
+            default:  return $this->dataBetweenQuery($beginDate, $endDate)->get();
+        }
+    }
+
+    /**
      * Return the timestamp and value of the first data value available
      * between two dates.
      * @param $field
@@ -686,7 +728,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
 
 
     /**
-     * Turns an array of field namese into an array of PV channel names
+     * Turns an array of field names into an array of PV channel names
      * by prepending the meter's epics name.
      *
      * @param array $fields
@@ -704,13 +746,19 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     }
 
     /**
-     * Returns the full list of PV channel names for the current meter.
+     * The list of fully qualified PV channel names for the current meter.
      *
      * @return array
      */
     public function channels()
     {
         return $this->makeChannels($this->pvFields());
+    }
+
+    public function fields(){
+        return array_map(function($val) {
+            return ltrim($val, ':');
+        }, $this->pvFields());
     }
 
     /**
