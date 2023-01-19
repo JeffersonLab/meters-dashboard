@@ -92,6 +92,9 @@ export default {
         nextMonth(){
             return this.thisMonth < 12 ? this.thisMonth + 1 : 1
         },
+        nextYear(){
+            return this.year + 1
+        },
         tableId(){
           return 'data_table_' + this.model.id
         },
