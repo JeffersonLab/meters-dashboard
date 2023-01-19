@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import DataTable from "./DataTable.vue";
+
 export default {
     name: "DataViewer",
     props: {
