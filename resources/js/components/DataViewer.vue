@@ -37,7 +37,6 @@ export default {
     props: {
       model: {required: true, type: Object},   // Of type building or meter
     },
-    components: { DataTable },
     created() {
         this.year = new Date().getFullYear()
         this.month = new Date().getMonth()  // Remember js January is month 0 !!
