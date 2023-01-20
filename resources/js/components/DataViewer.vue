@@ -6,14 +6,19 @@
                 <h4 class="mb-0 col-7" style="display: inline-block">
                     Data Table
                 </h4>
-                <b-form-select class="mb-0 col-2" :options="monthOptions" v-model="month"></b-form-select>
-                <b-form-select class="mb-0 col-2" :options="yearOptions" v-model="year"></b-form-select>
+                <year-month-select class="mb-0 col-4" :month="month" :year="year" :min-year="minYear"
+                    @selectMonth="(v) => month=v"
+                    @selectYear="(v) => year=v">
+                </year-month-select>
                 <b-form-select class="mb-0 col-1" :options="granularityOptions" v-model="granularity"></b-form-select>
             </div>
         </template>
 
-    <div style="display: flex; justify-content: center; align-items: center; height: 360px; width: 100%;" v-if="! hasData">
+    <div style="display: flex; justify-content: center; align-items: center; height: 360px; width: 100%;" v-if="isLoading">
         <b-spinner label="Loading..."></b-spinner>
+    </div>
+    <div style="display: flex; justify-content: center; align-items: center; height: 360px; width: 100%;" v-if="hasEmptyData">
+        <p>Empty Data Set</p>
     </div>
     <div>
         <b-pagination
@@ -31,25 +36,16 @@
 </template>
 
 <script>
-
+import YearMonthSelect from "./YearMonthSelect.vue";
 export default {
     name: "DataViewer",
+    components: {YearMonthSelect},
     props: {
       model: {required: true, type: Object},   // Of type building or meter
     },
     created() {
         this.year = new Date().getFullYear()
         this.month = new Date().getMonth()  // Remember js January is month 0 !!
-        // Populate the monthOptions
-        this.monthOptions = Array.from({length: 12}, (e, i) => {
-            let date = new Date(null, i + 1, null).toLocaleDateString("en", {month: "short"});
-            return {text: date, value: i}
-        })
-        // Populate the yearOptions
-        let maxYear = this.thisMonth === 12 ? this.year + 1 : this.year  // to support end date of nextYear-01-01
-        for (let i=this.minYear; i <= maxYear; i++){
-            this.yearOptions.push(i)
-        }
     },
     mounted() {
         this.getData()
@@ -101,6 +97,9 @@ export default {
         hasData(){
             return this.data.length > 0
         },
+        hasEmptyData(){
+            return this.data.length === 0 && ! this.isLoading
+        },
         hasPages(){
           return this.rows > this.perPage
         },
@@ -144,12 +143,11 @@ export default {
     },
     data() {
         return {
+            isLoading: true,
             minYear: 2021,
             year: null,
             month: null,
             granularity: 'daily',
-            yearOptions: [],
-            monthOptions: [],
             granularityOptions:['daily','hourly','all'],
              title: {
                 text: "Data Table"
@@ -161,9 +159,11 @@ export default {
     },
     methods: {
         getData(){
+            this.isLoading = true
             this.$http.get(this.queryUrl,{params:this.queryParams}).then((res) => {
-                this.data = res.data.data.data  //fist data is axios, 2nd is API, 3rd is payload
+                this.data = res.data.data.data  //first data is axios, 2nd is API, 3rd is payload
                 this.columns = res.data.data.columns
+                this.isLoading = false
             })
 
         }

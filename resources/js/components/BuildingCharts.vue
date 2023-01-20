@@ -6,8 +6,10 @@
                     <h4 class="mb-0 col-8" style="display: inline-block">
                         Consumption Charts
                     </h4>
-                    <b-form-select class="mb-0 col-2" :options="monthOptions" v-model="month"></b-form-select>
-                    <b-form-select class="mb-0 col-2" :options="yearOptions" v-model="year"></b-form-select>
+                    <year-month-select class="mb-0 col-4" :month="month" :year="year" :min-year="minYear"
+                                       @selectMonth="(v) => month=v"
+                                       @selectYear="(v) => year=v">
+                    </year-month-select>
                 </div>
             </template>
             <b-tabs pills card vertical>
@@ -42,37 +44,24 @@
 
 <script>
 import ConsumptionViewer from "./ConsumptionViewer";
-import moment from 'moment';
-
+import YearMonthSelect from "./YearMonthSelect.vue";
 export default {
     name: "BuildingCharts",
     props: {
         meters: {type: Array},
         building: {type: Object, required: true}
     },
-    components: {ConsumptionViewer},
+    components: {ConsumptionViewer,YearMonthSelect},
     data() {
         return {
             minYear: 2021,
             year: null,
             month: null,
-            yearOptions: [],
-            monthOptions: [],
         }
     },
     created() {
         this.year = new Date().getFullYear()
         this.month = new Date().getMonth()  // Remember js January is month 0 !!
-        // Populate the monthOptions
-        this.monthOptions = Array.from({length: 12}, (e, i) => {
-            let date = new Date(null, i + 1, null).toLocaleDateString("en", {month: "short"});
-            return {text: date, value: i}
-        })
-        // Populate the yearOptions
-        let maxYear = this.thisMonth === 12 ? this.year + 1 : this.year  // to support end date of nextYear-01-01
-        for (let i=this.minYear; i <= maxYear; i++){
-            this.yearOptions.push(i)
-        }
     },
     computed: {
         startDate() {

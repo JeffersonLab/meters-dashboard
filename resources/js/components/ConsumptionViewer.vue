@@ -3,6 +3,9 @@
     <div style="display: flex; justify-content: center; align-items: center; height: 360px; width: 100%;" v-if="! hasData">
         <b-spinner label="Loading..."></b-spinner>
     </div>
+    <div style="display: flex; justify-content: center; align-items: center; height: 360px; width: 100%;" v-if="hasEmptyData">
+        <p>Empty Data Set</p>
+    </div>
     <consumption-chart v-if="hasData" :title="title" :data="data" :id="chartId"/>
 </div>
 
@@ -36,6 +39,9 @@ export default {
         hasData(){
             return this.data.length > 0
         },
+        hasEmptyData(){
+            return this.data.length === 0 && ! this.isLoading
+        },
         queryUrl(){
           // The route() helper used below was imported as a global helper
           // via the @ziggy blade directive in layouts.default template
@@ -56,6 +62,7 @@ export default {
     },
     data() {
         return {
+            isLoading: true,
             title: {
                 text: "Consumption Chart"
             },
@@ -64,11 +71,12 @@ export default {
     },
     methods: {
         getData(){
+            this.isLoading = true
             this.$http.get(this.queryUrl,{params:this.queryParams}).then((res) => {
                 this.data = res.data.data.data  //fist data is axios, 2nd is API, 3rd is chartjs
                 this.title = res.data.data.title  //fist data is axios, 2nd is API
+                this.isLoading = false
             })
-
         }
     }
 }
