@@ -8,6 +8,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/JeffersonLab/laravel-utilities.git"
+        },
+        {
+            "type" : "vcs",
+            "url"  : "https://github.com/JeffersonLab/laravel-auth.git"
         }
     ],
     "require": {
@@ -19,6 +23,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "jeroennoten/laravel-adminlte": "^3.8",
         "jlab/laravel-utilities": "^8.4",
+        "jlab/auth" : "^8.01",
         "laracasts/utilities": "^3.2",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",

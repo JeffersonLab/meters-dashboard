@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::match(['GET','POST'],'/login',[
+    'as' => 'login',
+    'uses' => "AuthController@login"
+]);
+
+Route::get('/logout',[
+    'as' => 'logout',
+    'uses' => "AuthController@logout"
+]);
+
 
 Route::get('/',[
     'as' => 'home',
@@ -101,7 +111,6 @@ Route::get('/test', function () {
 });
 
 
-Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
