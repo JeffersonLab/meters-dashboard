@@ -46,19 +46,31 @@ class MenuServiceProvider extends ServiceProvider
 
             if (!Auth::user()) {
                 $event->menu->add(
-                    ['text' => 'Login',
+                    ['text' => 'Not Authenticated',
                         'url' => '/login',
                         'icon' => 'fas fa-fw fa-user',
                         'icon_color' => 'blue',
+                        'submenu' => [
+                            ['text' => 'Login',
+                                'url' => '/login',
+                                'icon' => 'fas fa-fw fa-power-off',
+                                'icon_color' => 'white',]
+                        ]
                     ]);
             }
 
             if (Auth::user()) {
                 $event->menu->add(
-                    ['text' => 'Logout ' . Auth::user()->username,
-                        'url' => '/logout',
+                    [
+                        'text' => Auth::user()->username,
                         'icon' => 'fas fa-fw fa-user',
                         'icon_color' => 'blue',
+                        'submenu' => [
+                            ['text' => 'Logout',
+                            'url' => '/logout',
+                            'icon' => 'fas fa-fw fa-power-off',
+                            'icon_color' => 'white',]
+                        ]
                     ]);
             }
 

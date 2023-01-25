@@ -3,14 +3,10 @@
 
 @section('content_header')
     @if (session()->get('error'))
-        <div class="alert alert-danger">
-            {{session()->get('error')}}
-        </div>
+        @include('partials.alert',['variant' => 'danger', 'message'=>session()->get('error')])
     @endif
     @if (session()->get('success'))
-        <div class="alert alert-success">
-            {{session()->get('success')}}
-        </div>
+        @include('partials.alert',['variant' => 'success', 'message'=>session()->get('success')])
     @endif
 @stop
 
