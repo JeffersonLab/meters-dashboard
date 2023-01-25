@@ -31,7 +31,10 @@
         </div>
 
         <div class="col-lg-6">
-                <div id="building-status"></div>
+            <div id="building-status"></div>
+            @if ($meter->hasRolloverEvents())
+                @include('box.rollover', ['model' => $meter])
+            @endif
         </div>
     </div>
 

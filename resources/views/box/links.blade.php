@@ -10,7 +10,6 @@ $title - title for the card
     <div class="card-header">
         <h3 class="card-title">{{isset($title) ? $title : 'Links'}}</h3>
     </div>
-    <!-- /.card-header -->
     <div class="card-body">
         <ul class="links">
             @foreach ($links as $link)
@@ -18,8 +17,5 @@ $title - title for the card
             @endforeach
         </ul>
     </div>
-    <!-- /.card-body -->
-
-
 </div>
-<!-- /.card -->
+
