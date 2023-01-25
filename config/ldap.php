@@ -44,14 +44,15 @@ return [
             'settings' => [
                 'schema' => \Adldap\Schemas\OpenLDAP::class,
                 'hosts' => explode(' ', env('CUE_LDAP_HOSTS', 'jlds-web.jlab.org')),
-                'port' => env('CUE_LDAP_PORT', 636),
+                'port' => env('CUE_LDAP_PORT', 389),
                 'timeout' => env('CUE_LDAP_TIMEOUT', 10),
                 'base_dn' => env('CUE_LDAP_BASE_DN', 'DC=lds,DC=jlab,DC=org'),
                 'follow_referrals' => true,
-                'use_ssl' => env('CUE_LDAP_USE_SSL', true),
+                'use_ssl' => env('CUE_LDAP_USE_SSL', false),
                 'use_tls' => env('CUE_LDAP_USE_TLS', false),
                 'custom_options'   => [
-                    LDAP_OPT_X_TLS_REQUIRE_CERT => env('CUE_LDAPTLS_REQCERT',1),
+                    LDAP_OPT_X_TLS_REQUIRE_CERT => env('CUE_LDAPTLS_REQCERT',0),
+                    LDAP_OPT_X_TLS_CACERTFILE => env('CUE_LDAP_TLS_CACERTFILE','/etc/pki/tls/cert.pem'),
                 ]
             ],
         ],
