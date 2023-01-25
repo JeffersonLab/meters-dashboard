@@ -13,7 +13,6 @@ import VueAxios from 'vue-axios';
 
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
 import ConsumptionReportFilters from "./components/ConsumptionReportFilters";
-import DateRangeFilterRow from "./components/DateRangeFilterRow.vue";
 import CoolingTowerReportFilters from "./components/CoolingTowerReportFilters.vue";
 import vSelect from 'vue-select'
 
