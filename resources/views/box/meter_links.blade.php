@@ -10,7 +10,6 @@ $title - title for the card
     <div class="card-header with-border">
         <h3 class="card-title">Meters</h3>
     </div>
-    <!-- /.card-header -->
     <div class="card-body">
         <ul class="links meter-links">
             @foreach ($building->powerMeters->sortBy('epics_name') as $meter)
@@ -24,8 +23,5 @@ $title - title for the card
             @endforeach
         </ul>
     </div>
-    <!-- /.card-body -->
-
-
 </div>
-<!-- /.card -->
+

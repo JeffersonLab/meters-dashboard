@@ -376,6 +376,10 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         return false;
     }
 
+    function hasRolloverEvents(){
+        return $this->rolloverEvents->isNotEmpty();
+    }
+
     function rolloverIncrement($field)
     {
         $key = 'meters.rollover.' . $this->model_number . '.' . $field;
