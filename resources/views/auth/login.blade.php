@@ -10,10 +10,15 @@
 
 <div class="card mx-auto w-50">
     <div class="card-header">
-        <h3 class="center">Login Form</h3>
+        <h3 class="center">Please Login</h3>
     </div>
     <div class="row>">
         &nbsp;
+    </div>
+    <div class="row">
+       <div class="offset-1 col">
+           <p>Please provide your JLAB username and either your CUE or Accelerator password in order to authenticate.</p>
+       </div>
     </div>
 
     <form method="POST" action="{{ route('login') }}">
