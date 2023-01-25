@@ -7,6 +7,7 @@ use App\Alerts\ServiceAlertRepository;
 use App\Models\Buildings\Building;
 use App\Models\Meters\Meter;
 use App\Utilities\NagiosServicelist;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
@@ -43,14 +44,37 @@ class MenuServiceProvider extends ServiceProvider
         // Listen for menu being built event so that we can inject dynamic items into it.
         Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
 
+            if (!Auth::user()) {
+                $event->menu->add(
+                    ['text' => 'Login',
+                        'url' => '/login',
+                        'icon' => 'fas fa-fw fa-user',
+                        'icon_color' => 'blue',
+                    ]);
+            }
+
+            if (Auth::user()) {
+                $event->menu->add(
+                    ['text' => 'Logout ' . Auth::user()->username,
+                        'url' => '/logout',
+                        'icon' => 'fas fa-fw fa-user',
+                        'icon_color' => 'blue',
+                    ]);
+            }
+
             $event->menu->add(
-                [   'text' => 'Alerts',
+                ['text' => 'Alerts',
                     'url' => '/alerts',
                     'icon' => 'warning',
                     'icon_color' => 'orange',
                     'label' => $this->getAlertLabel(),
                 ]);
-
+            $event->menu->add(
+                ['text' => 'Reports',
+                    'url' => '/reports',
+                    'icon' => 'area-chart',
+                    'icon_color' => 'green'
+                ]);
 
             $event->menu->add(
                 [
@@ -104,7 +128,7 @@ class MenuServiceProvider extends ServiceProvider
                     'url' => route('buildings.substation_summary'),
                 ]);
 
-            foreach ($this->substationMenuItems()->all() as $substation){
+            foreach ($this->substationMenuItems()->all() as $substation) {
                 $event->menu->add($substation);
             }
 
@@ -131,7 +155,7 @@ class MenuServiceProvider extends ServiceProvider
                     'submenu' => $items->toArray()
                 ]
             );
-            
+
         });
     }
 
@@ -140,8 +164,9 @@ class MenuServiceProvider extends ServiceProvider
      *
      * @return \Illuminate\Support\Collection|mixed|static
      */
-    protected function buildingMenuItems(){
-        return $this->buildingsOfType('Building')->sortBy('building_num',SORT_NATURAL)
+    protected function buildingMenuItems()
+    {
+        return $this->buildingsOfType('Building')->sortBy('building_num', SORT_NATURAL)
             ->map(function (Building $building) {
                 return $this->buildingMenuItem($building);
             });
@@ -152,8 +177,9 @@ class MenuServiceProvider extends ServiceProvider
      *
      * @return \Illuminate\Support\Collection|mixed|static
      */
-    protected function coolingTowerItems(){
-        return $this->buildingsOfType('CoolingTower')->sortBy('name',SORT_NATURAL)
+    protected function coolingTowerItems()
+    {
+        return $this->buildingsOfType('CoolingTower')->sortBy('name', SORT_NATURAL)
             ->map(function (Building $building) {
                 return $this->buildingMenuItem($building);
             });
@@ -164,7 +190,8 @@ class MenuServiceProvider extends ServiceProvider
      *
      * @return \Illuminate\Support\Collection|mixed|static
      */
-    protected function substationMenuItems(){
+    protected function substationMenuItems()
+    {
         return $this->buildingsOfType('Substation')->sortBy('building_num')
             ->map(function (Building $building) {
                 return $this->substationMenuItem($building);
@@ -176,11 +203,12 @@ class MenuServiceProvider extends ServiceProvider
      *
      * @return \Illuminate\Support\Collection|mixed|static
      */
-    protected function coolingTowerMenuItems(){
-        return $this->buildingsOfType('CoolingTower')->sortBy('name',SORT_NATURAL)
+    protected function coolingTowerMenuItems()
+    {
+        return $this->buildingsOfType('CoolingTower')->sortBy('name', SORT_NATURAL)
             ->map(function (Building $building) {
                 return $this->coolingTowerMenuItem($building);
-        });
+            });
     }
 
     /**
@@ -188,14 +216,15 @@ class MenuServiceProvider extends ServiceProvider
      *
      * @return \Illuminate\Support\Collection|mixed|static
      */
-    protected function buildingsOfType($type){
-        return Building::where('type',$type)->get();
+    protected function buildingsOfType($type)
+    {
+        return Building::where('type', $type)->get();
     }
 
     /**
      * Return array representation of a substation menu item.
      *
-     * @param Building $substation  - substations are a type of building
+     * @param Building $substation - substations are a type of building
      * @return array
      */
     public function substationMenuItem(Building $substation)
@@ -226,7 +255,7 @@ class MenuServiceProvider extends ServiceProvider
     /**
      * Return array representation of a substation menu item.
      *
-     * @param Building $tower  - substations are a type of building
+     * @param Building $tower - substations are a type of building
      * @return array
      */
     public function coolingTowerMenuItem(Building $tower)
@@ -238,14 +267,15 @@ class MenuServiceProvider extends ServiceProvider
         ];
     }
 
-    public function getAlertLabel(){
-        if (config('app.env') == 'testing' || config('app.env') == 'local'){
+    public function getAlertLabel()
+    {
+        if (config('app.env') == 'testing' || config('app.env') == 'local') {
             return 'X';
         }
         if (Cache::has('menu-alert-label')) {
             return Cache::get('menu-alert-label');
         }
-        try{
+        try {
             $count = 0;
             $serviceAlertRepo = new ServiceAlertRepository(new NagiosServicelist());
             $count += $serviceAlertRepo->alerts()->count();
@@ -254,7 +284,7 @@ class MenuServiceProvider extends ServiceProvider
             $label = ($count ? $count : '');
             Cache::put('menu-alert-label', $label, $this->ttl);
             return $label;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             Log::error($e);
         }
         return '!';

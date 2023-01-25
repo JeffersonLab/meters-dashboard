@@ -265,11 +265,11 @@ return [
 //            'type' => 'sidebar-menu-search',
 //            'text' => 'search',
 //        ],
-        [   'text' => 'Reports',
-            'url' => '/reports',
-            'icon' => 'area-chart',
-            'icon_color' => 'green'
-        ],
+//        [   'text' => 'Reports',
+//            'url' => '/reports',
+//            'icon' => 'area-chart',
+//            'icon_color' => 'green'
+//        ],
 //        ['header' => 'account_settings'],
 //        [
 //            'text' => 'profile',
@@ -321,7 +321,7 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => true,
+            'active' => false,
             'files' => [
                 [
                     'type' => 'js',
