@@ -59,7 +59,7 @@ class DataTableCreator
             // The columns that are meter-type specific can be
             // obtained from the meter pv list.  As of now we
             // have only floating point PVs in use.
-            foreach ($this->model->pvFields() as $field) {
+            foreach ($this->model->dbFields() as $field) {
                 $columnName = substr($field, 1);  //to strip initial ":"
                 $table->double($columnName)->nullable();
             }

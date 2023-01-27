@@ -68,7 +68,6 @@ class DataTableReporter
         $dataSeries = new Collection();
         foreach ($data as $datum) {
             if ($previous !== null) {
-                /** @noinspection PhpUndefinedFieldInspection */
                 $dataSeries->push((object)[
                     'label' => $previous->label,
                     'value' => $this->odometerDifference($previous->value, $datum->value)
@@ -99,7 +98,7 @@ class DataTableReporter
             // A meter transitioning from a positive value to exactly 0 seems
             // generally not to be the result of odometer rollover,
             // but a sign of something being reset and/or initialized
-            // back to 0.  Therefore we will treat it as missing data and
+            // back to 0.  We will treat it as missing data and
             // return null.
             if ($y == 0){
                 return null;
@@ -143,35 +142,27 @@ class DataTableReporter
      *
      * @return \Illuminate\Database\Query\Builder
      */
-    function dateRangeQuery()
+    function dateRangeQuery($direction = 'asc')
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         return $this->model->dataTable()
             ->where($this->dataTableFk, '=', $this->model->id)
-            ->whereDate('date', '>=', $this->begins_at)
-            ->whereDate('date', '<=', $this->ends_at)
-            ->orderBy('date');
+            ->where('date', '>=', $this->begins_at)
+            ->where('date', '<=', $this->ends_at)
+            ->orderBy('date', $direction);
     }
 
     /**
-     * Returns first row of data in the date range query
+     * Returns the earliest row of data in the date range query
      */
     function firstData(){
         return $this->dateRangeQuery()->first();
     }
 
     /**
-     * Returns first row of data in the date range query
+     * Returns latest row of data in the date range query
      */
     function lastData(){
-        // Eloquent doesn't provide a last() method as it does a first(),
-        // so we have to specify a reverse sort order so that first()
-        // will actually be equivalent of last();
-        return $this->model->dataTable()
-            ->where($this->dataTableFk, '=', $this->model->id)
-            ->where('date', '>=', $this->begins_at)
-            ->where('date', '<=', $this->ends_at)
-            ->orderBy('date','desc')->first();
+        return $this->dateRangeQuery('desc')->first();
     }
 
     /**

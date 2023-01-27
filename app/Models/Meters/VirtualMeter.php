@@ -263,6 +263,11 @@ class VirtualMeter extends BaseModel implements DataTableInterface
 
     }
 
+    public function dbFields(): array
+    {
+        return $this->pvFields();
+    }
+
 
     public function pvFields(): array
     {

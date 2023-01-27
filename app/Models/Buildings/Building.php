@@ -2,7 +2,6 @@
 
 namespace App\Models\Buildings;
 
-
 use App\Exceptions\ReportingException;
 use App\Models\BaseModel;
 use App\Models\DataTables\BuildingDataTableReporter;
@@ -14,9 +13,7 @@ use App\Models\Meters\Meter;
 use App\Presenters\BuildingPresenter;
 use App\Utilities\MySamplerData;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use phpDocumentor\Reflection\PseudoTypes\Numeric_;
 use Robbo\Presenter\PresentableInterface;
 
 class Building extends BaseModel implements PresentableInterface, DataTableInterface
@@ -54,7 +51,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
         $this->dataTableFk = 'building_id';
         parent::__construct($attributes);
     }
-
 
     public function meters(){
         return $this->hasMany(Meter::class);
@@ -262,8 +258,32 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
      * epics_name to form pvs.
      *
      * Buildings can have a mix of power, water, and gas readings.
+     * This function will return the master list of possible fields.
+     * Use pvFields() to limit the list based on the type of meters
+     * actively associated with the building.
+     *
+     * @return array
+     */
+    public function dbFields(): array
+    {
+        //They are total for the building and could be from a single
+        //meter or by summing multiple.  Gary takes care of this
+        //at the IOC level and simply provides a single building PV
+        //for each.
+        $fields = array();
+        foreach (array_keys(config('meters.pvs')) as $type){
+            $fields = array_merge($fields, array_keys(config('meters.pvs.'.$type)));
+        }
+        return $this->removeNonBuildingFields($fields);
+    }
+
+    /**
+     * Returns the array of fields that can be stored in the database
+     *
+     * Buildings can have a mix of power, water, and gas readings.
      * This function will only return a list of fields relevant to
      * the types of meters associated with the building.
+     *
      *
      * @return array
      */
@@ -277,7 +297,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
         foreach ($this->meterTypes() as $type){
             $fields = array_merge($fields, array_keys(config('meters.pvs.'.$type)));
         }
-
         return $this->removeNonBuildingFields($fields);
     }
 

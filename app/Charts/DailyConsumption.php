@@ -9,7 +9,6 @@
 namespace App\Charts;
 
 use App\Models\DataTables\DataTableInterface;
-use App\Models\Meters\Meter;
 use Illuminate\Http\Request;
 
 /**
@@ -70,8 +69,7 @@ class DailyConsumption implements ChartInterface
      *
      * @return \Illuminate\Support\Collection
      */
-    public function chartData(){
-        if (is_a($this->model, Meter::class)){
+    public function chartData(): \Illuminate\Support\Collection{
             $query = $this->model->dailyConsumptionQuery($this->pv, $this->reporter->begins_at, $this->reporter->ends_at);
             // Must recast the query output column names into a new collection with
             // keys generically named "label" and "value"
@@ -81,14 +79,12 @@ class DailyConsumption implements ChartInterface
                     'value' => $item->consumed,
                 ];
             });
-        }else{
-            $result = $this->reporter->dailyPv($this->pv);
-        }
         return $this->reporter->canvasTimeSeries($result);
     }
 
     /**
-     * Returns an array representation of chart settings and data.
+     * Returns an array representation of chart settings and data in the format expected
+     * by canvasjs client library.
      *
      * @return array
      */

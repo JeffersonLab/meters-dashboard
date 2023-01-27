@@ -8,4 +8,8 @@ use Jlab\LaravelUtilities\BaseModel as Model;
 class BaseModel extends Model
 {
     use HasFactory;
+
+    public function primaryKeyValue(): int{
+        return $this->getAttribute($this->primaryKey);
+    }
 }

@@ -9,6 +9,7 @@
 namespace App\Models\DataTables;
 
 
+use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 
 /**
@@ -73,5 +74,14 @@ interface DataTableInterface
      */
     public function pvFields(): array;
 
+
+    /**
+     * Returns the array of fields to be used when creating database columns
+     * for data storage.
+     * @return array
+     */
+    public function dbFields(): array;
+
+    public function dailyConsumptionQuery($field, Carbon $beginDate, Carbon $endDate): Builder;
 
 }
