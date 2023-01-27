@@ -15,6 +15,7 @@ use App\Presenters\WaterMeterPresenter;
 use App\Presenters\GasMeterPresenter;
 use App\Utilities\MySamplerData;
 use Carbon\Carbon;
+use Dflydev\DotAccessData\Exception\DataException;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -367,6 +368,90 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         return null;
     }
 
+    /**
+     * Returns the appropriate daily consumption query for the meter type.
+     * #
+     * @param Carbon $beginDate
+     * @param Carbon $endDate
+     * @return Builder
+     */
+    function dailyConsumptionQuery($field, Carbon $beginDate, Carbon $endDate){
+        return $this->periodicConsumptionQuery($field, $beginDate, $endDate, 'daily');
+    }
+
+    function dailyGasConsumptionQuery(Carbon $beginDate, Carbon $endDate){
+        return $this->periodicConsumptionQuery('ccf', $beginDate, $endDate, 'daily');
+    }
+
+    function dailyPowerConsumptionQuery(Carbon $beginDate, Carbon $endDate){
+        return $this->periodicConsumptionQuery('totkWh', $beginDate, $endDate, 'daily');
+    }
+
+    function dailyWaterConsumptionQuery(Carbon $beginDate, Carbon $endDate){
+        return $this->periodicConsumptionQuery('gal', $beginDate, $endDate, 'daily');
+    }
+
+    function hourlyGasConsumptionQuery(Carbon $beginDate, Carbon $endDate){
+        return $this->periodicConsumptionQuery('ccf', $beginDate, $endDate, 'hourly');
+    }
+
+    function hourlyPowerConsumptionQuery(Carbon $beginDate, Carbon $endDate){
+        return $this->periodicConsumptionQuery('totkWh', $beginDate, $endDate, 'hourly');
+    }
+
+    function hourlyWaterConsumptionQuery(Carbon $beginDate, Carbon $endDate){
+        return $this->periodicConsumptionQuery('gal', $beginDate, $endDate, 'hourly');
+    }
+
+
+    /**
+     * Throw an exception if field is not a valid.
+     * @param $field
+     * @return true
+     * @throws MeterDataException
+     */
+    protected function assertHasField($field): bool
+    {
+        if (! $this->hasField($field)){
+            throw new MeterDataException("{$field} is not a field of Meter {$this->id}", $this);
+        }
+        return true;
+    }
+
+    protected function periodicConsumptionQuery($field, Carbon $beginDate, Carbon $endDate,$granularity = null){
+        $this->assertHasField($field);
+        /**
+         The Query builder below constructs a function akin to the raw sql shown below.
+         -- This first portion is fetched as a subquery
+         with running_total as (
+            select date, gal from water_meter_data_115
+            where
+            date between '2022-12-01' and '2023-01-01'
+             and hour(date) = 0
+            and minute(date) = 0
+            )
+         -- and this section portion pulls from that subquery
+            select date, gal,
+                lead(gal, 1) over (order by date) as  next_gal,
+                lead(gal, 1) over (order by date) - gal as  consumed
+                from running_total;
+         */
+        switch ($granularity){
+            case 'hourly': $subQuery = DB::table($this->hourlyDataBetweenQuery($beginDate, $endDate));
+                            break;
+            case 'daily' : $subQuery = DB::table($this->dailyDataBetweenQuery($beginDate, $endDate));
+                            break;
+            default:  $subQuery = DB::table($this->dataDataBetweenQuery($beginDate, $endDate));
+        }
+        /*
+         * The lead() function is a mysql window function to efficiently gather periodic column
+         * differences which equate to periodic consumption.
+         */
+        return DB::table($subQuery)
+            ->select(['date',$field])
+            ->selectRaw("lead($field, 1) over (order by date) as  next_val")
+            ->selectRaw("lead($field, 1) over (order by date) - $field as  consumed");
+    }
 
     function hasRolloverIncrement($field)
     {
@@ -759,8 +844,19 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         return $this->makeChannels($this->pvFields());
     }
 
+    public function hasField($field){
+        return in_array($field, $this->fields());
+    }
+
+    /**
+     * The list of database fields.
+     *
+     * @return array|string[]
+     */
     public function fields(){
         return array_map(function($val) {
+            // The database field name is the same as the PV field name with the
+            // delimiter character removed.
             return ltrim($val, ':');
         }, $this->pvFields());
     }

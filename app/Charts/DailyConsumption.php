@@ -9,6 +9,7 @@
 namespace App\Charts;
 
 use App\Models\DataTables\DataTableInterface;
+use App\Models\Meters\Meter;
 use Illuminate\Http\Request;
 
 /**
@@ -22,6 +23,7 @@ use Illuminate\Http\Request;
 class DailyConsumption implements ChartInterface
 {
 
+    protected $model;
     public $reporter;
     public $type = 'column';
     public $pv;
@@ -37,6 +39,7 @@ class DailyConsumption implements ChartInterface
      */
     public function __construct(DataTableInterface $model, $pv, $title = null)
     {
+        $this->model = $model;
         $this->reporter = $model->reporter();
         $this->pv = $pv;
         if ($title){
@@ -68,9 +71,20 @@ class DailyConsumption implements ChartInterface
      * @return \Illuminate\Support\Collection
      */
     public function chartData(){
-        $result = $this->reporter->dailyPv($this->pv);
-        $data = $this->reporter->canvasTimeSeries($result);
-        return $data;
+        if (is_a($this->model, Meter::class)){
+            $query = $this->model->dailyConsumptionQuery($this->pv, $this->reporter->begins_at, $this->reporter->ends_at);
+            // Must recast the query output column names into a new collection with
+            // keys generically named "label" and "value"
+            $result = $query->get()->map(function($item){
+                return (object) [
+                    'label' => $item->date,
+                    'value' => $item->consumed,
+                ];
+            });
+        }else{
+            $result = $this->reporter->dailyPv($this->pv);
+        }
+        return $this->reporter->canvasTimeSeries($result);
     }
 
     /**

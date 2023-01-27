@@ -26,7 +26,8 @@ class CreateTableMeterLimits extends Migration
 
             $table->unique(['meter_id','field']);
 
-            $table->foreign('meter_id')->references('id')->on('meters');
+            $table->foreign('meter_id')->references('id')->on('meters')
+            ->onDelete('cascade');
 
         });
 

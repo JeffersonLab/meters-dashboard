@@ -66,8 +66,8 @@ class DataTableReporterTest extends TestCase
         $data = $reporter->dataForDay($this->sampleCollection,new Carbon('2017-07-01'));
         $this->assertCount(6, $data);
 
-        $this->assertEquals('2017-07-01 00:00', $data->first()->date);
-        $this->assertEquals('2017-07-01 20:00', $data->last()->date);
+        $this->assertEquals(strtotime('2017-07-01 00:00'), strtotime($data->first()->date));
+        $this->assertEquals(strtotime('2017-07-01 20:00'), strtotime($data->last()->date));
 
         $data = $reporter->dataForDay($this->sampleCollection,new Carbon('2017-06-01'));
         $this->assertCount(0, $data);
@@ -87,8 +87,8 @@ class DataTableReporterTest extends TestCase
         $reporter = new DataTableReporter($meter);
         $reporter->beginning('2017-07-01');
         $reporter->ending('2017-07-02');
-        $this->assertEquals('2017-07-01 00:00', $reporter->firstData()->date);
-        $this->assertEquals('2017-07-02 00:00', $reporter->lastData()->date);
+        $this->assertEquals(strtotime('2017-07-01 00:00'), strtotime($reporter->firstData()->date));
+        $this->assertEquals(strtotime('2017-07-02 00:00'), strtotime($reporter->lastData()->date));
     }
 
     protected function insertSampleData(Meter $meter){
