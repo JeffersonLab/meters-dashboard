@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
-class AlterTableWaterMeterDataAddRollover extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -28,4 +28,4 @@ class AlterTableWaterMeterDataAddRollover extends Migration
             $table->dropColumn('rollover_accumulated');
         });
     }
-}
+};
