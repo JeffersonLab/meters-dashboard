@@ -67,7 +67,7 @@ class MyaStats extends MultiMeter
      * ex: ['gal'=>'Gallons'];
      * @var array
      */
-    protected $pvOptions = array();
+    protected $pvOptions = [];
 
 
     public function __construct()

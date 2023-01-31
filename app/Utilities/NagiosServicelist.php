@@ -71,12 +71,12 @@ class NagiosServicelist extends NagiosData
      */
     function query(){
         //?query=hostlist&formatoptions=whitespace+enumerate+bitmask+duration&hoststatus=up+down+unreachable';
-        return array(
+        return [
             'query' => 'servicelist',
             'details' => 'true',
             'formatoptions' => 'whitespace enumerate bitmask duration',
             //'hoststatus' => 'up down unreachable',
-        );
+        ];
     }
 
 

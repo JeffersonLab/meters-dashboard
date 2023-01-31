@@ -41,14 +41,14 @@ class MySamplerStatsData
      * @return array
      */
     function query(){
-        return array(
+        return [
             's' => $this->stepSize,
             'n' => $this->numSteps,
             'sUnit' => 'second',
             'l' => $this->channels,
             'b' => $this->begin->format('Y-m-d H:i'),
             'm' => $this->deployment,
-        );
+        ];
     }
 
     /**
@@ -69,7 +69,7 @@ class MySamplerStatsData
      * @throws \Exception
      */
     function organize($data){
-        $organized = array();
+        $organized = [];
         foreach ($data->data as $item){
             if(isset($item->error)){
                 throw new \Exception($item->error);

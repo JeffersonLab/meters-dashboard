@@ -47,7 +47,7 @@ class FacilitiesClimateData extends ClimateData
 
     protected function getApiData()
     {
-        $temps = array();
+        $temps = [];
         $data = $this->httpGet()->getContents();
         foreach( explode("\n", $data) as $line){
             if (preg_match('/^\d\d\:\d\d(am|pm)\s.*/', $line)){

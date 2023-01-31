@@ -101,7 +101,7 @@ class MultiMeter implements ChartInterface
      * @throws \Exception
      */
     public function chartData(){
-        $data = array();
+        $data = [];
         foreach ($this->virtualMeter->meters() as $meter){
             //Each meter's datatable reporter needs to be told
             //of the current date range settings.

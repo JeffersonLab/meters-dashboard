@@ -65,10 +65,10 @@ class NagiosServiceCount extends NagiosData
      */
     function query(){
         //?query=hostlist&formatoptions=whitespace+enumerate+bitmask+duration&hoststatus=up+down+unreachable';
-        return array(
+        return [
             'query' => 'servicecount',
             'formatoptions' => 'whitespace enumerate bitmask duration',
-        );
+        ];
     }
 
 

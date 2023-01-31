@@ -32,7 +32,7 @@ abstract class MeterPresenter extends Presenter implements BoxInterface
 
     function epicsMacroVariables()
     {
-        $vars = array();
+        $vars = [];
         if (isset($this->model_number)) {
             $vars[] = urlencode(epics_macro_variable('meter')) . '=' . $this->epics_name;  // macro var passed to screen
         }

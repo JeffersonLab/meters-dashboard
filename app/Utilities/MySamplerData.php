@@ -51,13 +51,13 @@ class MySamplerData implements DataFetchContract
      * @return array
      */
     function query(){
-        return array(
+        return [
             's' => $this->stepSize,
             'n' => $this->numSteps,
             'channels' => $this->channels,
             'b' => $this->begin->format('Y-m-d H:i'),
             'm' => $this->deployment,
-        );
+        ];
     }
 
 
@@ -78,7 +78,7 @@ class MySamplerData implements DataFetchContract
      * @return array
      */
     function organize($data){
-        $organized = array();
+        $organized = [];
         foreach ($data->data as $item){
             $organizedItem = [];
             $organizedItem['date'] = $item->date;

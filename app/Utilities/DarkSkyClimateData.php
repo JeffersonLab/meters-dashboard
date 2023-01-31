@@ -35,7 +35,7 @@ class DarkSkyClimateData extends ClimateData
                 return $data;
             }
         }
-        return array();
+        return [];
     }
 
     protected function hasExpectedFormat($data){

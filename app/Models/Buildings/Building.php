@@ -22,18 +22,18 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
 
     protected $reporter;
 
-    protected $nonBuildingFields = array(':llVolt');
+    protected $nonBuildingFields = [':llVolt'];
 
-    public static $rules = array(
+    public static $rules = [
         'name' => 'required | max:80',
         'abbreviation' => 'max:20',
         'building_num' => 'max:20',
         'jlab_name' => 'max:80',
         'square_footage' => 'nullable | numeric | min:0',
 
-    );
+    ];
 
-    public $fillable = array('name','element_id','type','abbreviation','building_num','square_footage','jlab_name');
+    public $fillable = ['name','element_id','type','abbreviation','building_num','square_footage','jlab_name'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -46,7 +46,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
      * Building constructor.
      *
      */
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = [])
     {
         $this->dataTableFk = 'building_id';
         parent::__construct($attributes);
@@ -270,7 +270,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
         //meter or by summing multiple.  Gary takes care of this
         //at the IOC level and simply provides a single building PV
         //for each.
-        $fields = array();
+        $fields = [];
         foreach (array_keys(config('meters.pvs')) as $type){
             $fields = array_merge($fields, array_keys(config('meters.pvs.'.$type)));
         }
@@ -293,7 +293,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
         //meter or by summing multiple.  Gary takes care of this
         //at the IOC level and simply provides a single building PV
         //for each.
-        $fields = array();
+        $fields = [];
         foreach ($this->meterTypes() as $type){
             $fields = array_merge($fields, array_keys(config('meters.pvs.'.$type)));
         }

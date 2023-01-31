@@ -25,7 +25,7 @@ class MeterLimit extends BaseModel
 
     //@todo custom validator that hi > lo
     //@see https://stackoverflow.com/questions/32036882/laravel-validate-an-integer-field-that-needs-to-be-greater-than-another
-    public static $rules = array(
+    public static $rules = [
         'meter_id' => 'required',
         'field' => 'required | in:gal,galPerMin,totkW,totkWh',
         'interval' => 'integer',
@@ -34,9 +34,9 @@ class MeterLimit extends BaseModel
         'lolo' => 'numeric',
         'hihi' => 'numeric',
         'source' => 'required | in:epics,web'
-    );
+    ];
 
-    public $fillable = array(
+    public $fillable = [
         'meter_id',
         'field',                //PV to which it applies
         'interval',             //seconds
@@ -45,7 +45,7 @@ class MeterLimit extends BaseModel
         'lolo',                 //major too low
         'hihi',                 //major too high
         'source'                //where limit defined
-    );
+    ];
 
 
 

@@ -30,15 +30,15 @@ class VirtualMeter extends BaseModel implements DataTableInterface
 {
     use DataTableTrait;
 
-    public static $rules = array(
+    public static $rules = [
         'name' => 'required | max:80',
         'description' => 'max:255',
 
-    );
-    public $fillable = array(
+    ];
+    public $fillable = [
         'name',
         'description',
-    );
+    ];
 
     /**
      * The attributes that should be mutated to dates.
@@ -74,7 +74,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * @param array $attributes
      */
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = [])
     {
         $this->dataTableFk = 'meter_id';
         $this->begins_at = Carbon::now()->startOfDay();

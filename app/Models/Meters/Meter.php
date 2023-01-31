@@ -27,13 +27,13 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
 
     protected $table = 'meters';
 
-    public static $rules = array(
+    public static $rules = [
         'name' => 'required | max:80',
         'type' => 'required | in:power,water,gas',
         'epics_name' => 'max:40',
         'name_alias' => 'max:80',
-    );
-    public $fillable = array(
+    ];
+    public $fillable = [
         'name',
         'type',
         'building_id',
@@ -42,7 +42,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         'model_number',
         'housed_by',
         'begins_at'
-    );
+    ];
     protected $reporter;
 
     /**
@@ -57,7 +57,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Meter constructor.
      *
      */
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = [])
     {
         $this->dataTableFk = 'meter_id';
         parent::__construct($attributes);
@@ -329,7 +329,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      */
     public static function allPvFields()
     {
-        $fields = array();
+        $fields = [];
         $types = array_keys(config('meters.pvs'));
         foreach ($types as $type) {
             $key = 'meters.pvs.' . $type;
@@ -411,7 +411,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         if ($fields) {
             return array_keys($fields);
         }
-        return array();
+        return [];
     }
 
 

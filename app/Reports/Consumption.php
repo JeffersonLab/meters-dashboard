@@ -57,7 +57,7 @@ abstract class Consumption implements ReportInterface
      * ex: ['gal'=>'Gallons'];
      * @var array
      */
-    protected $pvOptions = array();
+    protected $pvOptions = [];
 
 
     /**

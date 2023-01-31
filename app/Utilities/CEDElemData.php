@@ -41,11 +41,11 @@ class CEDElemData extends CEDData
      * @return array
      */
     function query(){
-        return array(
+        return [
             'wrkspc' => $this->workspace,
             'e' => $this->elem,
             'out' => 'json',
-        );
+        ];
     }
 
 
