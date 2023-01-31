@@ -46,12 +46,10 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
 
     protected $reporter;
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at', 'begins_at'];
+    protected $casts = [
+        'deleted_at' => 'datetime',
+        'begins_at' => 'datetime',
+    ];
 
     /**
      * Meter constructor.

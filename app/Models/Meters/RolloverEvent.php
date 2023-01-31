@@ -21,12 +21,9 @@ class RolloverEvent extends BaseModel
         'rollover_accumulated',
     ];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['rollover_at'];
+    protected $casts = [
+        'rollover_at' => 'datetime',
+    ];
 
     public function meter()
     {

@@ -35,12 +35,10 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
 
     public $fillable = ['name', 'element_id', 'type', 'abbreviation', 'building_num', 'square_footage', 'jlab_name'];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at', 'begins_at'];
+    protected $casts = [
+        'deleted_at' => 'datetime',
+        'begins_at' => 'datetime',
+    ];
 
     /**
      * Building constructor.

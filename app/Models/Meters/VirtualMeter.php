@@ -37,12 +37,10 @@ class VirtualMeter extends BaseModel implements DataTableInterface
         'description',
     ];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at', 'begins_at'];
+    protected $casts = [
+        'deleted_at' => 'datetime',
+        'begins_at' => 'datetime',
+    ];
 
     /*
      * @var string
