@@ -4,16 +4,16 @@ namespace Tests\Http\Controllers;
 
 use App\Models\Meters\Meter;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ReportControllerTest extends TestCase
 {
     protected $meter1;
+
     protected $meter2;
 
-    function setup(): void {
+    public function setup(): void
+    {
         parent::setUp();
 
         $this->meter1 = Meter::factory()->create([
@@ -21,7 +21,7 @@ class ReportControllerTest extends TestCase
             'epics_name' => 'epics 1',
             'name_alias' => 'alias 1',
             'type' => 'power',
-            'begins_at'=>Carbon::yesterday()->subDay(5)->hour(config('reports.day_start_hour')),
+            'begins_at' => Carbon::yesterday()->subDay(5)->hour(config('reports.day_start_hour')),
             'model_number' => 'ModelX',
         ]);
 
@@ -32,7 +32,7 @@ class ReportControllerTest extends TestCase
             'epics_name' => 'epics 2',
             'name_alias' => 'alias 2',
             'type' => 'power',
-            'begins_at'=>Carbon::yesterday()->subDay(4)->hour(config('reports.day_start_hour')),
+            'begins_at' => Carbon::yesterday()->subDay(4)->hour(config('reports.day_start_hour')),
             'model_number' => 'ModelX',
         ]);
 
@@ -47,7 +47,7 @@ class ReportControllerTest extends TestCase
 
         $response = $this->call(
             'GET',
-            route('reports.item',['power-consumption']),
+            route('reports.item', ['power-consumption']),
             ['begin' => $start, 'end' => $end, 'meters' => implode(',', [$this->meter1->epics_name, $this->meter2->epics_name])]
         );
         $response->assertViewIs('reports.consumption');
@@ -73,20 +73,15 @@ class ReportControllerTest extends TestCase
 //        $response->assertHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     }
 
-
-
-
-
-    function fillMeterWithData($meter, $increment = 100, $initial = 0){
-        $meter->dataTable()->where('meter_id',$meter->id)->delete();
+    public function fillMeterWithData($meter, $increment = 100, $initial = 0)
+    {
+        $meter->dataTable()->where('meter_id', $meter->id)->delete();
         $date = clone $meter->begins_at;
         $val = $initial;
-        while ($date < Carbon::today()){
+        while ($date < Carbon::today()) {
             $date->addDay();
-            $meter->dataTable()->insert(['meter_id'=>$meter->id, 'date'=>$date, 'totkWh' => $val]);
+            $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => $date, 'totkWh' => $val]);
             $val += $increment;
         }
-
     }
-
 }

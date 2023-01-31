@@ -8,11 +8,10 @@
 
 namespace App\Models\Meters;
 
-
 class MeterHelper
 {
-
     protected $meter;
+
     /**
      * MeterHelper constructor.
      */
@@ -20,5 +19,4 @@ class MeterHelper
     {
         $this->meter = $meter;
     }
-
 }

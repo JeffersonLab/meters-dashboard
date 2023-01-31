@@ -8,13 +8,11 @@
 
 namespace App\Models\DataTables;
 
-
-class BuildingDataTableReporter extends  DataTableReporter
+class BuildingDataTableReporter extends DataTableReporter
 {
     /*
      * The foreign key in building_data is building_id
      * and not the default of meter_id.
      */
     protected $dataTableFk = 'building_id';
-
 }

@@ -20,7 +20,6 @@ class UpdateMeters extends Command
                 {begin : Specify starting date }
                 {pvs* : PVs to update. Avoid updating pvs susceptible to rollover}';
 
-
     /**
      * The console command description.
      *
@@ -28,27 +27,28 @@ class UpdateMeters extends Command
      */
     protected $description = 'Updates meter data table by sampling mya archiver';
 
-
-    protected function getMeters(){
-
-        if ($this->option('meter')){
+    protected function getMeters()
+    {
+        if ($this->option('meter')) {
             return Meter::where('id', $this->option('meter'))->get();
         }
 
-        if ($this->option('type')){
+        if ($this->option('type')) {
             return Meter::where('type', $this->option('type'))->get();
         }
 
         return Meter::all();
     }
 
-    protected function beginAt(){
-        if ($this->argument('begin')){
+    protected function beginAt()
+    {
+        if ($this->argument('begin')) {
             return Carbon::parse($this->argument('begin'));
         }
     }
 
-    protected function pvs(){
+    protected function pvs()
+    {
         return Arr::wrap($this->argument('pvs'));
     }
 
@@ -59,8 +59,9 @@ class UpdateMeters extends Command
      */
     public function handle()
     {
-        if ($this->option('meter') && $this->option('type')){
-            $this->error("Please specify either meter OR type, not both!");
+        if ($this->option('meter') && $this->option('type')) {
+            $this->error('Please specify either meter OR type, not both!');
+
             return false;
         }
 
@@ -68,7 +69,7 @@ class UpdateMeters extends Command
             if ($meter->type == 'power' || $meter->type == 'water' || $meter->type == 'gas') {
                 try {
                     $count = $meter->updateDataTable($this->beginAt(), $this->pvs());
-                    $this->info("Updated $count rows for " . $meter->name);
+                    $this->info("Updated $count rows for ".$meter->name);
 
 //                    $eventCount = $meter->makeNewRolloverEvents();
 //                    if ($eventCount > 0) {
@@ -83,8 +84,7 @@ class UpdateMeters extends Command
                 }
             }
         }
+
         return true;
     }
-
-
 }

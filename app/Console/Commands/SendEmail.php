@@ -22,19 +22,16 @@ class SendEmail extends Command
      */
     protected $description = 'Sends scheduled emails';
 
-
     /**
      * Execute the console command.
+     *
      * @return mixed
+     *
      * @throws \Exception
      */
     public function handle()
     {
-            Mail::to(config('meters.alert_email_recipients'))
+        Mail::to(config('meters.alert_email_recipients'))
                 ->send(new DailyAlertStatus(new NagiosServicelist()));
-
-
     }
-
-
 }

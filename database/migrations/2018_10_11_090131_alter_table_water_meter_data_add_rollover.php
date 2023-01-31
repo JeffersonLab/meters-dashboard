@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AlterTableWaterMeterDataAddRollover extends Migration
 {
@@ -13,10 +12,9 @@ class AlterTableWaterMeterDataAddRollover extends Migration
      */
     public function up()
     {
-        Schema::table('water_meter_data', function($table){
+        Schema::table('water_meter_data', function ($table) {
             $table->integer('rollover_accumulated')->nullable();
         });
-
     }
 
     /**
@@ -26,7 +24,7 @@ class AlterTableWaterMeterDataAddRollover extends Migration
      */
     public function down()
     {
-        Schema::table('water_meter_data', function($table){
+        Schema::table('water_meter_data', function ($table) {
             $table->dropColumn('rollover_accumulated');
         });
     }

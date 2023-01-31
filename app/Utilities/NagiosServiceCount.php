@@ -8,14 +8,12 @@
 
 namespace App\Utilities;
 
-use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 class NagiosServiceCount extends NagiosData
 {
-
     protected $cgi = 'statusjson.cgi';
+
     protected $lastResult;
 
     /**
@@ -23,37 +21,45 @@ class NagiosServiceCount extends NagiosData
      *
      *
      * @return mixed
+     *
      * @internal param $name
      */
-    function getData(){
-        if (! $this->lastResult){
+    public function getData()
+    {
+        if (! $this->lastResult) {
             $this->lastResult = $this->httpGet();
         }
+
         return $this->lastResult;
     }
 
-
-    function ok(){
+    public function ok()
+    {
         return $this->getData()->data->count->ok;
     }
 
-    function critical(){
+    public function critical()
+    {
         return $this->getData()->data->count->critical;
     }
 
-    function warning(){
+    public function warning()
+    {
         return $this->getData()->data->count->warning;
     }
 
-    function pending(){
+    public function pending()
+    {
         return $this->getData()->data->count->pending;
     }
 
-    function unknown(){
+    public function unknown()
+    {
         return $this->getData()->data->count->unknown;
     }
 
-    function notOk(){
+    public function notOk()
+    {
         return $this->critical() + $this->unknown() + $this->warning();
     }
 
@@ -63,17 +69,12 @@ class NagiosServiceCount extends NagiosData
      *
      * @return array
      */
-    function query(){
+    public function query()
+    {
         //?query=hostlist&formatoptions=whitespace+enumerate+bitmask+duration&hoststatus=up+down+unreachable';
-        return array(
+        return [
             'query' => 'servicecount',
             'formatoptions' => 'whitespace enumerate bitmask duration',
-        );
+        ];
     }
-
-
-
-
-
-
 }

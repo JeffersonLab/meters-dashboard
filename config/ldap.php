@@ -32,9 +32,9 @@ return [
                 'follow_referrals' => true,
                 'use_ssl' => env('ACE_LDAP_USE_SSL', true),
                 'use_tls' => env('ACE_LDAP_USE_TLS', false),
-                'custom_options'   => [
-                    LDAP_OPT_X_TLS_REQUIRE_CERT => env('ACE_LDAPTLS_REQCERT',1),
-                ]
+                'custom_options' => [
+                    LDAP_OPT_X_TLS_REQUIRE_CERT => env('ACE_LDAPTLS_REQCERT', 1),
+                ],
 
             ],
         ],
@@ -50,10 +50,10 @@ return [
                 'follow_referrals' => true,
                 'use_ssl' => env('CUE_LDAP_USE_SSL', false),
                 'use_tls' => env('CUE_LDAP_USE_TLS', false),
-                'custom_options'   => [
-                    LDAP_OPT_X_TLS_REQUIRE_CERT => env('CUE_LDAPTLS_REQCERT',0),
-                    LDAP_OPT_X_TLS_CACERTFILE => env('CUE_LDAP_TLS_CACERTFILE','/etc/pki/tls/cert.pem'),
-                ]
+                'custom_options' => [
+                    LDAP_OPT_X_TLS_REQUIRE_CERT => env('CUE_LDAPTLS_REQCERT', 0),
+                    LDAP_OPT_X_TLS_CACERTFILE => env('CUE_LDAP_TLS_CACERTFILE', '/etc/pki/tls/cert.pem'),
+                ],
             ],
         ],
     ],

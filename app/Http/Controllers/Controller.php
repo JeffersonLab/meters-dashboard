@@ -12,7 +12,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected function meterData(Collection $meters){
+    protected function meterData(Collection $meters)
+    {
         return $meters->map(function ($item) {
             return [
                 'id' => $item->id,
@@ -24,8 +25,5 @@ class Controller extends BaseController
 
             ];
         })->sortBy('epics_name')->values();
-
     }
-
-
 }

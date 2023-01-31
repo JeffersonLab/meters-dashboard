@@ -8,7 +8,6 @@
 
 namespace App\Reports;
 
-
 use App\Charts\MultiMeter as MultiMeterChart;
 use App\Exports\MultiMeterDataExport;
 use App\Models\Meters\Meter;
@@ -41,14 +40,15 @@ class MultiMeter implements ReportInterface
     protected $title;
 
     /**
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @throws \Exception
      */
-    function applyRequest(Request $request)
+    public function applyRequest(Request $request)
     {
         $this->virtualMeter = new VirtualMeter();
-        if ($request->has('model_id')){
-            $physicalMeters = Meter::whereIn('id',$request->input('model_id'))->get();
+        if ($request->has('model_id')) {
+            $physicalMeters = Meter::whereIn('id', $request->input('model_id'))->get();
             $this->virtualMeter->setMeters($physicalMeters);
         }
         $this->chart = new MultiMeterChart($this->virtualMeter);
@@ -64,17 +64,20 @@ class MultiMeter implements ReportInterface
      *
      * @param $meterType
      */
-    function initMeterType($meterType){
-        if ($this->virtualMeter->type()){
+    public function initMeterType($meterType)
+    {
+        if ($this->virtualMeter->type()) {
             $this->meterType = $this->virtualMeter->type();
         }
         $this->meterType = $meterType;
     }
 
-    function meterType(){
-        if (! $this->meterType && $this->virtualMeter->type()){
+    public function meterType()
+    {
+        if (! $this->meterType && $this->virtualMeter->type()) {
             $this->meterType = $this->virtualMeter->type();
         }
+
         return $this->meterType;
     }
 
@@ -83,8 +86,8 @@ class MultiMeter implements ReportInterface
      *
      * @return View
      */
-    public function view(){
-
+    public function view()
+    {
         JavaScript::put([
             'currentApiUrl' => route('reports.chart_data'),
         ]);
@@ -93,59 +96,70 @@ class MultiMeter implements ReportInterface
             ->with('report', $this);
     }
 
-    function title()
+    public function title()
     {
-       if (! $this->title){
-           $prefix = ucfirst($this->meterType()).' '.str_plural('Meter',count($this->virtualMeter->meterIds()));
-           return $prefix .' '. $this->virtualMeter->name();
-       }
-       return $this->title;
+        if (! $this->title) {
+            $prefix = ucfirst($this->meterType()).' '.str_plural('Meter', count($this->virtualMeter->meterIds()));
+
+            return $prefix.' '.$this->virtualMeter->name();
+        }
+
+        return $this->title;
     }
 
-    function description()
+    public function description()
     {
         return 'Multi Meter Chart';
     }
 
-    function chart(){
+    public function chart()
+    {
         return $this->chart;
     }
 
-    function meter(){
+    public function meter()
+    {
         return $this->virtualMeter;
     }
 
-    public function pvOptions(){
-        switch($this->meterType()){
+    public function pvOptions()
+    {
+        switch ($this->meterType()) {
             case 'power': return ['totkW' => 'kW', 'llVolt' => 'Volt'];
-            case 'water' : return ['galPerMin'=>'GPM'];
-            case 'gas' : return ['ccfPerMin'=>'CCFPM'];
+            case 'water': return ['galPerMin' => 'GPM'];
+            case 'gas': return ['ccfPerMin' => 'CCFPM'];
         }
+
         return [];
     }
 
-    public function meterOptions(){
-        switch($this->meterType()){
-            case 'power': $query = Meter::where('type','power'); break;
-            case 'water' : $query = Meter::where('type','water'); break;
-            case 'gas' : $query = Meter::where('type','gas'); break;
+    public function meterOptions()
+    {
+        switch ($this->meterType()) {
+            case 'power': $query = Meter::where('type', 'power'); break;
+            case 'water' : $query = Meter::where('type', 'water'); break;
+            case 'gas' : $query = Meter::where('type', 'gas'); break;
             default: return [];
         }
-        return $query->orderBy('epics_name')->pluck('epics_name','id')->toArray();
+
+        return $query->orderBy('epics_name')->pluck('epics_name', 'id')->toArray();
     }
 
-    public function beginsAt(){
+    public function beginsAt()
+    {
         return $this->chart()->beginsAt();
     }
 
-    public function endsAt(){
+    public function endsAt()
+    {
         return $this->chart()->endsAt();
     }
 
     /**
      * @return \Illuminate\Support\Collection
      */
-    public function data(){
+    public function data()
+    {
         if ($this->virtualMeter->hasMeters()) {
             return $this->virtualMeter->dataTable()
                 ->join('meters', 'meter_id', '=', 'id')
@@ -153,19 +167,18 @@ class MultiMeter implements ReportInterface
                 ->where('date', '>=', $this->beginsAt())
                 ->where('date', '<=', $this->endsAt())
                 ->orderBy('date')->get();
-        }else{
+        } else {
             return new Collection();
         }
     }
 
-    function hasExcel()
+    public function hasExcel()
     {
-       return true;
+        return true;
     }
 
     public function getExcelExport()
     {
         return new MultiMeterDataExport($this);
     }
-
 }

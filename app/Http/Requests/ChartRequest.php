@@ -25,8 +25,8 @@ class ChartRequest extends FormRequest
     {
         return [
             'start' => 'required|date',
-            'end'   => 'date',
-            'chart'    => 'required',
+            'end' => 'date',
+            'chart' => 'required',
             'model_id' => 'required',
 
         ];

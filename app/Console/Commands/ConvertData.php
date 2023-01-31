@@ -43,27 +43,29 @@ class ConvertData extends Command
         $status = 0;
         $status += $this->convert(Building::all());
         $status += $this->convert(Meter::all());
+
         return $status;
     }
 
-    protected function convert($items){
+    protected function convert($items)
+    {
         $status = 0;
-        foreach ($items as $item){
-            try{
+        foreach ($items as $item) {
+            try {
                 $c = new DataTableCreator($item);
-                if ($this->option('drop')){
+                if ($this->option('drop')) {
                     $c->dropTable();
                 }
                 $c->createTable();
                 $c->migrateData();
                 $this->info("Converted {$item->name}");
-            }catch(\Exception $e){
+            } catch (\Exception $e) {
                 $this->error("Failed to convert {$item->name}");
                 $this->error($e->getMessage());
                 $status = 1;
             }
         }
+
         return $status;
     }
-
 }

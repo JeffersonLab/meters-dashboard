@@ -10,10 +10,11 @@ use Tests\TestCase;
 
 class VirtualMeterTest extends TestCase
 {
-    public function test_meters_relation(){
+    public function test_meters_relation()
+    {
         $meter1 = Meter::factory()->create(['type' => 'power', 'model_number' => 'ModelX']);
         $meter2 = Meter::factory()->create(['type' => 'power', 'model_number' => 'ModelY']);
-        $vm = new VirtualMeter(['name'=>'foobar']);
+        $vm = new VirtualMeter(['name' => 'foobar']);
         $this->assertTrue($vm->save());
 
         $vm->physicalMeters()->attach([$meter1->id, $meter2->id]);
@@ -21,16 +22,13 @@ class VirtualMeterTest extends TestCase
 
         $this->assertEquals(2, $vm->meters()->count());
         $this->assertEquals('power', $vm->type());
-
     }
 
-
-
-    function test_it_has_data()
+    public function test_it_has_data()
     {
         $meter1 = Meter::factory()->create([
             'type' => 'water',
-            'begins_at' => Carbon::yesterday()->subDay(2)
+            'begins_at' => Carbon::yesterday()->subDay(2),
         ]);
         $meter1->dataTable()->insert(['meter_id' => $meter1->id, 'date' => Carbon::yesterday()->hour(1), 'gal' => 125]);
         $meter1->dataTable()->insert(['meter_id' => $meter1->id, 'date' => Carbon::yesterday()->hour(2), 'gal' => 0]);
@@ -45,12 +43,11 @@ class VirtualMeterTest extends TestCase
         $this->assertEquals(Carbon::yesterday()->hour(3)->format('Y-m-d H:i:s'), $vm->lastDataDate()->date);
     }
 
-
-    function test_it_can_set_meters_explicitly()
+    public function test_it_can_set_meters_explicitly()
     {
         $meter1 = Meter::factory()->create([
             'type' => 'water',
-            'begins_at' => Carbon::yesterday()->subDay(2)
+            'begins_at' => Carbon::yesterday()->subDay(2),
         ]);
         $meter1->dataTable()->insert(['meter_id' => $meter1->id, 'date' => Carbon::yesterday()->hour(1), 'gal' => 125]);
         $meter1->dataTable()->insert(['meter_id' => $meter1->id, 'date' => Carbon::yesterday()->hour(2), 'gal' => 0]);
@@ -60,6 +57,5 @@ class VirtualMeterTest extends TestCase
 
         $vm->setMeters(new Collection([$meter1, $meter2]));
         $this->assertTrue($vm->hasData());
-
     }
 }

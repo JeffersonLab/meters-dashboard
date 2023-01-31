@@ -6,19 +6,18 @@ use App\Alerts\MeterAlertRepository;
 use App\Alerts\ServiceAlertRepository;
 use App\Utilities\NagiosHostlist;
 use App\Utilities\NagiosServicelist;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
 
 class AlertController extends Controller
 {
-
     /**
      * Display the buildings index page
      *
      * @return Response
      */
-    public function index(NagiosHostlist $hostlist, NagiosServicelist $servicelist) {
-        try{
+    public function index(NagiosHostlist $hostlist, NagiosServicelist $servicelist)
+    {
+        try {
             $serviceAlertRepository = new ServiceAlertRepository($servicelist);
             $meterAlertRepository = new MeterAlertRepository();
 
@@ -30,10 +29,9 @@ class AlertController extends Controller
 
             return View::make('alerts.table')
                     ->with('alerts', $alerts);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return View::make('alerts.error')
                 ->with('message', $e->getMessage());
         }
-
     }
 }

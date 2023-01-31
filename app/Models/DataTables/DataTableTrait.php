@@ -8,7 +8,6 @@
 
 namespace App\Models\DataTables;
 
-
 use App\Exceptions\DataTableException;
 use App\Exceptions\MeterDataException;
 use Carbon\Carbon;
@@ -17,13 +16,12 @@ use Illuminate\Support\Facades\DB;
 
 trait DataTableTrait
 {
-
     /**
      * Column in the *_data table
+     *
      * @var string
      */
     protected $dataTableFk;
-
 
     //----- Abstract methods which trait inheritors must implement ------------------------------------------------//
 
@@ -32,28 +30,26 @@ trait DataTableTrait
      * Theoretically a primary key value could be non-integer, but in our application
      * it won't be by convention.
      */
-    abstract function primaryKeyValue(): int;
-
+    abstract public function primaryKeyValue(): int;
 
     /**
      * The array of fields that can be appended to
      * epics_name to form pvs.
+     *
      * @return array
      */
     abstract public function pvFields(): array;
 
-
-
     //------ Trait implemented methods ----------------------------------------------------------------------------//
-
-
 
     /**
      * Return the name of the column in the data table that is the foreign key
      * back to the parent table. (ex: building_id, meter_id)
+     *
      * @return string
      */
-    public function dataTableFk(): string{
+    public function dataTableFk(): string
+    {
         return $this->dataTableFk;
     }
 
@@ -61,6 +57,7 @@ trait DataTableTrait
      * Returns a Query Builder for the appropriate data table.
      *
      * @return Builder
+     *
      * @throws \Exception if physical meters are of different types;
      */
     public function dataTable(): Builder
@@ -78,6 +75,7 @@ trait DataTableTrait
         if ($this->dataTable()->where($this->dataTableFk(), $this->id)->limit(1)->first()) {
             return true;
         }
+
         return false;
     }
 
@@ -88,9 +86,8 @@ trait DataTableTrait
     {
         $latest = $this->lastDataDate();
         if ($latest) {
-            return (date('Y-m-d H:i',
-                strtotime($latest->date) + config('meters.data_interval', 900))
-            );
+            return date('Y-m-d H:i',
+                strtotime($latest->date) + config('meters.data_interval', 900));
         } else {
             return $this->begins_at->format('Y-m-d H:00');
         }
@@ -110,45 +107,54 @@ trait DataTableTrait
     /**
      * Returns the appropriate daily consumption query for the meter type.
      * #
-     * @param Carbon $beginDate
-     * @param Carbon $endDate
+     *
+     * @param  Carbon  $beginDate
+     * @param  Carbon  $endDate
      * @return Builder
      */
-    function dailyConsumptionQuery($field, Carbon $beginDate, Carbon $endDate): Builder{
+    public function dailyConsumptionQuery($field, Carbon $beginDate, Carbon $endDate): Builder
+    {
         return $this->periodicConsumptionQuery($field, $beginDate, $endDate, 'daily');
     }
 
-    function dailyGasConsumptionQuery(Carbon $beginDate, Carbon $endDate): Builder{
+    public function dailyGasConsumptionQuery(Carbon $beginDate, Carbon $endDate): Builder
+    {
         return $this->periodicConsumptionQuery('ccf', $beginDate, $endDate, 'daily');
     }
 
-    function dailyPowerConsumptionQuery(Carbon $beginDate, Carbon $endDate): Builder{
+    public function dailyPowerConsumptionQuery(Carbon $beginDate, Carbon $endDate): Builder
+    {
         return $this->periodicConsumptionQuery('totkWh', $beginDate, $endDate, 'daily');
     }
 
-    function dailyWaterConsumptionQuery(Carbon $beginDate, Carbon $endDate): Builder{
+    public function dailyWaterConsumptionQuery(Carbon $beginDate, Carbon $endDate): Builder
+    {
         return $this->periodicConsumptionQuery('gal', $beginDate, $endDate, 'daily');
     }
 
-    function hourlyGasConsumptionQuery(Carbon $beginDate, Carbon $endDate): Builder{
+    public function hourlyGasConsumptionQuery(Carbon $beginDate, Carbon $endDate): Builder
+    {
         return $this->periodicConsumptionQuery('ccf', $beginDate, $endDate, 'hourly');
     }
 
-    function hourlyPowerConsumptionQuery(Carbon $beginDate, Carbon $endDate): Builder{
+    public function hourlyPowerConsumptionQuery(Carbon $beginDate, Carbon $endDate): Builder
+    {
         return $this->periodicConsumptionQuery('totkWh', $beginDate, $endDate, 'hourly');
     }
 
-    function hourlyWaterConsumptionQuery(Carbon $beginDate, Carbon $endDate): Builder{
+    public function hourlyWaterConsumptionQuery(Carbon $beginDate, Carbon $endDate): Builder
+    {
         return $this->periodicConsumptionQuery('gal', $beginDate, $endDate, 'hourly');
     }
 
     /**
-     *
      * between two dates.
-     * @param Carbon $atDate
+     *
+     * @param  Carbon  $atDate
+     *
      * @throws \Exception
      */
-    function dataBetweenQuery(Carbon $beginDate, Carbon $endDate): Builder
+    public function dataBetweenQuery(Carbon $beginDate, Carbon $endDate): Builder
     {
         return $this->dataTable()
             ->select($this->dataColumns())
@@ -157,7 +163,8 @@ trait DataTableTrait
             ->orderBy('date');
     }
 
-    protected function periodicConsumptionQuery($field, Carbon $beginDate, Carbon $endDate,$granularity = null): Builder{
+    protected function periodicConsumptionQuery($field, Carbon $beginDate, Carbon $endDate, $granularity = null): Builder
+    {
         $this->assertHasField($field);
         /**
         The Query builder below constructs a function akin to the raw sql shown below.
@@ -175,7 +182,7 @@ trait DataTableTrait
         lead(gal, 1) over (order by date) - gal as  consumed
         from running_total;
          */
-        switch ($granularity){
+        switch ($granularity) {
             case 'hourly': $subQuery = DB::table($this->hourlyDataBetweenQuery($beginDate, $endDate));
                 break;
             case 'daily' : $subQuery = DB::table($this->dailyDataBetweenQuery($beginDate, $endDate));
@@ -187,40 +194,44 @@ trait DataTableTrait
          * differences which equate to periodic consumption.
          */
         return DB::table($subQuery)
-            ->select(['date',$field])
+            ->select(['date', $field])
             ->selectRaw("lead($field, 1) over (order by date) as  next_val")
             ->selectRaw("lead($field, 1) over (order by date) - $field as  consumed");
     }
 
-    function hourlyDataBetweenQuery(Carbon $beginDate, Carbon $endDate){
+    public function hourlyDataBetweenQuery(Carbon $beginDate, Carbon $endDate)
+    {
         return $this->dataBetweenQuery($beginDate, $endDate)
             ->whereRaw('minute(date) = 0');
     }
 
-    function dailyDataBetweenQuery(Carbon $beginDate, Carbon $endDate){
+    public function dailyDataBetweenQuery(Carbon $beginDate, Carbon $endDate)
+    {
         return $this->hourlyDataBetweenQuery($beginDate, $endDate)
             ->whereRaw('hour(date) = 0');
     }
 
-    function dataBetween(Carbon $beginDate, Carbon $endDate, $granularity = null){
-        switch ($granularity){
+    public function dataBetween(Carbon $beginDate, Carbon $endDate, $granularity = null)
+    {
+        switch ($granularity) {
             case 'hourly': return $this->hourlyDataBetweenQuery($beginDate, $endDate)->get();
             case 'daily' : return $this->dailyDataBetweenQuery($beginDate, $endDate)->get();
             default:  return $this->dataBetweenQuery($beginDate, $endDate)->get();
         }
     }
 
-
-
     /**
      * Columns to return for dataBetween queries
+     *
      * @return array|string[]
      */
-    public function dataColumns(){
-        return array_merge(['id','date'],$this->fields());
+    public function dataColumns()
+    {
+        return array_merge(['id', 'date'], $this->fields());
     }
 
-    public function hasField($field){
+    public function hasField($field)
+    {
         return in_array($field, $this->fields());
     }
 
@@ -229,8 +240,9 @@ trait DataTableTrait
      *
      * @return array|string[]
      */
-    public function fields(){
-        return array_map(function($val) {
+    public function fields()
+    {
+        return array_map(function ($val) {
             // The database field name is the same as the PV field name with the
             // delimiter character removed.
             return ltrim($val, ':');
@@ -239,16 +251,18 @@ trait DataTableTrait
 
     /**
      * Throw an exception if field is not a valid.
+     *
      * @param $field
      * @return true
+     *
      * @throws MeterDataException
      */
     protected function assertHasField($field): bool
     {
-        if (! $this->hasField($field)){
+        if (! $this->hasField($field)) {
             throw new DataTableException("{$field} is not a field of Meter {$this->primaryKeyValue()}");
         }
+
         return true;
     }
-
 }

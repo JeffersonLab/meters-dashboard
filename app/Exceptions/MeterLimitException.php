@@ -8,7 +8,6 @@
 
 namespace App\Exceptions;
 
-
 class MeterLimitException extends \Exception
 {
 }

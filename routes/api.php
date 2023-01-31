@@ -18,22 +18,22 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::get('/meters/chart-data',[
+Route::get('/meters/chart-data', [
     'as' => 'meters.chart_data',
-    'uses' => 'ApiController@meterChartData'
+    'uses' => 'ApiController@meterChartData',
 ]);
 
-Route::get('/meters/table-data',[
+Route::get('/meters/table-data', [
     'as' => 'meters.table_data',
-    'uses' => 'ApiController@meterTableData'
+    'uses' => 'ApiController@meterTableData',
 ]);
 
-Route::get('/buildings/chart-data',[
+Route::get('/buildings/chart-data', [
     'as' => 'buildings.chart_data',
-    'uses' => 'ApiController@buildingChartData'
+    'uses' => 'ApiController@buildingChartData',
 ]);
 
-Route::get('/reports/chart-data',[
+Route::get('/reports/chart-data', [
     'as' => 'reports.chart_data',
-    'uses' => 'ApiController@reportChartData'
+    'uses' => 'ApiController@reportChartData',
 ]);

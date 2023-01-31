@@ -13,82 +13,79 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::match(['GET','POST'],'/login',[
+Route::match(['GET', 'POST'], '/login', [
     'as' => 'login',
-    'uses' => "AuthController@login"
+    'uses' => 'AuthController@login',
 ]);
 
-Route::get('/logout',[
+Route::get('/logout', [
     'as' => 'logout',
-    'uses' => "AuthController@logout"
+    'uses' => 'AuthController@logout',
 ]);
 
-
-Route::get('/',[
+Route::get('/', [
     'as' => 'home',
-    'uses' => 'BuildingController@siteMap'
+    'uses' => 'BuildingController@siteMap',
 ]);
 
-
-Route::get('meters/{meter}',[
+Route::get('meters/{meter}', [
     'as' => 'meters.show',
-    'uses' => 'MeterController@show'
+    'uses' => 'MeterController@show',
 ]);
 
-Route::get('meters',[
+Route::get('meters', [
     'as' => 'meters.index',
-    'uses' => 'MeterController@index'
+    'uses' => 'MeterController@index',
 ]);
 
-Route::get('monitor/{type}',[
+Route::get('monitor/{type}', [
     'as' => 'monitor',
-    'uses' => 'MeterController@monitor'
+    'uses' => 'MeterController@monitor',
 ]);
 
-Route::get('reports/{report}',[
+Route::get('reports/{report}', [
     'as' => 'reports.item',
-    'uses' => 'ReportController@show'
+    'uses' => 'ReportController@show',
 ]);
 
-Route::get('reports/{report}/excel',[
+Route::get('reports/{report}/excel', [
     'as' => 'reports.excel',
-    'uses' => 'ReportController@excel'
+    'uses' => 'ReportController@excel',
 ]);
 
-Route::get('alerts',[
+Route::get('alerts', [
     'as' => 'alerts.index',
-    'uses' => 'AlertController@index'
+    'uses' => 'AlertController@index',
 ]);
 
-Route::get('reports',[
+Route::get('reports', [
     'as' => 'reports.index',
-    'uses' => 'ReportController@index'
+    'uses' => 'ReportController@index',
 ]);
 
-
-Route::get('buildings',[
+Route::get('buildings', [
     'as' => 'buildings.index',
-    'uses' => 'BuildingController@index'
+    'uses' => 'BuildingController@index',
 ]);
 
-Route::get('map',[
+Route::get('map', [
     'as' => 'buildings.map',
-    'uses' => 'BuildingController@siteMap'
+    'uses' => 'BuildingController@siteMap',
 ]);
 
-Route::get('buildings/substation-summary',[
+Route::get('buildings/substation-summary', [
     'as' => 'buildings.substation_summary',
-    'uses' => 'BuildingController@substationSummary'
+    'uses' => 'BuildingController@substationSummary',
 ]);
 
-Route::get('buildings/{building}',[
+Route::get('buildings/{building}', [
     'as' => 'buildings.show',
-    'uses' => 'BuildingController@show'
+    'uses' => 'BuildingController@show',
 ]);
 
-Route::get('cooling-towers/{building}',[
+Route::get('cooling-towers/{building}', [
     'as' => 'cooling_towers.show',
-    'uses' => 'CoolingTowerController@show'
+    'uses' => 'CoolingTowerController@show',
 ]);
 
 Route::get('/test', function () {
@@ -101,16 +98,11 @@ Route::get('/test', function () {
 //    var_dump($c->coolingDegreeDays());
 //    dd($c->data());
 
-
 //    $vm = new \App\Meters\VirtualMeter();
 //    $vm->setMeters(Meter::whereIn('id',[49,50])->get());
 //    $chart = new \App\Charts\MultiMeter($vm);
 //
 //    dd($chart->toArray());
-
 });
 
-
-
 Route::get('/home', 'HomeController@index')->name('home');
-

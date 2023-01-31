@@ -2,25 +2,24 @@
 
 namespace App\Models\Meters;
 
-
 use App\Models\BaseModel;
 
 class RolloverEvent extends BaseModel
 {
-
-    public static $rules = array(
+    public static $rules = [
         'meter_id' => 'required',
         'field' => 'required | in:gal,totkWh,ccf',
         'rollover_at' => 'date',
         'rollover_accumulated' => 'integer',
 
-    );
-    public $fillable = array(
+    ];
+
+    public $fillable = [
         'meter_id',
         'field',
         'rollover_at',
         'rollover_accumulated',
-    );
+    ];
 
     /**
      * The attributes that should be mutated to dates.
@@ -29,9 +28,8 @@ class RolloverEvent extends BaseModel
      */
     protected $dates = ['rollover_at'];
 
-
-    public function meter(){
+    public function meter()
+    {
         return $this->belongsTo(Meter::class);
     }
-
 }

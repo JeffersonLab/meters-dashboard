@@ -13,10 +13,9 @@ use Tests\TestCase;
 
 class MeterTest extends TestCase
 {
-
-
     /**
      * @test
+     *
      * @return void
      */
     public function it_casts_dates()
@@ -38,8 +37,6 @@ class MeterTest extends TestCase
      */
     public function it_retrieves_meter_using_from_pv_scope()
     {
-
-
         $model = Meter::factory()->create([
             'epics_name' => 'foo',
             'type' => 'power',
@@ -71,7 +68,6 @@ class MeterTest extends TestCase
         $this->assertEquals($building->name, $meter->building->name);
     }
 
-
     /**
      * @test
      */
@@ -99,7 +95,6 @@ class MeterTest extends TestCase
         $this->assertContains(':llVolt', $found);
         $this->assertContains(':gal', $found);
         $this->assertContains(':galPerMin', $found);
-
     }
 
     /**
@@ -117,7 +112,6 @@ class MeterTest extends TestCase
         $this->assertEmpty($meter2->rolloverFields());
     }
 
-
     /**
      * @test
      */
@@ -129,7 +123,7 @@ class MeterTest extends TestCase
             'meter_id' => $meter1->id,
             'field' => 'totkWh',
             'rollover_at' => Carbon::now(),
-            'rollover_accumulated' => $meter1->rolloverIncrement('totkWh')
+            'rollover_accumulated' => $meter1->rolloverIncrement('totkWh'),
         ]);
         $this->assertTrue($event->save());
         $meter1->fresh();
@@ -137,7 +131,6 @@ class MeterTest extends TestCase
         $this->assertCount(1, $found);
         $this->assertEquals($meter1->id, $found->first()->meter->id);
     }
-
 
     /**
      * @test
@@ -147,7 +140,6 @@ class MeterTest extends TestCase
         $this->assertEquals('foo', Meter::epicsNameFromPv('foo:totkW'));
         $this->assertEquals('bar:totkW', Meter::epicsNameFromPv('bar:totkW:totkW'));
         $this->assertNull(Meter::epicsNameFromPv('alligator'));
-
     }
 
     /**
@@ -163,7 +155,6 @@ class MeterTest extends TestCase
 
         $notFound = (new Meter)->findByPv('troobar:totkW');
         $this->assertNull($notFound);
-
     }
 
     /**
@@ -175,7 +166,6 @@ class MeterTest extends TestCase
         $this->assertInstanceOf(DataTableReporter::class, $meter1->reporter());
     }
 
-
     /**
      * @test
      */
@@ -184,7 +174,6 @@ class MeterTest extends TestCase
         //TODO implement afer database migration update
         $this->assertTrue(true);  //placeholder
     }
-
 
     /**
      * @test
@@ -198,7 +187,7 @@ class MeterTest extends TestCase
             'interval' => 1,
             'lolo' => 0,
             'hihi' => 100,
-            'source' => 'epics'
+            'source' => 'epics',
         ]);
         $this->assertTrue($limit->save());
         $meter->fresh();
@@ -211,7 +200,6 @@ class MeterTest extends TestCase
         $this->assertTrue($meter->withinLimits('gal', 50));
         $this->assertFalse($meter->withinLimits('gal', 0));
         $this->assertFalse($meter->withinLimits('gal', 100));
-
     }
 
     /**
@@ -228,7 +216,7 @@ class MeterTest extends TestCase
             'low' => 20,
             'high' => 80,
             'hihi' => 100,
-            'source' => 'epics'
+            'source' => 'epics',
         ]);
         $this->assertTrue($limit->save());
         $meter->fresh();
@@ -238,14 +226,13 @@ class MeterTest extends TestCase
         $this->assertEquals(1, $meter->meterLimits->count());
         $this->assertEquals(100, $meter->meterLimits->first()->hihi);
 
-
         $this->assertTrue($meter->withinLimits('gal', 50));
         $this->assertFalse($meter->withinLimits('gal', 10)); // less than minor low
         $this->assertFalse($meter->withinLimits('gal', 90)); // more than minor high
-
     }
 
-    function test_it_performs_first_and_last_data_queries(){
+    public function test_it_performs_first_and_last_data_queries()
+    {
         $meter = Meter::factory()->create(['type' => 'water', 'begins_at' => Carbon::yesterday()->subDay(5)]);
 
         $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(9), 'gal' => 100]);
@@ -256,11 +243,10 @@ class MeterTest extends TestCase
         $this->assertEquals(900, $meter->lastDataQuery('gal')->first()->gal);
     }
 
-
     /**
      * @test
      */
-    function test_it_returns_average_for_an_interval()
+    public function test_it_returns_average_for_an_interval()
     {
         $meter = Meter::factory()->create(['type' => 'water', 'begins_at' => Carbon::yesterday()->subDay(2)]);
         $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::yesterday()->hour(1), 'gal' => 125]);
@@ -275,7 +261,7 @@ class MeterTest extends TestCase
     /**
      * @test
      */
-    function test_it_returns_first_on_or_after()
+    public function test_it_returns_first_on_or_after()
     {
         $meter = Meter::factory()->create(['type' => 'water', 'begins_at' => Carbon::yesterday()->subDay(5)]);
 
@@ -290,14 +276,12 @@ class MeterTest extends TestCase
         $data = $meter->firstDataOnOrAfter('gal', Carbon::today()->subDay(2));
         $this->assertEquals(Carbon::today()->subDays(2), $data->date);
         $this->assertEquals(250, $data->gal);
-
     }
-
 
     /**
      * @test
      */
-    function test_it_makes_and_applies_rollover_events()
+    public function test_it_makes_and_applies_rollover_events()
     {
         Config::set('meters.rollover.ModelX.totkWh', 1000);
         $meter = Meter::factory()->create([
@@ -327,15 +311,12 @@ class MeterTest extends TestCase
         $data = $meter->dataTable()->select('*')->orderBy('date')->get();
         $this->assertEquals(125, $data->first()->totkWh);
         $this->assertEquals(1345, $data->last()->totkWh);
-
-
     }
-
 
     /**
      * @test
      */
-    function test_it_returns_first_or_last_between()
+    public function test_it_returns_first_or_last_between()
     {
         $meter = Meter::factory()->create(['type' => 'water', 'begins_at' => Carbon::yesterday()->subDay(5)]);
 
@@ -356,11 +337,5 @@ class MeterTest extends TestCase
         $data = $meter->lastDataBetween('gal', Carbon::today()->subDay(7), Carbon::today()->subDay(5));
         $this->assertEquals(Carbon::today()->subDays(5), $data->date);
         $this->assertEquals(500, $data->gal);
-
     }
-
-
-
-
-
 }

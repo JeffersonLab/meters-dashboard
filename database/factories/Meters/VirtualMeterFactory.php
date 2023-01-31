@@ -2,7 +2,6 @@
 
 namespace Database\Factories\Meters;
 
-use App\Models\Meters\Meter;
 use App\Models\Meters\VirtualMeter;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

@@ -3,7 +3,6 @@
 namespace App\Models\DataTables;
 
 use App\Exceptions\DataConversionException;
-use App\Exceptions\MeterDataException;
 use App\Models\Buildings\Building;
 use App\Models\Meters\Meter;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +10,6 @@ use Illuminate\Support\Facades\Schema;
 
 class DataTableCreator
 {
-
     /**
      * @var Meter
      */
@@ -27,15 +25,16 @@ class DataTableCreator
      */
     protected $db;
 
-
-    public function __construct(DataTableInterface $model){
+    public function __construct(DataTableInterface $model)
+    {
         $this->model = $model;
-        $this->schema = Schema::connection(config("database.default"));
-        $this->db = DB::connection(config("database.default"));
+        $this->schema = Schema::connection(config('database.default'));
+        $this->db = DB::connection(config('database.default'));
     }
 
-    protected function assertTableDoesNotExist($table){
-        if ($this->schema->hasTable($table)){
+    protected function assertTableDoesNotExist($table)
+    {
+        if ($this->schema->hasTable($table)) {
             throw new DataConversionException("Table $table already exists");
         }
     }
@@ -45,15 +44,15 @@ class DataTableCreator
      *
      * @return void
      */
-    public function createTable(){
+    public function createTable()
+    {
         $this->assertTableDoesNotExist($this->model->tableName());
-        $this->schema->create($this->model->tableName(), function($table)
-        {
+        $this->schema->create($this->model->tableName(), function ($table) {
             // The columns that are common to all meter types
             $table->increments('id');
             $table->dateTime('date');
             $table->unsignedInteger($this->fk());
-            $table->string('src',20)->default('mya');
+            $table->string('src', 20)->default('mya');
             $table->timestamps();
             $table->bigInteger('rollover_accumulated')->nullable();
             // The columns that are meter-type specific can be
@@ -66,8 +65,8 @@ class DataTableCreator
             // The index construction differs for buildings vs meters
             if ($this->model instanceof Building) {
                 $table->foreign($this->fk())->references('id')->on('buildings')->onDelete('cascade');
-            }else{
-                $table->foreign($this->fk())->references('id')->on('meters')->onDelete('cascade');;
+            } else {
+                $table->foreign($this->fk())->references('id')->on('meters')->onDelete('cascade');
             }
             $table->index('date');
         });
@@ -78,18 +77,21 @@ class DataTableCreator
      *
      * @return array|false[]|string[]
      */
-    public function pvs(){
-        return array_map(fn($value) => substr($value,1), $this->model->pvFields());
+    public function pvs()
+    {
+        return array_map(fn ($value) => substr($value, 1), $this->model->pvFields());
     }
 
     /**
      * The foreign key column name in the data table.
      * It will be meter_id in a meter_data_* table and building_id in a building_data_table
      */
-    protected function fk(): string {
-        if ($this->model instanceof Building){
+    protected function fk(): string
+    {
+        if ($this->model instanceof Building) {
             return 'building_id';
         }
+
         return 'meter_id';
     }
 
@@ -98,12 +100,14 @@ class DataTableCreator
      *
      * @return array|false[]|string[]
      */
-    public function columnList(){
-        if ($this->model instanceof Building){
+    public function columnList()
+    {
+        if ($this->model instanceof Building) {
             $list = ['date', $this->fk(), 'src', 'created_at', 'updated_at'];
-        }else{
+        } else {
             $list = ['date', $this->fk(), 'src', 'created_at', 'updated_at', 'rollover_accumulated'];
         }
+
         return array_merge($list, $this->pvs());
     }
 
@@ -112,8 +116,9 @@ class DataTableCreator
      *
      * @return string|null
      */
-    public function oldTableName(){
-        if ($this->model instanceof Building){
+    public function oldTableName()
+    {
+        if ($this->model instanceof Building) {
             return 'building_data';
         }
         if ($this->model instanceof Meter) {
@@ -126,18 +131,21 @@ class DataTableCreator
                     return 'water_meter_data';
             }
         }
+
         return null;
     }
 
     /**
      * Migrate data from the old monolithic single data table into the new per-meter table.
+     *
      * @return void
      */
-    public function migrateData(){
-        $sql = sprintf("insert into %s (%s) select %s from %s where %s = %s",
+    public function migrateData()
+    {
+        $sql = sprintf('insert into %s (%s) select %s from %s where %s = %s',
             $this->model->tableName(),
             implode(',', $this->columnList()),
-            implode(',',$this->columnList()),
+            implode(',', $this->columnList()),
             $this->oldTableName(),
             $this->fk(),
             $this->model->id);
@@ -145,15 +153,13 @@ class DataTableCreator
         $this->db->statement($sql);
     }
 
-
     /**
      * Drop the meter's data table.
      *
      * @return void
      */
-    public function dropTable(){
+    public function dropTable()
+    {
         $this->schema->dropIfExists($this->model->tableName());
     }
-
-
 }

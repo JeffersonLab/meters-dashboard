@@ -13,8 +13,7 @@ return [
       | Supported: "internal", "ace_ldap", "cue_ldap"
       |
     */
-        'methods' => explode(' ', env('JLAB_AUTH_METHODS', 'internal ace_ldap cue_ldap')),
-
+    'methods' => explode(' ', env('JLAB_AUTH_METHODS', 'internal ace_ldap cue_ldap')),
 
     /*
       |--------------------------------------------------------------------------
@@ -33,13 +32,12 @@ return [
       | body sent to clients.
       |
     */
-        'jwt' => [
-            'cookie' => env('JLAB_AUTH_JWT_COOKIE', 'X-JLAB-AUTH'),
-            'secret' => env('JLAB_AUTH_JWT_SECRET', ''),
-            'expires' => env('JLAB_AUTH_JWT_EXPIRES', 60),
-            'send'  => false,
-        ],
-
+    'jwt' => [
+        'cookie' => env('JLAB_AUTH_JWT_COOKIE', 'X-JLAB-AUTH'),
+        'secret' => env('JLAB_AUTH_JWT_SECRET', ''),
+        'expires' => env('JLAB_AUTH_JWT_EXPIRES', 60),
+        'send' => false,
+    ],
 
     /*
       |--------------------------------------------------------------------------
@@ -51,7 +49,6 @@ return [
       |
      */
     'staff_service_url' => env('ACE_STAFF_URL', 'https://accweb.acc.jlab.org/staff/data/users'),
-
 
     /*
      |--------------------------------------------------------------------------

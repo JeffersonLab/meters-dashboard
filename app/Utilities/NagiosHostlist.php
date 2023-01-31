@@ -8,14 +8,12 @@
 
 namespace App\Utilities;
 
-use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 class NagiosHostlist extends NagiosData
 {
-
     protected $cgi = 'statusjson.cgi';
+
     protected $lastResult;
 
     /**
@@ -23,27 +21,31 @@ class NagiosHostlist extends NagiosData
      *
      *
      * @return mixed
+     *
      * @internal param $name
      */
-    function getData(){
-        if (! $this->lastResult){
+    public function getData()
+    {
+        if (! $this->lastResult) {
             $this->lastResult = $this->httpGet();
         }
+
         return $this->lastResult;
     }
 
-
-
-    function hosts(){
+    public function hosts()
+    {
         $hosts = new Collection();
-        foreach ($this->getData()->data->hostlist as $host){
+        foreach ($this->getData()->data->hostlist as $host) {
             $hosts->push($host);
         }
+
         return $hosts;
     }
 
-    function countNotUp(){
-        return $this->hosts()->where('status','!=','up')->count();
+    public function countNotUp()
+    {
+        return $this->hosts()->where('status', '!=', 'up')->count();
     }
 
     /**
@@ -52,19 +54,14 @@ class NagiosHostlist extends NagiosData
      *
      * @return array
      */
-    function query(){
+    public function query()
+    {
         //?query=hostlist&formatoptions=whitespace+enumerate+bitmask+duration&hoststatus=up+down+unreachable';
-        return array(
+        return [
             'query' => 'hostlist',
             'details' => 'true',
             'formatoptions' => 'whitespace enumerate bitmask duration',
             //'hoststatus' => 'up down unreachable',
-        );
+        ];
     }
-
-
-
-
-
-
 }

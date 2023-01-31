@@ -23,20 +23,18 @@ class FillMeters extends Command
      */
     protected $description = 'Fills meter data table by sampling mya archiver';
 
-
-    protected function getMeters(){
-
-        if ($this->option('meter')){
+    protected function getMeters()
+    {
+        if ($this->option('meter')) {
             return Meter::where('id', $this->option('meter'))->get();
         }
 
-        if ($this->option('type')){
+        if ($this->option('type')) {
             return Meter::where('type', $this->option('type'))->get();
         }
 
         return Meter::all();
     }
-
 
     /**
      * Execute the console command.
@@ -45,9 +43,10 @@ class FillMeters extends Command
      */
     public function handle()
     {
-        ini_set("memory_limit", "1G");
-        if ($this->option('meter') && $this->option('type')){
-            $this->error("Please specify either meter OR type, not both!");
+        ini_set('memory_limit', '1G');
+        if ($this->option('meter') && $this->option('type')) {
+            $this->error('Please specify either meter OR type, not both!');
+
             return false;
         }
 
@@ -55,7 +54,7 @@ class FillMeters extends Command
             if ($meter->type == 'power' || $meter->type == 'water' || $meter->type == 'gas') {
                 try {
                     $count = $meter->fillDataTable();
-                    $this->info('Filled ' . $meter->name . "with $count rows");
+                    $this->info('Filled '.$meter->name."with $count rows");
                     $eventCount = $meter->makeNewRolloverEvents();
                     if ($eventCount > 0) {
                         $this->info("Identified $eventCount rollover events");
@@ -69,8 +68,7 @@ class FillMeters extends Command
                 }
             }
         }
+
         return true;
     }
-
-
 }

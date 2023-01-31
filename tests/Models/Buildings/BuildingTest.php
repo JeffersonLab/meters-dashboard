@@ -5,17 +5,15 @@ namespace Tests\Models\Buildings;
 use App\Models\Buildings\Building;
 use App\Models\Meters\Meter;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
 class BuildingTest extends TestCase
 {
-
     public function test_it_returns_pv_fields()
     {
         $building = Building::factory()->create(['name' => 'foo']);
-        $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'building_id'=>$building->id]);
-        $meter2 = Meter::factory()->create(['type' => 'water', 'name' => 'm2', 'building_id'=>$building->id]);
+        $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'building_id' => $building->id]);
+        $meter2 = Meter::factory()->create(['type' => 'water', 'name' => 'm2', 'building_id' => $building->id]);
 
         $this->assertCount(5, $building->pvFields());
         $this->assertContains(':totkW', $building->pvFields());
@@ -29,9 +27,8 @@ class BuildingTest extends TestCase
     public function test_it_return_channels()
     {
         $building = Building::factory()->create(['name' => 'foo']);
-        $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'building_id'=>$building->id]);
-        $meter2 = Meter::factory()->create(['type' => 'water', 'name' => 'm2', 'building_id'=>$building->id]);
-
+        $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'building_id' => $building->id]);
+        $meter2 = Meter::factory()->create(['type' => 'water', 'name' => 'm2', 'building_id' => $building->id]);
 
         $this->assertCount(5, $building->channels());
         $this->assertContains('foo:totkW', $building->channels());
@@ -40,20 +37,22 @@ class BuildingTest extends TestCase
         $this->assertContains('foo:totMBTU', $building->channels());
     }
 
-    public function test_meter_types(){
+    public function test_meter_types()
+    {
         $building = Building::factory()->create(['name' => 'foo']);
-        $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'building_id'=>$building->id]);
-        $meter2 = Meter::factory()->create(['type' => 'water', 'name' => 'm2', 'building_id'=>$building->id]);
+        $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'building_id' => $building->id]);
+        $meter2 = Meter::factory()->create(['type' => 'water', 'name' => 'm2', 'building_id' => $building->id]);
 
         $this->assertTrue($building->hasMeterType('power'));
         $this->assertTrue($building->hasMeterType('water'));
         $this->assertFalse($building->hasMeterType('gas'));
     }
 
-    public function test_meters_of_type(){
+    public function test_meters_of_type()
+    {
         $building = Building::factory()->create(['name' => 'foo']);
-        $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'building_id'=>$building->id]);
-        $meter2 = Meter::factory()->create(['type' => 'water', 'name' => 'm2', 'building_id'=>$building->id]);
+        $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'building_id' => $building->id]);
+        $meter2 = Meter::factory()->create(['type' => 'water', 'name' => 'm2', 'building_id' => $building->id]);
 
         $wm = $building->metersOfType('water');
         $this->assertEquals($meter2->name, $wm->first()->name);
@@ -61,10 +60,11 @@ class BuildingTest extends TestCase
         $this->assertEquals($meter2->name, $waterMeter->name);
     }
 
-    public function test_it_fetches_supply_and_drain_meters(){
+    public function test_it_fetches_supply_and_drain_meters()
+    {
         $building = Building::factory()->create(['name' => 'CoolingTower']);
-        foreach (['CT-SUPPLY-1','CT-SUPPLY-2','CT-SUPPLY-3','CT-DRAIN1','CT-FLTERDRAIN-1'] as $name){
-            Meter::factory()->create(['type' => 'water', 'epics_name' => $name, 'building_id'=>$building->id]);
+        foreach (['CT-SUPPLY-1', 'CT-SUPPLY-2', 'CT-SUPPLY-3', 'CT-DRAIN1', 'CT-FLTERDRAIN-1'] as $name) {
+            Meter::factory()->create(['type' => 'water', 'epics_name' => $name, 'building_id' => $building->id]);
         }
         $building->load('meters');
         $this->assertCount(5, $building->waterMeters()->get());
@@ -72,11 +72,12 @@ class BuildingTest extends TestCase
         $this->assertCount(2, $building->waterDrainMeters()->get());
     }
 
-    public function test_it_computes_consumption_sewer_evaporation(){
+    public function test_it_computes_consumption_sewer_evaporation()
+    {
         $building = Building::factory()->create(['name' => 'CoolingTower']);
-        $supplyMeter1 = Meter::factory()->create(['type' => 'water', 'epics_name' => 'CT-SUPPLY-1', 'building_id'=>$building->id]);
-        $supplyMeter2 = Meter::factory()->create(['type' => 'water', 'epics_name' => 'CT-SUPPLY-2', 'building_id'=>$building->id]);
-        $drainMeter1 = Meter::factory()->create(['type' => 'water', 'epics_name' => 'CT-DRAIN-1', 'building_id'=>$building->id]);
+        $supplyMeter1 = Meter::factory()->create(['type' => 'water', 'epics_name' => 'CT-SUPPLY-1', 'building_id' => $building->id]);
+        $supplyMeter2 = Meter::factory()->create(['type' => 'water', 'epics_name' => 'CT-SUPPLY-2', 'building_id' => $building->id]);
+        $drainMeter1 = Meter::factory()->create(['type' => 'water', 'epics_name' => 'CT-DRAIN-1', 'building_id' => $building->id]);
 
         // Dates we'll use for the test
         $begin = Carbon::today()->subDay(2)->hour(0);
@@ -102,8 +103,5 @@ class BuildingTest extends TestCase
         $this->assertEquals(50, $building->waterToSewer($begin, $end));       // Sum of Drain
         $this->assertEquals(200, $building->waterToEvaporation($begin, $end)); // Supply - Drain
         $this->assertEquals(5, $building->waterCyclesOfConcentration($begin, $end)); // Supply / Drain
-
-
     }
-
 }

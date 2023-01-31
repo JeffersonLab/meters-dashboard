@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTableVirtualMeterMeters extends Migration
 {
@@ -18,7 +18,7 @@ class CreateTableVirtualMeterMeters extends Migration
             $table->unsignedInteger('meter_id');
             $table->timestamps();
 
-            $table->primary(['virtual_meter_id','meter_id']);
+            $table->primary(['virtual_meter_id', 'meter_id']);
 
             $table->foreign('virtual_meter_id')
                 ->references('id')->on('virtual_meters')
@@ -27,7 +27,6 @@ class CreateTableVirtualMeterMeters extends Migration
             $table->foreign('meter_id')
                 ->references('id')->on('meters')
                 ->onDelete('cascade');
-
         });
     }
 

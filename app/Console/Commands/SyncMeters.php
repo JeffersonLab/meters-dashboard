@@ -28,7 +28,6 @@ class SyncMeters extends Command
      */
     protected $description = 'Synchronize Meters table with CED';
 
-
     /**
      * The CED Type Data Helper.
      *
@@ -43,12 +42,11 @@ class SyncMeters extends Command
      */
     protected $cedElemData;
 
-
     /**
      * Create a new command instance.
      *
-     * @param CEDTypeData $cedTypeData
-     * @param CEDElemData $cedElemData
+     * @param  CEDTypeData  $cedTypeData
+     * @param  CEDElemData  $cedElemData
      */
     public function __construct(CEDTypeData $cedTypeData, CEDElemData $cedElemData)
     {
@@ -79,6 +77,7 @@ class SyncMeters extends Command
      * and to update
      *
      * @param $data
+     *
      * @throws \Throwable
      */
     protected function addAndUpdate($data)
@@ -87,9 +86,7 @@ class SyncMeters extends Command
 
         foreach ($data as $item) {
             if ($this->propertyFromItem($item, 'Unpowered') != 1) {
-
-                if (!$existing->contains('name', $item->name)) {
-
+                if (! $existing->contains('name', $item->name)) {
                     $meter = new Meter([
                         'name' => $item->name,
                         'type' => Meter::typeFromCEDType($item->type),
@@ -101,8 +98,7 @@ class SyncMeters extends Command
 
                     ]);
                     $meter->saveOrFail();
-                    $this->info('Added ' . $item->name);
-
+                    $this->info('Added '.$item->name);
                 } else {
                     $meter = $existing->where('name', '=', $item->name)->first();
                     if ($this->differs($meter, $item)) {
@@ -113,9 +109,8 @@ class SyncMeters extends Command
                             'housed_by' => $this->propertyFromItem($item, 'Housed_by'),
                         ]);
                         $meter->saveOrFail();
-                        $this->info('Updated ' . $item->name);
+                        $this->info('Updated '.$item->name);
                     }
-
                 }
                 $this->syncBuilding($meter);
             }
@@ -153,11 +148,11 @@ class SyncMeters extends Command
     /**
      * Ensures that the building housing the meter is also in the local database.
      *
-     * @param Meter $meter
+     * @param  Meter  $meter
      */
     public function syncBuilding(Meter $meter)
     {
-        if (!$meter->building_id) {
+        if (! $meter->building_id) {
             if ($meter->housed_by) {
                 $building = $this->getBuilding($meter->housed_by);
 
@@ -166,9 +161,9 @@ class SyncMeters extends Command
                     try {
                         $meter->saveOrFail();
                     } catch (ModelValidationException $e) {
-                        $this->error($building->name . ': ' . $e->getMessage());
+                        $this->error($building->name.': '.$e->getMessage());
                     }
-                    $this->line('Assigned building id' . $building->id . ' to ' . $meter->name);
+                    $this->line('Assigned building id'.$building->id.' to '.$meter->name);
                 }
             }
         }
@@ -177,15 +172,17 @@ class SyncMeters extends Command
     /**
      * Obtain building object by its name.
      * Goes to CED if not found in local DB
+     *
      * @param $name
      * @return Building|mixed|null
      */
     protected function getBuilding($name)
     {
         $localBuilding = Building::where('name', '=', $name)->first();
-        if (!$localBuilding) {
+        if (! $localBuilding) {
             return $this->getBuildingFromCed($name);
         }
+
         return $localBuilding;
     }
 
@@ -211,12 +208,13 @@ class SyncMeters extends Command
             try {
                 $building->saveOrFail();
             } catch (ModelValidationException $e) {
-                $this->error($building->name . ': ' . $e->getMessage());
+                $this->error($building->name.': '.$e->getMessage());
             }
-            $this->line('Added building ' . $building->name . 'from CED');
+            $this->line('Added building '.$building->name.'from CED');
+
             return $building;
         }
+
         return null;
     }
-
 }

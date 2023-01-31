@@ -9,7 +9,8 @@ class BaseModel extends Model
 {
     use HasFactory;
 
-    public function primaryKeyValue(): int{
+    public function primaryKeyValue(): int
+    {
         return $this->getAttribute($this->primaryKey);
     }
 }

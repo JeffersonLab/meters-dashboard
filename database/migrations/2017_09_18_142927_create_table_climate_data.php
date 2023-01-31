@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTableClimateData extends Migration
 {
@@ -18,13 +18,11 @@ class CreateTableClimateData extends Migration
             $table->float('cooling_degree_days');
             $table->float('heating_degree_days');
             $table->float('degree_days');
-            $table->string('src',20)->default('wunderground');
+            $table->string('src', 20)->default('wunderground');
             $table->timestamps();
 
             $table->primary('date');
-
         });
-
     }
 
     /**

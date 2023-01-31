@@ -76,21 +76,20 @@ class RouteServiceProvider extends ServiceProvider
          * Special route model bindings allowing the user to provide a
          * numeric id or a string name.
          */
-        Route::bind('meter', function($id) {
+        Route::bind('meter', function ($id) {
             if (is_numeric($id)) {
                 return Meter::where('id', $id)->firstOrFail();
-            }else{
+            } else {
                 return Meter::where('name', $id)->firstOrFail();
             }
         });
 
-        Route::bind('building', function($id) {
+        Route::bind('building', function ($id) {
             if (is_numeric($id)) {
                 return Building::where('id', $id)->first();
-            }else{
+            } else {
                 return Building::where('name', $id)->first();
             }
         });
-
     }
 }

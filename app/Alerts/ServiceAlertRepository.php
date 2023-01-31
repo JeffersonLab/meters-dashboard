@@ -18,12 +18,9 @@ use Illuminate\Support\Facades\DB;
  * Class ServiceAlertRepository
  *
  * Repository used to retrieve ServiceAlerts.
- *
- * @package App\Alerts
  */
 class ServiceAlertRepository
 {
-
     /**
      * @var NagiosServicelist
      */
@@ -34,7 +31,7 @@ class ServiceAlertRepository
      */
     protected $alerts;
 
-    function __construct(NagiosServicelist $nagiosServicelist)
+    public function __construct(NagiosServicelist $nagiosServicelist)
     {
         $this->nagiosServiceList = $nagiosServicelist;
         $this->alerts = new Collection();
@@ -44,42 +41,44 @@ class ServiceAlertRepository
     /**
      * Populates the alerts collection from Nagios Service alerts
      */
-    function populateAlerts(){
+    public function populateAlerts()
+    {
         $this->nagiosServiceList->getData();
-            foreach ($this->nagiosServiceList->filterByNotStatus('ok') as $hostname => $services){
-                foreach ($services as $service){
-                    $this->pushAlert(new ServiceAlert($service));
-                }
+        foreach ($this->nagiosServiceList->filterByNotStatus('ok') as $hostname => $services) {
+            foreach ($services as $service) {
+                $this->pushAlert(new ServiceAlert($service));
             }
+        }
     }
 
     /**
      * Populates the alerts collection with alerts related to
      * excessive or insufficient water consumption
      */
-    function populateWaterFlowAlerts(){
-        $meters = Meter::where('epics_name','CH_Grnd_Wtr_Dis_Sml')->get()->all();
-        foreach ($meters as $meter){
-          $consumedYesterday = $meter->dataTable()
-              ->select (DB::raw('max(gal) - min(gal) as consumed'))
-              ->where ('meter_id', $meter->id)
-              ->where ('date','<=',Carbon::today())
-              ->where ('date','>=',Carbon::yesterday())
+    public function populateWaterFlowAlerts()
+    {
+        $meters = Meter::where('epics_name', 'CH_Grnd_Wtr_Dis_Sml')->get()->all();
+        foreach ($meters as $meter) {
+            $consumedYesterday = $meter->dataTable()
+              ->select(DB::raw('max(gal) - min(gal) as consumed'))
+              ->where('meter_id', $meter->id)
+              ->where('date', '<=', Carbon::today())
+              ->where('date', '>=', Carbon::yesterday())
               ->get();
-          dd($consumedYesterday);
+            dd($consumedYesterday);
         }
     }
 
-
-    function pushAlert(ServiceAlert $alert){
+    public function pushAlert(ServiceAlert $alert)
+    {
         $this->alerts->push($alert);
     }
 
     /**
      * Returns a collection of alerts
      */
-    function alerts(){
+    public function alerts()
+    {
         return $this->alerts;
     }
-
 }

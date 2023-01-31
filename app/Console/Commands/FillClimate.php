@@ -15,7 +15,7 @@ class FillClimate extends Command
     protected $signature = 'climate:fill
                 {--date= : Yesterday is assumed unless specified (yyyy-mm-dd) }
                 {--source=jlab : specify data source (darksky | jlab) }
-                {--replace : Replace existing data }' ;
+                {--replace : Replace existing data }';
 
     /**
      * The console command description.
@@ -24,27 +24,26 @@ class FillClimate extends Command
      */
     protected $description = 'Fills climate data table from historical weather data source';
 
-
-
-    protected function getDataSource(){
-        if ($this->hasOption('source') && $this->option('source') == 'darksky'){
+    protected function getDataSource()
+    {
+        if ($this->hasOption('source') && $this->option('source') == 'darksky') {
             $dataSource = new \App\Utilities\DarkSkyClimateData();
-        }else{
+        } else {
             $dataSource = new \App\Utilities\FacilitiesClimateData();
         }
 
-        if ($this->hasOption('date')){
-
+        if ($this->hasOption('date')) {
             $dataSource->setDate($this->option('date'));
         }
 
         return $dataSource;
     }
 
-
     /**
      * Execute the console command.
+     *
      * @return mixed
+     *
      * @throws \Exception
      */
     public function handle()
@@ -52,7 +51,7 @@ class FillClimate extends Command
         try {
             $data = $this->getDataSource();
 
-            if ($this->hasOption('replace')){
+            if ($this->hasOption('replace')) {
                 DB::table('climate_data')->where('date', $data->getDate())->delete();
             }
 
@@ -60,15 +59,14 @@ class FillClimate extends Command
                 'date' => $data->getDate(),
                 'heating_degree_days' => $data->heatingDegreeDays(),
                 'cooling_degree_days' => $data->coolingDegreeDays(),
-                'degree_days'   => $data->heatingDegreeDays() + $data->coolingDegreeDays(),
-                'src'   => $data->sourceName(),
+                'degree_days' => $data->heatingDegreeDays() + $data->coolingDegreeDays(),
+                'src' => $data->sourceName(),
             ]);
         } catch (\Exception $e) {
             $this->error($e->getMessage());
             throw $e;
         }
+
         return true;
     }
-
-
 }
