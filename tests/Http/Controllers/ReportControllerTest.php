@@ -12,7 +12,7 @@ class ReportControllerTest extends TestCase
 
     protected $meter2;
 
-    public function setup(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

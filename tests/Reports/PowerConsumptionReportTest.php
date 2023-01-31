@@ -12,7 +12,7 @@ class PowerConsumptionReportTest extends TestCase
 {
     protected $meter;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->meter = Meter::factory()->create(['type' => 'power', 'begins_at' => Carbon::yesterday()->subDay(30)]);

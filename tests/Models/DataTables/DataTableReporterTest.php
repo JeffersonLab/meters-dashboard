@@ -28,7 +28,7 @@ class DataTableReporterTest extends TestCase
 
     protected $sampleCollection;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->sampleCollection = new Collection();

@@ -59,7 +59,7 @@ abstract class TestCase extends BaseTestCase
         ],
     ];
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         //specify the valid epics field names for a power meter

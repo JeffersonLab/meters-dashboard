@@ -21,7 +21,7 @@ class DailyConsumptionChartDataTest extends TestCase
      */
     protected $building;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->building = Building::factory()->create([
