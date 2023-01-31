@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "repositories": [
         {
@@ -10,8 +13,8 @@
             "url": "https://github.com/JeffersonLab/laravel-utilities.git"
         },
         {
-            "type" : "vcs",
-            "url"  : "https://github.com/JeffersonLab/laravel-auth.git"
+            "type": "vcs",
+            "url": "https://github.com/JeffersonLab/laravel-auth.git"
         }
     ],
     "require": {
@@ -19,11 +22,10 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "doctrine/dbal": "^3.3",
-        "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "jeroennoten/laravel-adminlte": "^3.8",
         "jlab/laravel-utilities": "^8.4",
-        "jlab/auth" : "^8.01",
+        "jlab/auth": "^8.01",
         "laracasts/utilities": "^3.2",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
