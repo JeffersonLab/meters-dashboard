@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\AlertController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BuildingController;
+use App\Http\Controllers\CoolingTowerController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MeterController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,36 +22,36 @@ use Illuminate\Support\Facades\Route;
 
 Route::match(['GET', 'POST'], '/login', [
     'as' => 'login',
-    'uses' => 'AuthController@login',
+    'uses' => [AuthController::class, 'login'],
 ]);
 
-Route::get('/logout', 'AuthController@logout')->name('logout');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/', 'BuildingController@siteMap')->name('home');
+Route::get('/', [BuildingController::class, 'siteMap'])->name('home');
 
-Route::get('meters/{meter}', 'MeterController@show')->name('meters.show');
+Route::get('meters/{meter}', [MeterController::class, 'show'])->name('meters.show');
 
-Route::get('meters', 'MeterController@index')->name('meters.index');
+Route::get('meters', [MeterController::class, 'index'])->name('meters.index');
 
-Route::get('monitor/{type}', 'MeterController@monitor')->name('monitor');
+Route::get('monitor/{type}', [MeterController::class, 'monitor'])->name('monitor');
 
-Route::get('reports/{report}', 'ReportController@show')->name('reports.item');
+Route::get('reports/{report}', [ReportController::class, 'show'])->name('reports.item');
 
-Route::get('reports/{report}/excel', 'ReportController@excel')->name('reports.excel');
+Route::get('reports/{report}/excel', [ReportController::class, 'excel'])->name('reports.excel');
 
-Route::get('alerts', 'AlertController@index')->name('alerts.index');
+Route::get('alerts', [AlertController::class, 'index'])->name('alerts.index');
 
-Route::get('reports', 'ReportController@index')->name('reports.index');
+Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
 
-Route::get('buildings', 'BuildingController@index')->name('buildings.index');
+Route::get('buildings', [BuildingController::class, 'index'])->name('buildings.index');
 
-Route::get('map', 'BuildingController@siteMap')->name('buildings.map');
+Route::get('map', [BuildingController::class, 'siteMap'])->name('buildings.map');
 
-Route::get('buildings/substation-summary', 'BuildingController@substationSummary')->name('buildings.substation_summary');
+Route::get('buildings/substation-summary', [BuildingController::class, 'substationSummary'])->name('buildings.substation_summary');
 
-Route::get('buildings/{building}', 'BuildingController@show')->name('buildings.show');
+Route::get('buildings/{building}', [BuildingController::class, 'show'])->name('buildings.show');
 
-Route::get('cooling-towers/{building}', 'CoolingTowerController@show')->name('cooling_towers.show');
+Route::get('cooling-towers/{building}', [CoolingTowerController::class, 'show'])->name('cooling_towers.show');
 
 Route::get('/test', function () {
 //    dd(file_get_contents('http://epics2web:8080/epics2web/caget?pv=87-L1%3AllVolt'));
@@ -63,4 +70,4 @@ Route::get('/test', function () {
 //    dd($chart->toArray());
 });
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
