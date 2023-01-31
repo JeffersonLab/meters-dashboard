@@ -12,7 +12,7 @@
     "devDependencies": {
         "acorn": "^8.0",
         "ajv": "^6.9.1",
-        "axios": "^0.21",
+        "axios": "^0.25",
         "bootstrap": "^4.0.0",
         "cross-env": "^5.1",
         "datatables.net-bs4": "^1.11.4",
