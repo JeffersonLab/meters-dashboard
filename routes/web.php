@@ -18,75 +18,33 @@ Route::match(['GET', 'POST'], '/login', [
     'uses' => 'AuthController@login',
 ]);
 
-Route::get('/logout', [
-    'as' => 'logout',
-    'uses' => 'AuthController@logout',
-]);
+Route::get('/logout', 'AuthController@logout')->name('logout');
 
-Route::get('/', [
-    'as' => 'home',
-    'uses' => 'BuildingController@siteMap',
-]);
+Route::get('/', 'BuildingController@siteMap')->name('home');
 
-Route::get('meters/{meter}', [
-    'as' => 'meters.show',
-    'uses' => 'MeterController@show',
-]);
+Route::get('meters/{meter}', 'MeterController@show')->name('meters.show');
 
-Route::get('meters', [
-    'as' => 'meters.index',
-    'uses' => 'MeterController@index',
-]);
+Route::get('meters', 'MeterController@index')->name('meters.index');
 
-Route::get('monitor/{type}', [
-    'as' => 'monitor',
-    'uses' => 'MeterController@monitor',
-]);
+Route::get('monitor/{type}', 'MeterController@monitor')->name('monitor');
 
-Route::get('reports/{report}', [
-    'as' => 'reports.item',
-    'uses' => 'ReportController@show',
-]);
+Route::get('reports/{report}', 'ReportController@show')->name('reports.item');
 
-Route::get('reports/{report}/excel', [
-    'as' => 'reports.excel',
-    'uses' => 'ReportController@excel',
-]);
+Route::get('reports/{report}/excel', 'ReportController@excel')->name('reports.excel');
 
-Route::get('alerts', [
-    'as' => 'alerts.index',
-    'uses' => 'AlertController@index',
-]);
+Route::get('alerts', 'AlertController@index')->name('alerts.index');
 
-Route::get('reports', [
-    'as' => 'reports.index',
-    'uses' => 'ReportController@index',
-]);
+Route::get('reports', 'ReportController@index')->name('reports.index');
 
-Route::get('buildings', [
-    'as' => 'buildings.index',
-    'uses' => 'BuildingController@index',
-]);
+Route::get('buildings', 'BuildingController@index')->name('buildings.index');
 
-Route::get('map', [
-    'as' => 'buildings.map',
-    'uses' => 'BuildingController@siteMap',
-]);
+Route::get('map', 'BuildingController@siteMap')->name('buildings.map');
 
-Route::get('buildings/substation-summary', [
-    'as' => 'buildings.substation_summary',
-    'uses' => 'BuildingController@substationSummary',
-]);
+Route::get('buildings/substation-summary', 'BuildingController@substationSummary')->name('buildings.substation_summary');
 
-Route::get('buildings/{building}', [
-    'as' => 'buildings.show',
-    'uses' => 'BuildingController@show',
-]);
+Route::get('buildings/{building}', 'BuildingController@show')->name('buildings.show');
 
-Route::get('cooling-towers/{building}', [
-    'as' => 'cooling_towers.show',
-    'uses' => 'CoolingTowerController@show',
-]);
+Route::get('cooling-towers/{building}', 'CoolingTowerController@show')->name('cooling_towers.show');
 
 Route::get('/test', function () {
 //    dd(file_get_contents('http://epics2web:8080/epics2web/caget?pv=87-L1%3AllVolt'));
