@@ -14,7 +14,6 @@ use Tests\TestCase;
 class MeterTest extends TestCase
 {
     /**
-     *
      * @return void
      */
     public function test_it_casts_dates()
