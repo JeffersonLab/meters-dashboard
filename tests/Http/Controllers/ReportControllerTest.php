@@ -73,7 +73,7 @@ class ReportControllerTest extends TestCase
 //        $response->assertHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     }
 
-    public function fillMeterWithData($meter, $increment = 100, $initial = 0)
+    protected function fillMeterWithData($meter, $increment = 100, $initial = 0)
     {
         $meter->dataTable()->where('meter_id', $meter->id)->delete();
         $date = clone $meter->begins_at;

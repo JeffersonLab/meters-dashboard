@@ -14,11 +14,9 @@ use Tests\TestCase;
 class MeterTest extends TestCase
 {
     /**
-     * @test
-     *
      * @return void
      */
-    public function it_casts_dates()
+    public function test_it_casts_dates()
     {
         $model = Meter::factory()->create([
             'begins_at' => '2022-01-01',
@@ -32,10 +30,7 @@ class MeterTest extends TestCase
         $this->assertInstanceOf(Carbon::class, $model->deleted_at);
     }
 
-    /**
-     * @test
-     */
-    public function it_retrieves_meter_using_from_pv_scope()
+    public function test_it_retrieves_meter_using_from_pv_scope()
     {
         $model = Meter::factory()->create([
             'epics_name' => 'foo',
@@ -45,10 +40,7 @@ class MeterTest extends TestCase
         $this->assertNull(Meter::fromPv('foo:DoesNotExist')->first());
     }
 
-    /**
-     * @test
-     */
-    public function it_returns_pv_fields()
+    public function test_it_returns_pv_fields()
     {
         $meter = Meter::factory()->make(['name' => 'foo', 'epics_name' => 'bar', 'type' => 'power']);
         $this->assertCount(4, $meter->pvFields());
@@ -58,20 +50,14 @@ class MeterTest extends TestCase
         $this->assertContains(':llVolt', $meter->pvFields());
     }
 
-    /**
-     * @test
-     */
-    public function it_relates_to_building()
+    public function test_it_relates_to_building()
     {
         $building = Building::factory()->create();
         $meter = Meter::factory()->create(['building_id' => $building->id]);
         $this->assertEquals($building->name, $meter->building->name);
     }
 
-    /**
-     * @test
-     */
-    public function it_returns_type_from_ced_type()
+    public function test_it_returns_type_from_ced_type()
     {
         $this->assertEquals('power', Meter::typeFromCEDType('PowerMeter'));
         $this->assertEquals('power', Meter::typeFromCEDType('pOwerMETer'));
@@ -82,10 +68,7 @@ class MeterTest extends TestCase
         $this->assertNull(Meter::typeFromCEDType('foobar'));
     }
 
-    /**
-     * @test
-     */
-    public function it_finds_all_pv_fields()
+    public function test_it_finds_all_pv_fields()
     {
         $found = Meter::allPvFields();
         $this->assertCount(8, $found);
@@ -97,10 +80,7 @@ class MeterTest extends TestCase
         $this->assertContains(':galPerMin', $found);
     }
 
-    /**
-     * @test
-     */
-    public function it_finds_rollover_config()
+    public function test_it_finds_rollover_config()
     {
         Config::set('meters.rollover.ModelX.totkWh', 500);
         $meter1 = Meter::factory()->create(['type' => 'power', 'model_number' => 'ModelX']);
@@ -112,10 +92,7 @@ class MeterTest extends TestCase
         $this->assertEmpty($meter2->rolloverFields());
     }
 
-    /**
-     * @test
-     */
-    public function it_has_rollover_events()
+    public function test_it_has_rollover_events()
     {
         Config::set('meters.rollover.ModelX.totkWh', 500);
         $meter1 = Meter::factory()->create(['type' => 'power', 'model_number' => 'ModelX']);
@@ -132,9 +109,6 @@ class MeterTest extends TestCase
         $this->assertEquals($meter1->id, $found->first()->meter->id);
     }
 
-    /**
-     * @test
-     */
     public function test_it_finds_epics_name_in_pv()
     {
         $this->assertEquals('foo', Meter::epicsNameFromPv('foo:totkW'));
@@ -142,9 +116,6 @@ class MeterTest extends TestCase
         $this->assertNull(Meter::epicsNameFromPv('alligator'));
     }
 
-    /**
-     * @test
-     */
     public function test_it_finds_meter_by_pv()
     {
         $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'epics_name' => 'en1']);
@@ -157,27 +128,18 @@ class MeterTest extends TestCase
         $this->assertNull($notFound);
     }
 
-    /**
-     * @test
-     */
     public function test_it_obtains_reporter()
     {
         $meter1 = Meter::factory()->create(['type' => 'power']);
         $this->assertInstanceOf(DataTableReporter::class, $meter1->reporter());
     }
 
-    /**
-     * @test
-     */
     public function test_it_is_precluded_from_duplicate_epics_name()
     {
         //TODO implement afer database migration update
         $this->assertTrue(true);  //placeholder
     }
 
-    /**
-     * @test
-     */
     public function test_it_retrieves_limits()
     {
         $meter = Meter::factory()->create(['type' => 'water', 'name' => 'm1', 'epics_name' => 'en1']);
@@ -202,9 +164,6 @@ class MeterTest extends TestCase
         $this->assertFalse($meter->withinLimits('gal', 100));
     }
 
-    /**
-     * @test
-     */
     public function test_it_respects_major_and_minor_limits()
     {
         $meter = Meter::factory()->create(['type' => 'water', 'name' => 'm1', 'epics_name' => 'en1']);
@@ -243,9 +202,6 @@ class MeterTest extends TestCase
         $this->assertEquals(900, $meter->lastDataQuery('gal')->first()->gal);
     }
 
-    /**
-     * @test
-     */
     public function test_it_returns_average_for_an_interval()
     {
         $meter = Meter::factory()->create(['type' => 'water', 'begins_at' => Carbon::yesterday()->subDay(2)]);
@@ -258,9 +214,6 @@ class MeterTest extends TestCase
         $this->assertEquals(250, $stats->max);
     }
 
-    /**
-     * @test
-     */
     public function test_it_returns_first_on_or_after()
     {
         $meter = Meter::factory()->create(['type' => 'water', 'begins_at' => Carbon::yesterday()->subDay(5)]);
@@ -278,9 +231,6 @@ class MeterTest extends TestCase
         $this->assertEquals(250, $data->gal);
     }
 
-    /**
-     * @test
-     */
     public function test_it_makes_and_applies_rollover_events()
     {
         Config::set('meters.rollover.ModelX.totkWh', 1000);
@@ -313,9 +263,6 @@ class MeterTest extends TestCase
         $this->assertEquals(1345, $data->last()->totkWh);
     }
 
-    /**
-     * @test
-     */
     public function test_it_returns_first_or_last_between()
     {
         $meter = Meter::factory()->create(['type' => 'water', 'begins_at' => Carbon::yesterday()->subDay(5)]);
