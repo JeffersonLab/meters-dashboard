@@ -17,7 +17,7 @@
 
 
 
-    <div class="meter-status-table">
+    <div class="consumption-chart">
 
     </div>
 
