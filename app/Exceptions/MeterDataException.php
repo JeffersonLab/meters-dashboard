@@ -8,9 +8,7 @@
 
 namespace App\Exceptions;
 
-
 use App\Models\Meters\Meter;
-use Throwable;
 
 class MeterDataException extends \Exception
 {
@@ -20,8 +18,5 @@ class MeterDataException extends \Exception
     {
         parent::__construct($message);
         $this->meter = $meter;
-
     }
-
-
 }

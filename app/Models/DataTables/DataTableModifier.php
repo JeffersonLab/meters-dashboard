@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Models\DataTables;
-
 
 use App\Exceptions\DataConversionException;
 use App\Models\Buildings\Building;
@@ -29,21 +27,26 @@ class DataTableModifier
 
     /**
      * DataTableModifier constructor.
-     * @param DataTableInterface $model
+     *
+     * @param  DataTableInterface  $model
      */
-    public function __construct(DataTableInterface $model){
+    public function __construct(DataTableInterface $model)
+    {
         $this->model = $model;
-        $this->schema = Schema::connection(config("database.default"));
-        $this->db = DB::connection(config("database.default"));
+        $this->schema = Schema::connection(config('database.default'));
+        $this->db = DB::connection(config('database.default'));
     }
 
     /**
      * Assert that a table exists before attempting to modify it.
+     *
      * @param $table
+     *
      * @throws DataConversionException
      */
-    protected function assertTableExists($table){
-        if (! $this->schema->hasTable($table)){
+    protected function assertTableExists($table)
+    {
+        if (! $this->schema->hasTable($table)) {
             throw new DataConversionException("Table $table does not exist");
         }
     }
@@ -85,10 +88,11 @@ class DataTableModifier
      * Add PV columns to a building's data table after it has already been created.
      * For examples if gas meters were added to a building that did not previously have them.
      *
-     * @param string $tableName
-     * @param string $type (gas, power, water)
+     * @param  string  $tableName
+     * @param  string  $type (gas, power, water)
      */
-    protected function addMeterColumns($tableName, $type){
+    protected function addMeterColumns($tableName, $type)
+    {
         // TODO strip out unnecessary columns?
         $this->schema->table($tableName, function ($table) use ($type) {
             foreach (array_keys(config('meters.pvs.'.$type)) as $field) {
@@ -97,6 +101,4 @@ class DataTableModifier
             }
         });
     }
-
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 return [
 
     /*
@@ -10,8 +11,7 @@ return [
     | IMPORTANT:  the URL must end with a slash /.
     |
     */
-    'url' => env('CED_UR','https://ced.acc.jlab.org/'),
-
+    'url' => env('CED_UR', 'https://ced.acc.jlab.org/'),
 
     /*
     |--------------------------------------------------------------------------
@@ -22,6 +22,6 @@ return [
     | data from CED.
     |
     */
-    'workspace' => env('CED_WORKSPACE','OPS'),
+    'workspace' => env('CED_WORKSPACE', 'OPS'),
 
 ];

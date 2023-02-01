@@ -4,26 +4,20 @@ namespace Tests\Http\Controllers;
 
 use App\Models\Buildings\Building;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class BuildingControllerTest extends TestCase
 {
-
-
-
     public function test_index()
     {
         $response = $this->get(route('buildings.index'));
         $response->assertViewIs('buildings.index');
-
     }
 
     public function test_show()
     {
         $building = Building::factory()->create();
-        $response = $this->get(route('buildings.show',[$building->id]));
+        $response = $this->get(route('buildings.show', [$building->id]));
         //dd($response->getContent());
         $response->assertViewIs('buildings.item');
         $response->assertViewHas('building');
@@ -37,7 +31,6 @@ class BuildingControllerTest extends TestCase
         $date = Carbon::tomorrow();
         $date->hour(0)->minute(0)->second(0);
         $this->assertEquals($date->format('Y-m-d'), $fetched->reporter()->endsAt());
-
     }
 
 //    public function test_show_specific_month()

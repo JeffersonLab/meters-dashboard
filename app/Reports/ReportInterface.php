@@ -15,15 +15,12 @@ use Illuminate\Http\Request;
  *
  * Contract that must be implemented by report objects that will be returned
  * by the ReportController.
- *
- * @package App\Meters
  */
 interface ReportInterface
 {
+    public function title();
 
-    function title();
-
-    function description();
+    public function description();
 
     /*
      * Accept an HTTP Request object and apply its contents to the
@@ -31,32 +28,28 @@ interface ReportInterface
      *
      * @return void
      */
-    function applyRequest(Request $request);
+    public function applyRequest(Request $request);
 
     /*
      * Return a View object for rendering the report.
      */
-    function view();
+    public function view();
 
     /*
      * Tells if Excel output is available
      *
      * @return bool
      */
-    function hasExcel();
-
+    public function hasExcel();
 
     /*
      * Returns an Excel export object for the report data.
      *
      * @return bool
      */
-    function getExcelExport();
+    public function getExcelExport();
 
+    public function beginsAt();
 
-
-    function beginsAt();
-    function endsAt();
-
-
+    public function endsAt();
 }

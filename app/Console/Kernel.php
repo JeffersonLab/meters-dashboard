@@ -15,13 +15,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('meters:sync')
+        $schedule->command('meters:sync')
             ->dailyAt('00:00');
         $schedule->command('meters:sync')
             ->dailyAt('12:00');
-	
-	$schedule->command('meters:fill')->hourly();
-	$schedule->command('buildings:fill')->hourly();
+
+        $schedule->command('meters:fill')->hourly();
+        $schedule->command('buildings:fill')->hourly();
 
         //Meters every 4 hours
         //$schedule->command('meters:fill')
@@ -42,7 +42,6 @@ class Kernel extends ConsoleKernel
         // or else there may be false alarms in the report.
         //$schedule->command('meters:email')
         //        ->dailyAt('03:00');
-
     }
 
     /**

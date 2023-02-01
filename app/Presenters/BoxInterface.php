@@ -13,23 +13,20 @@ namespace App\Presenters;
  *
  * Contract that must be implemented by objects that will be used with the
  * partials.box_* views.
- *
- * @package App\Meters
  */
 interface BoxInterface
 {
-
     /**
      * Returns a label/value array of items to display in a meter
      * info box.
      *
      * @return array
      */
-    function infoBoxItems();
+    public function infoBoxItems();
 
-    function linkToEpicsDetailScreen();
+    public function linkToEpicsDetailScreen();
 
-    function linkToCedElement();
+    public function linkToCedElement();
 
-    function defaultChart();
+    public function defaultChart();
 }

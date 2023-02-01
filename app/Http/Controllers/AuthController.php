@@ -4,12 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Redirect;
 
 class AuthController extends \Jlab\Auth\Http\AuthController
 {
-
     public function __construct()
     {
         // Authentication requirement to access methods of this controller.
@@ -18,22 +15,22 @@ class AuthController extends \Jlab\Auth\Http\AuthController
 
     /**
      * Processes a login request. Sends the user to the login form if necessary
-     *
      */
     public function login()
     {
         if ($this->isPostRequest()) {
-
             $validator = $this->getLoginValidator();
 
             if ($validator->passes()) {
                 $credentials = $this->getLoginCredentials();
                 if (Auth::attempt($credentials)) {
                     session()->flash('success', 'Login attempt successful!');
-                    return redirect()->intended("/");
+
+                    return redirect()->intended('/');
                 }
             }
             session()->flash('error', 'Login attempt failed. Verify that the username or password are both valid');
+
             return redirect()->back()
                 ->withInput()
                 ->withErrors($validator);
@@ -44,13 +41,12 @@ class AuthController extends \Jlab\Auth\Http\AuthController
         return view('auth.login');
     }
 
-    public function logout(){
-        if ($this->doLogout()){
+    public function logout()
+    {
+        if ($this->doLogout()) {
             session()->flash('success', 'User logged out successfully');
         }
+
         return redirect()->back();
     }
-
-
-
 }

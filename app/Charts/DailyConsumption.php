@@ -15,70 +15,70 @@ use Illuminate\Http\Request;
  * Class DailyConsumption
  *
  * Plot units consumption (gal, kwH, ccf) on a daily basis.
- *
- * @package App\Charts
  */
-
 class DailyConsumption implements ChartInterface
 {
-
     protected $model;
-    public $reporter;
-    public $type = 'column';
-    public $pv;
-    public $title;
 
+    public $reporter;
+
+    public $type = 'column';
+
+    public $pv;
+
+    public $title;
 
     /**
      * DailyConsumption constructor.
      *
-     * @param DataTableInterface $model
-     * @param string $pv
-     * @param string $title (optional)
+     * @param  DataTableInterface  $model
+     * @param  string  $pv
+     * @param  string  $title (optional)
      */
     public function __construct(DataTableInterface $model, $pv, $title = null)
     {
         $this->model = $model;
         $this->reporter = $model->reporter();
         $this->pv = $pv;
-        if ($title){
+        if ($title) {
             $this->title = $title;
-        }else{
+        } else {
             $this->title = 'Daily '.$pv;
         }
     }
 
-    function applyRequest(Request $request)
+    public function applyRequest(Request $request)
     {
         $this->setDateRange($request->input('start'), $request->input('end', null));
     }
 
-    function setDateRange($start, $end){
+    public function setDateRange($start, $end)
+    {
         $this->reporter->beginning($start);
-        if ($end){
+        if ($end) {
             $this->reporter->ending($end);
-        }else{
+        } else {
             $this->reporter->defaultEnding();
         }
     }
-
-
 
     /**
      * Returns the collection of data points to be plotted.
      *
      * @return \Illuminate\Support\Collection
      */
-    public function chartData(): \Illuminate\Support\Collection{
-            $query = $this->model->dailyConsumptionQuery($this->pv, $this->reporter->begins_at, $this->reporter->ends_at);
-            // Must recast the query output column names into a new collection with
-            // keys generically named "label" and "value"
-            $result = $query->get()->map(function($item){
-                return (object) [
-                    'label' => $item->date,
-                    'value' => $item->consumed,
-                ];
-            });
+    public function chartData(): \Illuminate\Support\Collection
+    {
+        $query = $this->model->dailyConsumptionQuery($this->pv, $this->reporter->begins_at, $this->reporter->ends_at);
+        // Must recast the query output column names into a new collection with
+        // keys generically named "label" and "value"
+        $result = $query->get()->map(function ($item) {
+            return (object) [
+                'label' => $item->date,
+                'value' => $item->consumed,
+            ];
+        });
+
         return $this->reporter->canvasTimeSeries($result);
     }
 
@@ -88,7 +88,8 @@ class DailyConsumption implements ChartInterface
      *
      * @return array
      */
-    public function toArray(){
+    public function toArray()
+    {
         return [
             'title' => [
                 'text' => $this->title,
@@ -112,7 +113,5 @@ class DailyConsumption implements ChartInterface
     public function toJson()
     {
         return json_encode($this->toArray());
-
     }
-
 }

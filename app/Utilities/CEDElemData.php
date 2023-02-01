@@ -8,16 +8,13 @@
 
 namespace App\Utilities;
 
-use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 class CEDElemData extends CEDData
 {
-
     public $elem;
 
-    function __construct($elem = null)
+    public function __construct($elem = null)
     {
         parent::__construct();
         $this->elem = $elem;
@@ -27,10 +24,13 @@ class CEDElemData extends CEDData
      * Returns a collection of CED element objects
      *
      * @return mixed
+     *
      * @internal param $name
      */
-    function getData(){
+    public function getData()
+    {
         $data = $this->httpGet();
+
         return $data->Inventory->elements[0];
     }
 
@@ -40,14 +40,12 @@ class CEDElemData extends CEDData
      *
      * @return array
      */
-    function query(){
-        return array(
+    public function query()
+    {
+        return [
             'wrkspc' => $this->workspace,
             'e' => $this->elem,
             'out' => 'json',
-        );
+        ];
     }
-
-
-
 }

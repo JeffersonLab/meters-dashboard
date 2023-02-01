@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BuildingFactory extends Factory
 {
-
     /**
      * The name of the factory's corresponding model.
      *
@@ -26,8 +25,8 @@ class BuildingFactory extends Factory
             'name' => $this->faker->word(),
             'abbreviation' => $this->faker->word(),
             'jlab_name' => $this->faker->sentence(3),
-            'building_num' => $this->faker->numberBetween(1,100),
-            'square_footage' => $this->faker->randomFloat(1,0,1000),
+            'building_num' => $this->faker->numberBetween(1, 100),
+            'square_footage' => $this->faker->randomFloat(1, 0, 1000),
         ];
     }
 }

@@ -8,45 +8,40 @@
 
 namespace App\Reports;
 
-
-
 use App\Models\Buildings\Building;
 use App\Models\Meters\Meter;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 /**
  * Class PowerConsumption
  *
  * Report on power consumption for a set of meters between two dates.
- *
- * @package App\Reports
  */
 class CoolingTowerConsumption extends Consumption
 {
-
     protected $title = 'Cooling Tower Consumption';
+
     protected $description = 'This report details cooling-tower specific consumption accounting for evaporation losses';
+
     protected $pv = 'gal';
 
     public function __construct()
     {
         parent::__construct();
-        $this->nameFilter = Building::where('type','CoolingTower')
+        $this->nameFilter = Building::where('type', 'CoolingTower')
         ->get()->pluck('name')->all();
     }
-
 
     /**
      * Update items property with fresh data from the database.
      * For example after applying updated filters.
+     *
      * @return void
      */
     protected function updateItems()
     {
         $this->items = Building::whereIn('name', $this->nameFilter)
             ->with('meters')->get()
-            ->sortBy('name',SORT_NATURAL);
+            ->sortBy('name', SORT_NATURAL);
     }
 
     /**
@@ -59,7 +54,7 @@ class CoolingTowerConsumption extends Consumption
      *   concentration: supply / drain
      *   isComplete: whether the data time span matches the requested time span
      *
-     * @param Meter $model
+     * @param  Meter  $model
      * @return object
      */
     protected function makeDataItem($model)
@@ -74,19 +69,15 @@ class CoolingTowerConsumption extends Consumption
             'url' => $model->getPresenter()->url(),
         ];
 
-        return (object)$dataItem;
+        return (object) $dataItem;
     }
-
 
     /**
      * Returns the view that should be used to render the report.
-     *
      */
     public function view()
     {
         return view('reports.cooling_tower_consumption')
             ->with('report', $this);
     }
-
-
 }

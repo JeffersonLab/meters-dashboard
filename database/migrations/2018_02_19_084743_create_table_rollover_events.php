@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateTableRolloverEvents extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -23,9 +23,7 @@ class CreateTableRolloverEvents extends Migration
             $table->foreign('meter_id')
                 ->references('id')->on('meters')
                 ->onDelete('cascade');
-
         });
-
     }
 
     /**
@@ -37,4 +35,4 @@ class CreateTableRolloverEvents extends Migration
     {
         Schema::dropIfExists('rollover_events');
     }
-}
+};

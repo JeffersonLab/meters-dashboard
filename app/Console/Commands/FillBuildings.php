@@ -23,7 +23,6 @@ class FillBuildings extends Command
      */
     protected $description = 'Fills building data table by sampling mya archiver';
 
-
     /**
      * Execute the console command.
      *
@@ -31,14 +30,13 @@ class FillBuildings extends Command
      */
     public function handle()
     {
-
         $existing = Building::all();
         foreach ($existing as $building) {
             try {
                 $count = $building->fillDataTable();
-                $this->info('Filled ' . $building->name . "with $count rows");
-            } catch (QueryException $e){
-                if (strstr($e->getMessage(), " Unknown column 'ccf'")){
+                $this->info('Filled '.$building->name."with $count rows");
+            } catch (QueryException $e) {
+                if (strstr($e->getMessage(), " Unknown column 'ccf'")) {
                     $this->error('Must add gas meter columns to '.$building->id);
                     // Fix the problem in anticipation of future runs.
                     $this->addGasMeterColumns($building);
@@ -48,18 +46,20 @@ class FillBuildings extends Command
                 throw $e;
             }
         }
+
         return true;
     }
 
     /**
      * Add gas meter columns to the building.
-     * @param Building $building
+     *
+     * @param  Building  $building
+     *
      * @throws \App\Exceptions\DataConversionException
      */
-    protected function addGasMeterColumns($building){
+    protected function addGasMeterColumns($building)
+    {
         $modifier = new DataTableModifier($building);
         $modifier->addGasMeterColumns();
     }
-
-
 }

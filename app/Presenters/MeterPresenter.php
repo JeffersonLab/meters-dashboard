@@ -9,76 +9,78 @@
 namespace App\Presenters;
 
 use Carbon\Carbon;
-use Robbo\Presenter\Presenter;
 use Collective\Html\HtmlFacade as Html;
-
+use Robbo\Presenter\Presenter;
 
 abstract class MeterPresenter extends Presenter implements BoxInterface
 {
-
-    function linkToEpicsDetailScreen($attributes = ['target' => '_blank'])
+    public function linkToEpicsDetailScreen($attributes = ['target' => '_blank'])
     {
         if (isset($this->model_number)) {
             //$var = urlencode(epics_macro_variable('meter')) . '=' . $this->epics_name;  // macro var passed to screen
-            $url = env('BASE_SCREEN_URL') . '/' . strtolower($this->model_number) . '.edl';
-            if (!empty($this->epicsMacroVariables())) {
-                $url .= '&' . implode('&', $this->epicsMacroVariables());
+            $url = env('BASE_SCREEN_URL').'/'.strtolower($this->model_number).'.edl';
+            if (! empty($this->epicsMacroVariables())) {
+                $url .= '&'.implode('&', $this->epicsMacroVariables());
             }
+
             return link_to($url, 'EPICS Detail Screen', $attributes);
         }
+
         return null;
     }
 
-
-    function epicsMacroVariables()
+    public function epicsMacroVariables()
     {
-        $vars = array();
+        $vars = [];
         if (isset($this->model_number)) {
-            $vars[] = urlencode(epics_macro_variable('meter')) . '=' . $this->epics_name;  // macro var passed to screen
+            $vars[] = urlencode(epics_macro_variable('meter')).'='.$this->epics_name;  // macro var passed to screen
         }
+
         return $vars;
     }
 
-
-    function linkToCedElement($attributes = ['target' => '_blank'])
+    public function linkToCedElement($attributes = ['target' => '_blank'])
     {
         return Html::linkToCedElement($this->name, 'CED Element Page', $attributes);
     }
 
-    function icon()
+    public function icon()
     {
         return Html::meterIcon($this->type);
     }
 
-    function nameWithAlias()
+    public function nameWithAlias()
     {
         return $this->epics_name;
     }
 
-    function reportLabel(){
-        if ( $this->getAttribute('name_alias') ){
+    public function reportLabel()
+    {
+        if ($this->getAttribute('name_alias')) {
             return $this->getAttribute('name_alias');
         }
-        if( $this->getAttribute('epics_name') ){
+        if ($this->getAttribute('epics_name')) {
             return $this->getAttribute('epics_name');
         }
+
         return $this->getAttribute('name');
     }
 
-    function url(){
+    public function url()
+    {
         return route('meters.show', [$this->getAttribute('id')]);
     }
 
-
-
-    function currentStatistics(){
+    public function currentStatistics()
+    {
         $fromDate = Carbon::today()->subDays(30);
         $toDate = Carbon::today();
-        switch ($this->type){
-            case 'power' : return $this->statsBetween('totkW', $fromDate, $toDate);
-            case 'water' : return $this->statsBetween('galPerMin', $fromDate, $toDate);
-            case 'gas' : return $this->statsBetween('ccfPerMin', $fromDate, $toDate);
+        switch ($this->type) {
+            case 'power': return $this->statsBetween('totkW', $fromDate, $toDate);
+            case 'water': return $this->statsBetween('galPerMin', $fromDate, $toDate);
+            case 'gas': return $this->statsBetween('ccfPerMin', $fromDate, $toDate);
         }
+
         return null;
     }
 
@@ -88,7 +90,7 @@ abstract class MeterPresenter extends Presenter implements BoxInterface
      *
      * @return array
      */
-    function infoBoxItems()
+    public function infoBoxItems()
     {
         return [
             'Model' => $this->model_number,
@@ -100,6 +102,4 @@ abstract class MeterPresenter extends Presenter implements BoxInterface
             //'First Data' => $this->reporter()->firstData()->get()->date,
         ];
     }
-
-
 }

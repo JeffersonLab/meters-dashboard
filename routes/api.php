@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,22 +19,10 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::get('/meters/chart-data',[
-    'as' => 'meters.chart_data',
-    'uses' => 'ApiController@meterChartData'
-]);
+Route::get('/meters/chart-data', [ApiController::class, 'meterChartData'])->name('meters.chart_data');
 
-Route::get('/meters/table-data',[
-    'as' => 'meters.table_data',
-    'uses' => 'ApiController@meterTableData'
-]);
+Route::get('/meters/table-data', [ApiController::class, 'meterTableData'])->name('meters.table_data');
 
-Route::get('/buildings/chart-data',[
-    'as' => 'buildings.chart_data',
-    'uses' => 'ApiController@buildingChartData'
-]);
+Route::get('/buildings/chart-data', [ApiController::class, 'buildingChartData'])->name('buildings.chart_data');
 
-Route::get('/reports/chart-data',[
-    'as' => 'reports.chart_data',
-    'uses' => 'ApiController@reportChartData'
-]);
+Route::get('/reports/chart-data', [ApiController::class, 'reportChartData'])->name('reports.chart_data');

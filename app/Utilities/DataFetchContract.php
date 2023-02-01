@@ -8,8 +8,7 @@
 
 namespace App\Utilities;
 
-
 interface DataFetchContract
 {
-    function getData();
+    public function getData();
 }

@@ -2,7 +2,6 @@
 
 namespace App\Charts;
 
-
 use App\Models\DataTables\DataTableInterface;
 use Illuminate\Http\Request;
 
@@ -10,44 +9,46 @@ use Illuminate\Http\Request;
  * Class MeterReadings
  *
  * Plot field values (gal, gpm. kW, kWh, ccf, etc.) for a date range.
- *
- * @package App\Charts
  */
 class MeterReadings implements ChartInterface
 {
-
     public $reporter;
+
     public $type = 'line';
+
     public $pv;
+
     public $title;
 
     /**
      * MeterReadings constructor.
-     * @param DataTableInterface $model
-     * @param string $pv
-     * @param string $title
+     *
+     * @param  DataTableInterface  $model
+     * @param  string  $pv
+     * @param  string  $title
      */
     public function __construct(DataTableInterface $model, $pv, $title = null)
     {
         $this->reporter = $model->reporter();
         $this->pv = $pv;
-        if ($title){
+        if ($title) {
             $this->title = $title;
-        }else{
-            $this->title = $pv . 'Readings';
+        } else {
+            $this->title = $pv.'Readings';
         }
     }
 
-    function applyRequest(Request $request)
+    public function applyRequest(Request $request)
     {
         $this->setDateRange($request->input('start'), $request->input('end', null));
     }
 
-    function setDateRange($start, $end){
+    public function setDateRange($start, $end)
+    {
         $this->reporter->beginning($start);
-        if ($end){
+        if ($end) {
             $this->reporter->ending($end);
-        }else{
+        } else {
             $this->reporter->defaultEnding();
         }
     }
@@ -57,9 +58,11 @@ class MeterReadings implements ChartInterface
      *
      * @return \Illuminate\Support\Collection
      */
-    public function chartData(){
+    public function chartData()
+    {
         $result = $this->reporter->pvReadings($this->pv);
         $data = $this->reporter->canvasTimeSeries($result);
+
         return $data;
     }
 
@@ -68,13 +71,14 @@ class MeterReadings implements ChartInterface
      *
      * @return array
      */
-    public function toArray(){
+    public function toArray()
+    {
         return [
             'title' => [
                 'text' => $this->title,
             ],
             'axisY' => [
-                'includeZero' => false
+                'includeZero' => false,
             ],
             'data' => [
                 [
@@ -87,7 +91,6 @@ class MeterReadings implements ChartInterface
         ];
     }
 
-
     /**
      * Returns an JSON string representation of chart settings and data.
      *
@@ -96,7 +99,5 @@ class MeterReadings implements ChartInterface
     public function toJson()
     {
         return json_encode($this->toArray());
-
     }
-
 }

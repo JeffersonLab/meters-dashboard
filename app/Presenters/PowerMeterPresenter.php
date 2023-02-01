@@ -8,12 +8,8 @@
 
 namespace App\Presenters;
 
-use App\Charts\DailyKWH;
-
-
 class PowerMeterPresenter extends MeterPresenter
 {
-
     /**
      * @return string
      */
@@ -22,19 +18,19 @@ class PowerMeterPresenter extends MeterPresenter
         return 'dailykwh';
     }
 
-
     public function voltageParameters()
     {
         switch ($this->epics_name) {
-            case '33MVA' :
-            case '40MVA' :
+            case '33MVA':
+            case '40MVA':
                 return $this->substationVoltageParameters();
-            default      :
+            default:
                 return $this->standard480Parameters();
         }
     }
 
-    protected function substationVoltageParameters(){
+    protected function substationVoltageParameters()
+    {
         return (object) [
             'min' => 12200,
             'low' => null,
@@ -44,11 +40,10 @@ class PowerMeterPresenter extends MeterPresenter
             'hihi' => 12800,
             'max' => 13000,
         ];
-
     }
 
-
-    protected function standard480Parameters(){
+    protected function standard480Parameters()
+    {
         // low and high are ~3% deviation (15V)from nominal 480
         // lolo and hihi are 5% deviation (24V) from nominal 480
         return (object) [
@@ -60,6 +55,5 @@ class PowerMeterPresenter extends MeterPresenter
             'hihi' => 504,
             'max' => 520,
         ];
-
     }
 }

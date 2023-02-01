@@ -23,8 +23,8 @@ class MacroServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        foreach (glob(base_path() . '/resources/macros/*.php') as $macroFile){
-            require_once($macroFile);
+        foreach (glob(base_path().'/resources/macros/*.php') as $macroFile) {
+            require_once $macroFile;
         }
     }
 }

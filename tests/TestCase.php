@@ -21,19 +21,19 @@ abstract class TestCase extends BaseTestCase
         'power' => [
             ':totkW' => [
                 'description' => 'Total real power',
-                'units' => 'kW'
+                'units' => 'kW',
             ],
             ':totkWh' => [
                 'description' => 'Total real energy',
-                'units' => 'kWh'
+                'units' => 'kWh',
             ],
             ':totMBTU' => [
                 'description' => 'Total real energy',
-                'units' => 'MBTU'
+                'units' => 'MBTU',
             ],
             ':llVolt' => [
                 'description' => 'Average Voltage',
-                'units' => 'V'
+                'units' => 'V',
             ],
         ],
         'water' => [
@@ -59,32 +59,30 @@ abstract class TestCase extends BaseTestCase
         ],
     ];
 
-
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         //specify the valid epics field names for a power meter
         Config::set('meters.pvs', $this->pvs);
     }
 
-
     /**
      * Ensure that we call delete on all created meters and buildings so that they can
      * remove their associated data table.
+     *
      * @return void
      */
     protected function tearDown(): void
     {
         // Must delete meters first because they reference building via building_id FK.
-        foreach (Meter::all() as $meter){
+        foreach (Meter::all() as $meter) {
             $meter->delete();
         }
-        foreach (Building::all() as $building){
+        foreach (Building::all() as $building) {
             $building->delete();
         }
         parent::tearDown();
     }
-
 
     /**
      * Extract a variable from a response.
@@ -95,9 +93,11 @@ abstract class TestCase extends BaseTestCase
      * @param $key
      * @return mixed
      */
-    protected function getResponseData($response, $key){
+    protected function getResponseData($response, $key)
+    {
         $content = $response->getOriginalContent();
         $data = $content->getData();
+
         return $data[$key];
     }
 }

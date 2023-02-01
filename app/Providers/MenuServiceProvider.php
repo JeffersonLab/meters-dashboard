@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Alerts\MeterAlertRepository;
 use App\Alerts\ServiceAlertRepository;
 use App\Models\Buildings\Building;
-use App\Models\Meters\Meter;
 use App\Utilities\NagiosServicelist;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -43,8 +42,7 @@ class MenuServiceProvider extends ServiceProvider
 
         // Listen for menu being built event so that we can inject dynamic items into it.
         Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
-
-            if (!Auth::user()) {
+            if (! Auth::user()) {
                 $event->menu->add(
                     ['text' => 'Not Authenticated',
                         'url' => '/login',
@@ -54,8 +52,8 @@ class MenuServiceProvider extends ServiceProvider
                             ['text' => 'Login',
                                 'url' => '/login',
                                 'icon' => 'fas fa-fw fa-power-off',
-                                'icon_color' => 'white',]
-                        ]
+                                'icon_color' => 'white', ],
+                        ],
                     ]);
             }
 
@@ -67,10 +65,10 @@ class MenuServiceProvider extends ServiceProvider
                         'icon_color' => 'blue',
                         'submenu' => [
                             ['text' => 'Logout',
-                            'url' => '/logout',
-                            'icon' => 'fas fa-fw fa-power-off',
-                            'icon_color' => 'white',]
-                        ]
+                                'url' => '/logout',
+                                'icon' => 'fas fa-fw fa-power-off',
+                                'icon_color' => 'white', ],
+                        ],
                     ]);
             }
 
@@ -85,7 +83,7 @@ class MenuServiceProvider extends ServiceProvider
                 ['text' => 'Reports',
                     'url' => '/reports',
                     'icon' => 'area-chart',
-                    'icon_color' => 'green'
+                    'icon_color' => 'green',
                 ]);
 
             $event->menu->add(
@@ -144,7 +142,6 @@ class MenuServiceProvider extends ServiceProvider
                 $event->menu->add($substation);
             }
 
-
             $event->menu->add(['header' => 'BUILDINGS']);
 
             $items = $this->buildingMenuItems();
@@ -153,7 +150,7 @@ class MenuServiceProvider extends ServiceProvider
                     'text' => 'Building List',
                     'icon' => 'fas fa-fw fa-building',
                     'label' => $items->count(),
-                    'submenu' => $items->toArray()
+                    'submenu' => $items->toArray(),
                 ]
             );
 
@@ -164,10 +161,9 @@ class MenuServiceProvider extends ServiceProvider
                     'text' => 'Cooling Tower List',
                     'icon' => 'fas fa-fw fa-building',
                     'label' => $items->count(),
-                    'submenu' => $items->toArray()
+                    'submenu' => $items->toArray(),
                 ]
             );
-
         });
     }
 
@@ -236,7 +232,7 @@ class MenuServiceProvider extends ServiceProvider
     /**
      * Return array representation of a substation menu item.
      *
-     * @param Building $substation - substations are a type of building
+     * @param  Building  $substation - substations are a type of building
      * @return array
      */
     public function substationMenuItem(Building $substation)
@@ -244,14 +240,14 @@ class MenuServiceProvider extends ServiceProvider
         return [
             'text' => $substation->name,
             'icon' => 'fas fa-fw fa-gopuram',
-            'url' => route('buildings.show', $substation->name)
+            'url' => route('buildings.show', $substation->name),
         ];
     }
 
     /**
      * Return array representation of a building menu item.
      *
-     * @param Building $building
+     * @param  Building  $building
      * @return array
      */
     public function buildingMenuItem(Building $building)
@@ -259,15 +255,14 @@ class MenuServiceProvider extends ServiceProvider
         return [
             'text' => $building->getPresenter()->menuLabel(),
             'icon' => 'fas fa-fw fa-building',
-            'url' => route('buildings.show', $building->name)
+            'url' => route('buildings.show', $building->name),
         ];
     }
-
 
     /**
      * Return array representation of a substation menu item.
      *
-     * @param Building $tower - substations are a type of building
+     * @param  Building  $tower - substations are a type of building
      * @return array
      */
     public function coolingTowerMenuItem(Building $tower)
@@ -275,7 +270,7 @@ class MenuServiceProvider extends ServiceProvider
         return [
             'text' => $tower->name,
             'icon' => 'fas fa-fw fa-gopuram',
-            'url' => route('cooling_towers.show', $tower->name)
+            'url' => route('cooling_towers.show', $tower->name),
         ];
     }
 
@@ -295,10 +290,12 @@ class MenuServiceProvider extends ServiceProvider
             $count += $meterAlertRepo->alerts()->count();
             $label = ($count ? $count : '');
             Cache::put('menu-alert-label', $label, $this->ttl);
+
             return $label;
         } catch (\Exception $e) {
             Log::error($e);
         }
+
         return '!';
     }
 }

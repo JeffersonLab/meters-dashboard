@@ -1,10 +1,9 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterBuildingsAddType extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +12,8 @@ class AlterBuildingsAddType extends Migration
      */
     public function up()
     {
-        Schema::table('buildings', function($table){
-            $table->string('type',255)->nullable();
+        Schema::table('buildings', function ($table) {
+            $table->string('type', 255)->nullable();
             $table->unsignedInteger('element_id')->nullable();
         });
     }
@@ -26,9 +25,9 @@ class AlterBuildingsAddType extends Migration
      */
     public function down()
     {
-        Schema::table('buildings', function($table){
+        Schema::table('buildings', function ($table) {
             $table->dropColumn('type');
             $table->dropColumn('element_id');
         });
     }
-}
+};

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\ConsumptionReportExport;
 use App\Models\Buildings\Building;
 use App\Models\Meters\Meter;
 use App\Reports\GasConsumption;
@@ -19,7 +18,6 @@ use Laracasts\Utilities\JavaScript\JavaScriptFacade as JavaScript;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-
 class ReportController extends Controller
 {
     /**
@@ -27,22 +25,24 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function index() {
+    public function index()
+    {
         return View::make('reports.index');
     }
 
     /**
      * Display a report
      *
-     * @param string $name - the name of the report to return
-     * @param Request $request
+     * @param  string  $name - the name of the report to return
+     * @param  Request  $request
      * @return Application|Factory|\Illuminate\Contracts\View\View|Collection|\Illuminate\View\View
      */
-    public function show($name, Request $request) {
+    public function show($name, Request $request)
+    {
         $report = ReportFactory::make($name, $request);
         $view = $report->view();
 
-        if ($report->hasExcel()){
+        if ($report->hasExcel()) {
             $view->with('excelUrl', $this->excelUrl($name, $request));
         }
 
@@ -57,7 +57,7 @@ class ReportController extends Controller
             'request' => $request->all(),
             'reportTitle' => $report->title(),
             'metersData' => $this->getMeterData($report),
-            'buildingsData' => $this->buildingData(Building::all()->sortBy('name',SORT_NATURAL)),
+            'buildingsData' => $this->buildingData(Building::all()->sortBy('name', SORT_NATURAL)),
         ]);
 
         // Return view with data for blade template.
@@ -66,25 +66,26 @@ class ReportController extends Controller
 
     /**
      * Return meter data for the types of meters that are appropriate for the report type.
-     * @param ReportInterface $report
+     *
+     * @param  ReportInterface  $report
      * @return Collection|void
      */
     protected function getMeterData(ReportInterface $report)
     {
-        if (is_a($report, PowerConsumption::class)){
-            return $this->meterData(Meter::where('type','power')->get());
+        if (is_a($report, PowerConsumption::class)) {
+            return $this->meterData(Meter::where('type', 'power')->get());
         }
-        if (is_a($report, WaterConsumption::class)){
-            return $this->meterData(Meter::where('type','water')->get());
+        if (is_a($report, WaterConsumption::class)) {
+            return $this->meterData(Meter::where('type', 'water')->get());
         }
-        if (is_a($report, GasConsumption::class)){
-            return $this->meterData(Meter::where('type','gas')->get());
+        if (is_a($report, GasConsumption::class)) {
+            return $this->meterData(Meter::where('type', 'gas')->get());
         }
         $this->meterData(Meter::all());
     }
 
     /**
-     * @param Collection $buildings
+     * @param  Collection  $buildings
      * @return Collection
      */
     protected function buildingData(Collection $buildings)
@@ -101,32 +102,30 @@ class ReportController extends Controller
         })->sortBy('building_num')->values();
     }
 
-
     /**
      * Output a report as an Excel spreadsheet
      *
-     * @param string $name - the name of the report to return
-     * @param Request $request
+     * @param  string  $name - the name of the report to return
+     * @param  Request  $request
      * @return BinaryFileResponse
+     *
      * @throws \Exception
      */
-    public function excel($name, Request $request) {
-
+    public function excel($name, Request $request)
+    {
         $report = ReportFactory::make($name, $request);
-        if ($report->hasExcel()){
+        if ($report->hasExcel()) {
             return Excel::download($report->getExcelExport(), 'report.xlsx');
         }
         abort(404, 'Spreadsheet output is not currently available.');
-
     }
 
-
-
-    protected function excelUrl($name, Request $request){
-        if ($request->getQueryString()){
+    protected function excelUrl($name, Request $request)
+    {
+        if ($request->getQueryString()) {
             return route('reports.excel', $name).'?'.$request->getQueryString();
         }
+
         return route('reports.excel', $name);
     }
-
 }

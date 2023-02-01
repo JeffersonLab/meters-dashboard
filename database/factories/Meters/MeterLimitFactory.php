@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MeterLimitFactory extends Factory
 {
-
     /**
      * The name of the factory's corresponding model.
      *
@@ -26,7 +25,7 @@ class MeterLimitFactory extends Factory
         return [
             'meter_id' => Meter::factory(),
             'source' => 'epics',
-            'field' => 'gal'
+            'field' => 'gal',
         ];
     }
 }

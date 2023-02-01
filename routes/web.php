@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\AlertController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BuildingController;
+use App\Http\Controllers\CoolingTowerController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MeterController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,104 +20,34 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::match(['GET','POST'],'/login',[
-    'as' => 'login',
-    'uses' => "AuthController@login"
-]);
+Route::match(['GET', 'POST'], '/login', [AuthController::class, 'login'])->name('login');
 
-Route::get('/logout',[
-    'as' => 'logout',
-    'uses' => "AuthController@logout"
-]);
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
+Route::get('/', [BuildingController::class, 'siteMap'])->name('home');
 
-Route::get('/',[
-    'as' => 'home',
-    'uses' => 'BuildingController@siteMap'
-]);
+Route::get('meters/{meter}', [MeterController::class, 'show'])->name('meters.show');
 
+Route::get('meters', [MeterController::class, 'index'])->name('meters.index');
 
-Route::get('meters/{meter}',[
-    'as' => 'meters.show',
-    'uses' => 'MeterController@show'
-]);
+Route::get('monitor/{type}', [MeterController::class, 'monitor'])->name('monitor');
 
-Route::get('meters',[
-    'as' => 'meters.index',
-    'uses' => 'MeterController@index'
-]);
+Route::get('reports/{report}', [ReportController::class, 'show'])->name('reports.item');
 
-Route::get('monitor/{type}',[
-    'as' => 'monitor',
-    'uses' => 'MeterController@monitor'
-]);
+Route::get('reports/{report}/excel', [ReportController::class, 'excel'])->name('reports.excel');
 
-Route::get('reports/{report}',[
-    'as' => 'reports.item',
-    'uses' => 'ReportController@show'
-]);
+Route::get('alerts', [AlertController::class, 'index'])->name('alerts.index');
 
-Route::get('reports/{report}/excel',[
-    'as' => 'reports.excel',
-    'uses' => 'ReportController@excel'
-]);
+Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
 
-Route::get('alerts',[
-    'as' => 'alerts.index',
-    'uses' => 'AlertController@index'
-]);
+Route::get('buildings', [BuildingController::class, 'index'])->name('buildings.index');
 
-Route::get('reports',[
-    'as' => 'reports.index',
-    'uses' => 'ReportController@index'
-]);
+Route::get('map', [BuildingController::class, 'siteMap'])->name('buildings.map');
 
+Route::get('buildings/substation-summary', [BuildingController::class, 'substationSummary'])->name('buildings.substation_summary');
 
-Route::get('buildings',[
-    'as' => 'buildings.index',
-    'uses' => 'BuildingController@index'
-]);
+Route::get('buildings/{building}', [BuildingController::class, 'show'])->name('buildings.show');
 
-Route::get('map',[
-    'as' => 'buildings.map',
-    'uses' => 'BuildingController@siteMap'
-]);
+Route::get('cooling-towers/{building}', [CoolingTowerController::class, 'show'])->name('cooling_towers.show');
 
-Route::get('buildings/substation-summary',[
-    'as' => 'buildings.substation_summary',
-    'uses' => 'BuildingController@substationSummary'
-]);
-
-Route::get('buildings/{building}',[
-    'as' => 'buildings.show',
-    'uses' => 'BuildingController@show'
-]);
-
-Route::get('cooling-towers/{building}',[
-    'as' => 'cooling_towers.show',
-    'uses' => 'CoolingTowerController@show'
-]);
-
-Route::get('/test', function () {
-//    dd(file_get_contents('http://epics2web:8080/epics2web/caget?pv=87-L1%3AllVolt'));
-    return view('Test');
-
-//    $c = new \App\Utilities\FacilitiesClimateData();
-//    $c->setDate('2019-01-29');
-//    var_dump($c->heatingDegreeDays());
-//    var_dump($c->coolingDegreeDays());
-//    dd($c->data());
-
-
-//    $vm = new \App\Meters\VirtualMeter();
-//    $vm->setMeters(Meter::whereIn('id',[49,50])->get());
-//    $chart = new \App\Charts\MultiMeter($vm);
-//
-//    dd($chart->toArray());
-
-});
-
-
-
-Route::get('/home', 'HomeController@index')->name('home');
-
+Route::get('/home', [HomeController::class, 'index'])->name('home');

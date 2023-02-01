@@ -7,16 +7,14 @@
  */
 
 namespace App\Reports;
+
 use Illuminate\Http\Request;
 
 class ReportFactory
 {
-    /**
-
-     */
-    static function make($name, Request $request){
-
-        switch ($name){
+    public static function make($name, Request $request)
+    {
+        switch ($name) {
             case 'power-consumption' : $report = new PowerConsumption(); break;
             case 'water-consumption' : $report = new WaterConsumption(); break;
             case 'gas-consumption' : $report = new GasConsumption(); break;
@@ -25,10 +23,11 @@ class ReportFactory
             case 'mya-stats' : $report = new MyaStats(); break;
             default: $report = null;
         }
-        if (! $report){
-            app()->abort('404', "The requested report is not available");
+        if (! $report) {
+            app()->abort('404', 'The requested report is not available');
         }
         $report->applyRequest($request);
+
         return $report;
     }
 }

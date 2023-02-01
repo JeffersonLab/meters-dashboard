@@ -10,72 +10,66 @@ use App\Models\Meters\VirtualMeter;
 use Carbon\Carbon;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Request;
 
 class ApiController extends Controller
 {
-
     /**
      * Return data for a canvasJs chart
      *
-     * @param ChartRequest $request
+     * @param  ChartRequest  $request
      * @return \Illuminate\Http\Response;
      */
     public function meterChartData(ChartRequest $request)
     {
-
-        try{
+        try {
             $meter = Meter::find($request->input('model_id'));
             $chart = ChartFactory::make($request->input('chart'), $meter, $request);
+
             return $this->response($chart->toArray());
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
-
     }
 
     /**
      * Return data for a meter
      *
-     * @param ChartRequest $request
+     * @param  ChartRequest  $request
      * @return \Illuminate\Http\Response;
      */
     public function meterTableData(HttpRequest $request)
     {
-
-        try{
+        try {
             $meter = Meter::find($request->input('model_id'));
+
             return $this->response([
                 'request' => $request->all(),
                 'columns' => $meter->dataColumns(),
                 'data' => $meter->dataBetween(
                     Carbon::parse($request->input('start')),
                     Carbon::parse($request->input('end')),
-                    $request->input('granularity', 'daily'))->all()
+                    $request->input('granularity', 'daily'))->all(),
             ]);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
-
     }
-
-
-
 
     /**
      * Return data for a canvasJs chart
      *
-     * @param ChartRequest $request
+     * @param  ChartRequest  $request
      * @return \Illuminate\Http\Response;
      */
     public function buildingChartData(ChartRequest $request)
     {
-        try{
+        try {
             $building = Building::find($request->input('model_id'));
             $chart = ChartFactory::make($request->input('chart'), $building, $request);
+
             return $this->response($chart->toArray());
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
     }
@@ -83,22 +77,21 @@ class ApiController extends Controller
     /**
      * Return data for a canvasJs chart
      *
-     * @param HttpRequest $request
+     * @param  HttpRequest  $request
      * @return \Illuminate\Http\Response;
      */
     public function reportChartData(HttpRequest $request)
     {
-        try{
+        try {
             $meter = new VirtualMeter();
-            $meter->setMeters(Meter::whereIn('id',Arr::wrap($request->input('model_id')))->get());
+            $meter->setMeters(Meter::whereIn('id', Arr::wrap($request->input('model_id')))->get());
             $chart = ChartFactory::make('multimeter', $meter, $request);
+
             return $this->response($chart->toArray());
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
-
     }
-
 
     /**
      * Returns a json success response.
@@ -106,46 +99,48 @@ class ApiController extends Controller
      * @param $data
      * @return mixed
      */
-    public function response($data){
+    public function response($data)
+    {
         $struct['status'] = 'ok';
         $struct['data'] = $data;
 
         $options = 0;
-        if (Request::input('pretty')){
+        if (Request::input('pretty')) {
             $options = JSON_PRETTY_PRINT;
         }
 
         $response = response()->json($struct, 200, [], $options);
 
-        if (Request::has('jsonp')){
+        if (Request::has('jsonp')) {
             $response->setCallback(Request::input('jsonp'));
         }
 
         return $response;
     }
 
-
     /**
      * Returns a json error response.
      *
-     * @param  string $msg
-     * @param  int $code
+     * @param  string  $msg
+     * @param  int  $code
      * @return mixed
      */
-    public function error($msg, $code=404){
+    public function error($msg, $code = 404)
+    {
         $struct['status'] = 'fail';
         $struct['message'] = $msg;
 
         $options = 0;
-        if (Request::input('pretty')){
+        if (Request::input('pretty')) {
             $options = JSON_PRETTY_PRINT;
         }
 
         $response = response()->json($struct, $code, [], $options);
 
-        if (Request::has('jsonp')){
+        if (Request::has('jsonp')) {
             $response->setCallback(Request::input('jsonp'));
         }
+
         return $response;
     }
 }

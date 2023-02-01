@@ -14,24 +14,24 @@ use Illuminate\Support\Facades\Log;
 
 abstract class CEDData implements DataFetchContract
 {
-
     protected $webClient;
+
     protected $workspace;
 
-    function __construct()
+    public function __construct()
     {
         $this->workspace = config('ced.workspace');
-        $this->webClient = new Client(['base_uri'=>config('ced.url')]);
+        $this->webClient = new Client(['base_uri' => config('ced.url')]);
     }
 
     /**
      * Returns a collection of CED element objects
      *
      * @return mixed
+     *
      * @internal param $name
      */
-    abstract function getData();
-
+    abstract public function getData();
 
     /**
      * Returns the query parameters expected by mySampler
@@ -39,23 +39,23 @@ abstract class CEDData implements DataFetchContract
      *
      * @return array
      */
-    abstract function query();
-
+    abstract public function query();
 
     /**
      * @return mixed|null
+     *
      * @internal param array $query
      */
-    function httpGet(){
-        $response = $this->webClient->get('inventory',['query' => $this->query()]);
-        if ($response->getStatusCode() == 200){
+    public function httpGet()
+    {
+        $response = $this->webClient->get('inventory', ['query' => $this->query()]);
+        if ($response->getStatusCode() == 200) {
             $body = $response->getBody();
+
             return json_decode($body);
-        }else{
+        } else {
             Log::error($response->getBody());
             throw new Exception('CED Retrieval Error '.$response->getStatusCode());
         }
     }
-
-
 }

@@ -13,19 +13,12 @@ use Illuminate\Support\Facades\Validator;
 
 /**
  * Class MeterLimit
- * @package App\Meters
- *
- * Defines a limit for generating alerts if a given field is found to have been
- * too high or too low during some preceding interval of time.
  */
-
 class MeterLimit extends BaseModel
 {
-
-
     //@todo custom validator that hi > lo
     //@see https://stackoverflow.com/questions/32036882/laravel-validate-an-integer-field-that-needs-to-be-greater-than-another
-    public static $rules = array(
+    public static $rules = [
         'meter_id' => 'required',
         'field' => 'required | in:gal,galPerMin,totkW,totkWh',
         'interval' => 'integer',
@@ -33,10 +26,10 @@ class MeterLimit extends BaseModel
         'high' => 'numeric',
         'lolo' => 'numeric',
         'hihi' => 'numeric',
-        'source' => 'required | in:epics,web'
-    );
+        'source' => 'required | in:epics,web',
+    ];
 
-    public $fillable = array(
+    public $fillable = [
         'meter_id',
         'field',                //PV to which it applies
         'interval',             //seconds
@@ -44,50 +37,56 @@ class MeterLimit extends BaseModel
         'high',                 //minor too high
         'lolo',                 //major too low
         'hihi',                 //major too high
-        'source'                //where limit defined
-    );
+        'source',                //where limit defined
+    ];
 
-
-
-
-    public function isWithinMinorLimits($value){
-        if ($this->isWithinMajorLimits($value)){
-            if ($this->isTooHighMinor($value) || $this->isTooLowMinor($value)){
+    public function isWithinMinorLimits($value)
+    {
+        if ($this->isWithinMajorLimits($value)) {
+            if ($this->isTooHighMinor($value) || $this->isTooLowMinor($value)) {
                 return false;
             }
+
             return true;
         }
+
         return false;
     }
 
-    public function isWithinMajorLimits($value){
-        if ($this->isTooHighMajor($value) || $this->isTooLowMajor($value)){
+    public function isWithinMajorLimits($value)
+    {
+        if ($this->isTooHighMajor($value) || $this->isTooLowMajor($value)) {
             return false;
         }
+
         return true;
     }
 
-    public function isWithinLimits($value){
-        if ($this->hasMinorLimits()){
+    public function isWithinLimits($value)
+    {
+        if ($this->hasMinorLimits()) {
             return $this->isWithinMinorLimits($value);
         }
+
         return $this->isWithinMajorLimits($value);
     }
 
     /**
      * @throws MeterLimitException
      */
-    protected function assertHasMinorLimits(){
-       if (! $this->hasMinorLimits()){
-           throw new MeterLimitException('Minor limits not set');
-       }
+    protected function assertHasMinorLimits()
+    {
+        if (! $this->hasMinorLimits()) {
+            throw new MeterLimitException('Minor limits not set');
+        }
     }
 
     /**
      * @throws MeterLimitException
      */
-    protected function assertHasMajorLimits(){
-        if (! $this->hasMajorLimits()){
+    protected function assertHasMajorLimits()
+    {
+        if (! $this->hasMajorLimits()) {
             throw new MeterLimitException('Major limits not set');
         }
     }
@@ -97,8 +96,9 @@ class MeterLimit extends BaseModel
      *
      * @return bool
      */
-    public function hasMinorLimits(){
-        return ($this->hasLowerLimitMinor() && $this->hasUpperLimitMinor());
+    public function hasMinorLimits()
+    {
+        return $this->hasLowerLimitMinor() && $this->hasUpperLimitMinor();
     }
 
     /**
@@ -106,83 +106,95 @@ class MeterLimit extends BaseModel
      *
      * @return bool
      */
-    public function hasMajorLimits(){
-        return ($this->hasLowerLimitMajor() && $this->hasUpperLimitMajor());
+    public function hasMajorLimits()
+    {
+        return $this->hasLowerLimitMajor() && $this->hasUpperLimitMajor();
     }
 
-
-    public function hasUpperLimitMajor(){
+    public function hasUpperLimitMajor()
+    {
         return $this->hihi !== null;
     }
 
-    public function hasUpperLimitMinor(){
+    public function hasUpperLimitMinor()
+    {
         return $this->high !== null;
     }
 
-    public function hasUpperLimit(){
+    public function hasUpperLimit()
+    {
         return $this->hasUpperLimitMajor() || $this->hasUpperLimitMinor();
     }
 
-    public function hasLowerLimitMajor(){
+    public function hasLowerLimitMajor()
+    {
         return $this->lolo !== null;
     }
 
-    public function hasLowerLimitMinor(){
+    public function hasLowerLimitMinor()
+    {
         return $this->low !== null;
     }
 
-    public function hasLowerLimit(){
+    public function hasLowerLimit()
+    {
         return $this->hasLowerLimitMinor() || $this->hasLowerLimitMajor();
     }
 
-    public function isTooHighMajor($value){
-        if ($this->hasUpperLimitMajor()){
-            if ($value >= $this->hihi){
+    public function isTooHighMajor($value)
+    {
+        if ($this->hasUpperLimitMajor()) {
+            if ($value >= $this->hihi) {
                 return true;
             }
         }
+
         return false;
     }
 
-    public function isTooHighMinor($value){
-        if ($this->hasUpperLimitMinor()){
-            if ($value >= $this->high){
+    public function isTooHighMinor($value)
+    {
+        if ($this->hasUpperLimitMinor()) {
+            if ($value >= $this->high) {
                 return true;
             }
         }
+
         return false;
     }
 
-    public function isTooLowMajor($value){
-        if ($this->hasLowerLimitMajor()){
-            if ($value <= $this->lolo){
+    public function isTooLowMajor($value)
+    {
+        if ($this->hasLowerLimitMajor()) {
+            if ($value <= $this->lolo) {
                 return true;
             }
         }
+
         return false;
     }
 
-    public function isTooLowMinor($value){
-        if ($this->hasLowerLimitMinor()){
-            if ($value <= $this->low){
+    public function isTooLowMinor($value)
+    {
+        if ($this->hasLowerLimitMinor()) {
+            if ($value <= $this->low) {
                 return true;
             }
         }
+
         return false;
     }
 
-
-    public function isMinorAlarm($value){
-        return ( ( $this->isTooLowMinor($value) || $this->isTooHighMinor($value) )
-                 && ! $this->isMajorAlarm($value)
-               );
+    public function isMinorAlarm($value)
+    {
+        return  ($this->isTooLowMinor($value) || $this->isTooHighMinor($value))
+                 && ! $this->isMajorAlarm($value);
     }
 
-    public function isMajorAlarm($value){
+    public function isMajorAlarm($value)
+    {
         $this->isTooLowMajor($value) || $this->isTooHighMajor($value);
     }
-
-
 
     /**
      * Exceeds major or minor upper limit.
@@ -190,7 +202,8 @@ class MeterLimit extends BaseModel
      * @param $value
      * @return bool
      */
-    public function isTooHigh($value){
+    public function isTooHigh($value)
+    {
         return $this->isTooHighMinor($value) || $this->isTooHighMajor($value);
     }
 
@@ -200,12 +213,13 @@ class MeterLimit extends BaseModel
      * @param $value
      * @return bool
      */
-    public function isTooLow($value){
+    public function isTooLow($value)
+    {
         return $this->isTooLowMinor($value) || $this->isTooLowMajor($value);
     }
 
-
-    public function getValidator(){
+    public function getValidator()
+    {
         $validator = Validator::make($this->attributes, static::$rules);
 
         //validation ensures sane limit pairs if/when set
@@ -220,7 +234,4 @@ class MeterLimit extends BaseModel
 
         return $validator;
     }
-
-
-
 }

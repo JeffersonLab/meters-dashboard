@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateTableVirtualMeters extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -15,8 +15,8 @@ class CreateTableVirtualMeters extends Migration
     {
         Schema::create('virtual_meters', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name',80)->unique();
-            $table->string('description',255)->nullable();
+            $table->string('name', 80)->unique();
+            $table->string('description', 255)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,4 +31,4 @@ class CreateTableVirtualMeters extends Migration
     {
         Schema::dropIfExists('virtual_meters');
     }
-}
+};

@@ -6,13 +6,11 @@ use App\Charts\DailyConsumption;
 use App\Models\Buildings\Building;
 use App\Models\Meters\Meter;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Request;
 use Tests\TestCase;
 
 class DailyConsumptionChartDataTest extends TestCase
 {
-
     /**
      * @var Meter
      */
@@ -23,38 +21,37 @@ class DailyConsumptionChartDataTest extends TestCase
      */
     protected $building;
 
-
-    function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->building = Building::factory()->create([
-            'type'=>'Building',
-            'begins_at' => Carbon::yesterday()->subDay(30)
+            'type' => 'Building',
+            'begins_at' => Carbon::yesterday()->subDay(30),
         ]);
         $this->meter = Meter::factory()->create([
             'type' => 'power',
-            'building_id'=>$this->building->id,
-            'begins_at' => Carbon::yesterday()->subDay(30)
+            'building_id' => $this->building->id,
+            'begins_at' => Carbon::yesterday()->subDay(30),
         ]);
         $this->building->load('meters');
         $totkWh = 0;
         // Populate 10 days of data with totkWh that increment by 10/hour for the first 5 days
         // and then by 15/hour
-        for ($i=10; $i>0; $i--){
-            for ($hour=0; $hour <24; $hour++){
+        for ($i = 10; $i > 0; $i--) {
+            for ($hour = 0; $hour < 24; $hour++) {
                 $this->meter->dataTable()->insert(['meter_id' => $this->meter->id, 'date' => Carbon::today()->subDay($i)->hour($hour), 'totkWh' => $totkWh]);
                 $this->building->dataTable()->insert(['building_id' => $this->building->id, 'date' => Carbon::today()->subDay($i)->hour($hour), 'totkWh' => $totkWh]);
-                if ($i > 5){
+                if ($i > 5) {
                     $totkWh += 10;
-                }else{
+                } else {
                     $totkWh += 15;
                 }
-
             }
         }
     }
 
-    function test_it_returns_correct_chart_data_for_meter(){
+    public function test_it_returns_correct_chart_data_for_meter()
+    {
         $chart = new DailyConsumption($this->meter, 'totkWh');
 
         // Request for first day of data should yield 240
@@ -85,10 +82,10 @@ class DailyConsumptionChartDataTest extends TestCase
         // The chart data timestamp was multiplied by 1000 per javascript convention
         $this->assertEquals(Carbon::today()->subDay(4)->hour(0)->timestamp * 1000, $data->first()->x);
         $this->assertEquals(360, $data->first()->y);
-
     }
 
-    function test_it_returns_correct_chart_data_for_building(){
+    public function test_it_returns_correct_chart_data_for_building()
+    {
         $chart = new DailyConsumption($this->building, 'totkWh');
 
         // Request for first day of data should yield 240
@@ -119,6 +116,5 @@ class DailyConsumptionChartDataTest extends TestCase
         // The chart data timestamp was multiplied by 1000 per javascript convention
         $this->assertEquals(Carbon::today()->subDay(4)->hour(0)->timestamp * 1000, $data->first()->x);
         $this->assertEquals(360, $data->first()->y);
-
     }
 }

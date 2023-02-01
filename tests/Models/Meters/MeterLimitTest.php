@@ -4,8 +4,6 @@ namespace Tests\Models\Meters;
 
 use App\Models\Meters\Meter;
 use App\Models\Meters\MeterLimit;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class MeterLimitTest extends TestCase
@@ -19,7 +17,7 @@ class MeterLimitTest extends TestCase
             'interval' => 1,
             'lolo' => 50,
             'hihi' => 40,
-            'source' => 'epics'
+            'source' => 'epics',
         ]);
         $this->assertFalse($limit->save());
     }
@@ -33,21 +31,21 @@ class MeterLimitTest extends TestCase
             'interval' => 1,
             'low' => 50,
             'high' => 40,
-            'source' => 'epics'
+            'source' => 'epics',
         ]);
         $this->assertFalse($limit->save());
     }
 
-
-    public function test_it_works_with_only_major(){
+    public function test_it_works_with_only_major()
+    {
         $meter = Meter::factory()->create(['type' => 'water', 'name' => 'm1', 'epics_name' => 'en1']);
         $limit = new MeterLimit([
-            'meter_id'=>$meter->id,
+            'meter_id' => $meter->id,
             'field' => 'gal',
             'interval' => 1,
-            'lolo'   => 0,
+            'lolo' => 0,
             'hihi' => 100,
-            'source' => 'epics'
+            'source' => 'epics',
         ]);
         $this->assertTrue($limit->save());
 
@@ -66,24 +64,22 @@ class MeterLimitTest extends TestCase
         $this->assertTrue($limit->isTooHigh(105));  //exceeds minor
         $this->assertTrue($limit->isTooHigh(100));  //exceeds minor
         $this->assertTrue($limit->isTooLow(0));  //exceeds minor
-
-
     }
 
-    public function test_it_works_with_minor_and_major(){
+    public function test_it_works_with_minor_and_major()
+    {
         $meter = Meter::factory()->create(['type' => 'water', 'name' => 'm1', 'epics_name' => 'en1']);
         $limit = new MeterLimit([
-            'meter_id'=>$meter->id,
+            'meter_id' => $meter->id,
             'field' => 'gal',
             'interval' => 1,
-            'lolo'   => 0.0,
+            'lolo' => 0.0,
             'low' => 20.0,
             'high' => 80.0,
             'hihi' => 100.0,
-            'source' => 'epics'
+            'source' => 'epics',
         ]);
         $this->assertTrue($limit->save());
-
 
         $this->assertTrue($limit->hasUpperLimitMinor());
         $this->assertTrue($limit->hasUpperLimitMajor());
@@ -109,7 +105,5 @@ class MeterLimitTest extends TestCase
 
         $this->assertFalse($limit->isTooHighMajor(85));  //exceeds minor
         $this->assertFalse($limit->isTooLowMajor(15));  //exceeds minor
-
     }
-
 }

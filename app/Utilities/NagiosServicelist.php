@@ -8,14 +8,12 @@
 
 namespace App\Utilities;
 
-use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 class NagiosServicelist extends NagiosData
 {
-
     protected $cgi = 'statusjson.cgi';
+
     protected $lastResult;
 
     /**
@@ -23,43 +21,56 @@ class NagiosServicelist extends NagiosData
      *
      *
      * @return mixed
+     *
      * @internal param $name
      */
-    function getData(){
-        if (! $this->lastResult){
+    public function getData()
+    {
+        if (! $this->lastResult) {
             $this->lastResult = $this->httpGet();
         }
+
         return $this->lastResult;
     }
 
-    function services(){
+    public function services()
+    {
         $services = new Collection();
-        foreach ($this->getData()->data->servicelist as $host => $service){
+        foreach ($this->getData()->data->servicelist as $host => $service) {
             $services->put($host, $service);
         }
+
         return $services;
     }
 
-
-    function filterByStatus($status){
-        return $this->services()->filter(function($value, $key) use ($status) {
-            foreach ($value as $serviceName => $detail){
-                if ($detail->status == $status) return true;
+    public function filterByStatus($status)
+    {
+        return $this->services()->filter(function ($value, $key) use ($status) {
+            foreach ($value as $serviceName => $detail) {
+                if ($detail->status == $status) {
+                    return true;
+                }
             }
+
             return false;
         });
     }
 
-    function filterByNotStatus($status){
-        return $this->services()->filter(function($value, $key) use ($status) {
-            foreach ($value as $serviceName => $detail){
-                if ($detail->status != $status) return true;
+    public function filterByNotStatus($status)
+    {
+        return $this->services()->filter(function ($value, $key) use ($status) {
+            foreach ($value as $serviceName => $detail) {
+                if ($detail->status != $status) {
+                    return true;
+                }
             }
+
             return false;
         });
     }
 
-    function countNotOk(){
+    public function countNotOk()
+    {
         return $this->filterByNotStatus('ok')->count();
     }
 
@@ -69,19 +80,14 @@ class NagiosServicelist extends NagiosData
      *
      * @return array
      */
-    function query(){
+    public function query()
+    {
         //?query=hostlist&formatoptions=whitespace+enumerate+bitmask+duration&hoststatus=up+down+unreachable';
-        return array(
+        return [
             'query' => 'servicelist',
             'details' => 'true',
             'formatoptions' => 'whitespace enumerate bitmask duration',
             //'hoststatus' => 'up down unreachable',
-        );
+        ];
     }
-
-
-
-
-
-
 }

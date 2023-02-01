@@ -70,7 +70,7 @@ return [
             'path' => '/img/volts.png',
             'alt' => 'AdminLTE Preloader Image',
             'effect' => 'animation__shake',
-//            'effect' => 'animation__wobble',
+            //            'effect' => 'animation__wobble',
             'width' => 96,
             'height' => 96,
         ],
@@ -233,8 +233,8 @@ return [
     */
 
     'enabled_laravel_mix' => true,
-    'laravel_mix_css_path' => env('LARAVEL_MIX_CSS_PATH','css/app.css'),
-    'laravel_mix_js_path' => env('LARAVEL_MIX_JS_PATH','js/app.js'),
+    'laravel_mix_css_path' => env('LARAVEL_MIX_CSS_PATH', 'css/app.css'),
+    'laravel_mix_js_path' => env('LARAVEL_MIX_JS_PATH', 'js/app.js'),
 
     /*
     |--------------------------------------------------------------------------
@@ -249,39 +249,38 @@ return [
     */
 
     'menu' => [
-//        // Navbar items:
-//        [
-//            'type'         => 'navbar-search',
-//            'text'         => 'search',
-//            'topnav_right' => true,
-//        ],
-//        [
-//            'type'         => 'fullscreen-widget',
-//            'topnav_right' => true,
-//        ],
+        //        // Navbar items:
+        //        [
+        //            'type'         => 'navbar-search',
+        //            'text'         => 'search',
+        //            'topnav_right' => true,
+        //        ],
+        //        [
+        //            'type'         => 'fullscreen-widget',
+        //            'topnav_right' => true,
+        //        ],
 
         // Sidebar items:
-//        [
-//            'type' => 'sidebar-menu-search',
-//            'text' => 'search',
-//        ],
-//        [   'text' => 'Reports',
-//            'url' => '/reports',
-//            'icon' => 'area-chart',
-//            'icon_color' => 'green'
-//        ],
-//        ['header' => 'account_settings'],
-//        [
-//            'text' => 'profile',
-//            'url'  => 'admin/settings',
-//            'icon' => 'fas fa-fw fa-user',
-//        ],
-//        [
-//            'text' => 'change_password',
-//            'url'  => 'admin/settings',
-//            'icon' => 'fas fa-fw fa-lock',
-//        ],
-
+        //        [
+        //            'type' => 'sidebar-menu-search',
+        //            'text' => 'search',
+        //        ],
+        //        [   'text' => 'Reports',
+        //            'url' => '/reports',
+        //            'icon' => 'area-chart',
+        //            'icon_color' => 'green'
+        //        ],
+        //        ['header' => 'account_settings'],
+        //        [
+        //            'text' => 'profile',
+        //            'url'  => 'admin/settings',
+        //            'icon' => 'fas fa-fw fa-user',
+        //        ],
+        //        [
+        //            'text' => 'change_password',
+        //            'url'  => 'admin/settings',
+        //            'icon' => 'fas fa-fw fa-lock',
+        //        ],
 
     ],
 

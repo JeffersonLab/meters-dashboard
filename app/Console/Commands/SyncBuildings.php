@@ -25,7 +25,6 @@ class SyncBuildings extends Command
      */
     protected $description = 'Synchronize Buildings table with CED';
 
-
     /**
      * The CED Type Data Helper.
      *
@@ -43,8 +42,8 @@ class SyncBuildings extends Command
     /**
      * Create a new command instance.
      *
-     * @param CEDTypeData $cedTypeData
-     * @param CEDElemData $cedElemData
+     * @param  CEDTypeData  $cedTypeData
+     * @param  CEDElemData  $cedElemData
      */
     public function __construct(CEDTypeData $cedTypeData, CEDElemData $cedElemData)
     {
@@ -68,6 +67,7 @@ class SyncBuildings extends Command
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
+
         return 0;
     }
 
@@ -79,32 +79,32 @@ class SyncBuildings extends Command
      * command's purpose is simply to update existing meter attributes.
      *
      * @param $data
+     *
      * @throws \Throwable
      */
     protected function update($data)
     {
         $existing = Building::all();
-        foreach ($existing as $building){
-            $match = $data->where('name',$building->name)->first();
-            if($match) {
+        foreach ($existing as $building) {
+            $match = $data->where('name', $building->name)->first();
+            if ($match) {
                 $updated = $building->update([
                     'element_id' => $match->id,
                     'type' => $match->type,
-                    'is_metered' => $this->propertyFromItem($match,'isMetered'),
-                    'abbreviation' => $this->propertyFromItem($match,'Abbreviation'),
-                    'address' => $this->propertyFromItem($match,'Address'),
-                    'building_num' => $this->propertyFromItem($match,'BuildingNum'),
-                    'square_footage' => $this->propertyFromItem($match,'SquareFootage'),
+                    'is_metered' => $this->propertyFromItem($match, 'isMetered'),
+                    'abbreviation' => $this->propertyFromItem($match, 'Abbreviation'),
+                    'address' => $this->propertyFromItem($match, 'Address'),
+                    'building_num' => $this->propertyFromItem($match, 'BuildingNum'),
+                    'square_footage' => $this->propertyFromItem($match, 'SquareFootage'),
                 ]);
-                if ($updated){
+                if ($updated) {
                     $this->line("Updated $building->name");
-                }else{
+                } else {
                     $this->error(("Error attempting to update $building->name"));
                 }
-            }else{
+            } else {
                 $this->error(("No match for $building->name"));
             }
         }
     }
-
 }
