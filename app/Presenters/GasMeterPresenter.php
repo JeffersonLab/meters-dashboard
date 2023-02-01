@@ -8,11 +8,6 @@
 
 namespace App\Presenters;
 
-use App\Charts\DailyConsumption;
-use Robbo\Presenter\Presenter;
-use Collective\Html\HtmlFacade as Html;
-
-
 class GasMeterPresenter extends MeterPresenter
 {
     public function defaultChart()
@@ -20,10 +15,11 @@ class GasMeterPresenter extends MeterPresenter
         return 'dailyccf';
     }
 
-    function epicsMacroVariables(){
+    public function epicsMacroVariables()
+    {
         $vars = parent::epicsMacroVariables();
-        $vars[] = urlencode(epics_macro_variable('units')) . '=ccf';  // macro var passed to screen
+        $vars[] = urlencode(epics_macro_variable('units')).'=ccf';  // macro var passed to screen
+
         return $vars;
     }
-
 }

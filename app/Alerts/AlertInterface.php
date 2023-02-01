@@ -8,57 +8,54 @@
 
 namespace App\Alerts;
 
-
 interface AlertInterface
 {
-
     /**
      * Identifies the type of alert
      *
      * @return string
      */
-    function type();
+    public function type();
 
     /**
      * The nature of the alert/check performed
      *
      * @return string
      */
-    function description();
+    public function description();
 
     /**
      * Message or text output from the check that can be displayed to a user
+     *
      * @return string
      */
-    function message();
+    public function message();
 
     /**
      * The alert status
      *
      * @return string  critical, warning, etc.
      */
-    function status();
+    public function status();
 
     /**
      * Whether the alert is acknowledged or not
      *
      * @return string
      */
-    function isAcknowledged();
+    public function isAcknowledged();
 
     /**
      * The unix timestamp of when the alert status was last checked
      *
      * @return int
      */
-    function lastCheck();
+    public function lastCheck();
 
     /**
      * The meter to which the alert applies
      *
      * @return string
      */
-    function meter();
-
-
+    public function meter();
 }

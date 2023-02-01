@@ -12,23 +12,20 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Events\BeforeSheet;
-use PhpOffice\PhpSpreadsheet\Cell\Hyperlink;
 
-class MyaStatsDataExport
-    implements FromCollection, WithMapping, WithHeadings, WithEvents, ShouldAutoSize, WithStrictNullComparison
+class MyaStatsDataExport implements FromCollection, WithMapping, WithHeadings, WithEvents, ShouldAutoSize, WithStrictNullComparison
 {
-
     protected $report;
 
     /**
      * ConsumptionReportExport constructor.
-     * @param ConsumptionReport $report
+     *
+     * @param  ConsumptionReport  $report
      */
     public function __construct(MultiMeter $report)
     {
         $this->report = $report;
     }
-
 
     /**
      * Is the given row considered empty?
@@ -36,19 +33,19 @@ class MyaStatsDataExport
      * @param $row
      * @return bool
      */
-    protected function isEmptyRow($row){
+    protected function isEmptyRow($row)
+    {
         return empty($row);
     }
-
-
 
     /**
      * Transform row data.
      *
-     * @param mixed $row
+     * @param  mixed  $row
      * @return array
      */
-    public function map($row): array {
+    public function map($row): array
+    {
         return [
             $row->start,
             $row->label,
@@ -60,9 +57,11 @@ class MyaStatsDataExport
 
     /**
      * Custom column headings.
+     *
      * @return array
      */
-    function headings(): array {
+    public function headings(): array
+    {
         return [
             'Date',
             'Signal',
@@ -75,13 +74,12 @@ class MyaStatsDataExport
     /**
      * Returns the data collection used to make the spreadsheet.
      *
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
         return $this->report->data();
     }
-
 
     /**
      * Register handlers to do manipulation of the underlying spreadsheet at
@@ -95,14 +93,13 @@ class MyaStatsDataExport
     public function registerEvents(): array
     {
         return [
-            BeforeSheet::class => function(BeforeSheet $event){
-                $event->sheet->append(['Stats'],'A1');
+            BeforeSheet::class => function (BeforeSheet $event) {
+                $event->sheet->append(['Stats'], 'A1');
                 $cellRange = 'A1:E1'; // All headers
                 $event->sheet->getDelegate()->mergeCells($cellRange);
-
             },
 
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class => function (AfterSheet $event) {
                 $cellRange = 'A1:F2'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()
                     ->setSize(14)
@@ -115,7 +112,6 @@ class MyaStatsDataExport
                 $event->sheet->getDelegate()->getStyle('E:F')
                     ->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-
             },
         ];
     }

@@ -8,20 +8,15 @@
 
 namespace App\Exceptions;
 
-
 use App\Models\Meters\Meter;
-use Throwable;
 
 class MeterDataException extends \Exception
 {
     public $meter;
 
-    public function __construct(string $message = "", Meter $meter)
+    public function __construct(string $message, Meter $meter)
     {
         parent::__construct($message);
         $this->meter = $meter;
-
     }
-
-
 }

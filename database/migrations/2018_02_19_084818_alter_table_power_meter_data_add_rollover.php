@@ -1,10 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
-class AlterTablePowerMeterDataAddRollover extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +12,9 @@ class AlterTablePowerMeterDataAddRollover extends Migration
      */
     public function up()
     {
-        Schema::table('power_meter_data', function($table){
+        Schema::table('power_meter_data', function ($table) {
             $table->integer('rollover_accumulated')->nullable();
         });
-
     }
 
     /**
@@ -26,8 +24,8 @@ class AlterTablePowerMeterDataAddRollover extends Migration
      */
     public function down()
     {
-        Schema::table('power_meter_data', function($table){
+        Schema::table('power_meter_data', function ($table) {
             $table->dropColumn('rollover_accumulated');
         });
     }
-}
+};

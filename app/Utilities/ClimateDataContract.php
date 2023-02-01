@@ -8,7 +8,6 @@
 
 namespace App\Utilities;
 
-
 interface ClimateDataContract
 {
     /**
@@ -16,19 +15,18 @@ interface ClimateDataContract
      *
      * Default should be "yesterday"
      *
-     * @param mixed $date
+     * @param  mixed  $date
      * @return ClimateDataContract
      */
-    function setDate($date);
-
+    public function setDate($date);
 
     /**
      * Retrieve the date of retrieved data set
      *
-     * @param mixed $date
+     * @param  mixed  $date
      * @return ClimateDataContract
      */
-    function getDate();
+    public function getDate();
 
     /**
      * Returns the name of the data source
@@ -37,22 +35,19 @@ interface ClimateDataContract
      *
      * @return string
      */
-    function sourceName();
+    public function sourceName();
 
     /**
      * get Heating Degree Days.
      *
      * @return float
      */
-    function heatingDegreeDays();
+    public function heatingDegreeDays();
 
     /**
      * get Cooling Degree Days.
      *
      * @return float
      */
-    function coolingDegreeDays();
-
-
-
+    public function coolingDegreeDays();
 }

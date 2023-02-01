@@ -2,8 +2,6 @@
 
 namespace App\Charts;
 
-
-
 use App\Models\DataTables\DateRangeTrait;
 use App\Models\Meters\VirtualMeter;
 use Illuminate\Http\Request;
@@ -12,8 +10,6 @@ use Illuminate\Http\Request;
  * Class MultiMeter
  *
  * Plot multiple meters in a single graph.
- *
- * @package App\Charts
  */
 class MultiMeter implements ChartInterface
 {
@@ -48,10 +44,11 @@ class MultiMeter implements ChartInterface
      */
     protected $title;
 
-
     /**
      * MultiMeter constructor.
-     * @param VirtualMeter $model
+     *
+     * @param  VirtualMeter  $model
+     *
      * @throws \Exception
      */
     public function __construct(VirtualMeter $model)
@@ -61,14 +58,13 @@ class MultiMeter implements ChartInterface
         $this->title = $this->virtualMeter->name();
     }
 
-
     /**
      * Apply HTTP Request parameters to customize the chart.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return mixed|void
      */
-    function applyRequest(Request $request)
+    public function applyRequest(Request $request)
     {
         $this->setDateRange($request->input('start'), $request->input('end', null));
         $this->pv = $request->input('pv');
@@ -77,14 +73,14 @@ class MultiMeter implements ChartInterface
     /**
      * Set the date range for data points to be plotted.
      *
-     * @param mixed $start string or Carbon datetime object (default: start of month)
-     * @param mixed $end string or Carbon datetime object  (default: now)
+     * @param  mixed  $start string or Carbon datetime object (default: start of month)
+     * @param  mixed  $end string or Carbon datetime object  (default: now)
      */
-    function setDateRange($start, $end)
+    public function setDateRange($start, $end)
     {
-        if ($start){
+        if ($start) {
             $this->beginning($start);
-        }else{
+        } else {
             $this->defaultBeginning();
         }
         if ($end) {
@@ -98,11 +94,13 @@ class MultiMeter implements ChartInterface
      * Returns the collection of data points to be plotted.
      *
      * @return array
+     *
      * @throws \Exception
      */
-    public function chartData(){
-        $data = array();
-        foreach ($this->virtualMeter->meters() as $meter){
+    public function chartData()
+    {
+        $data = [];
+        foreach ($this->virtualMeter->meters() as $meter) {
             //Each meter's datatable reporter needs to be told
             //of the current date range settings.
             $meter->reporter()->beginning($this->beginsAt());
@@ -117,30 +115,32 @@ class MultiMeter implements ChartInterface
                 'name' => $meter->epics_name,
                 'xValueType' => 'dateTime',
                 'dataPoints' => $dataPoints->toArray(),
-                ];
+            ];
         }
+
         return $data;
     }
-
 
     /**
      * Returns an array representation of chart settings and data.
      *
      * @return array
+     *
      * @throws \Exception
      */
-    public function toArray(){
+    public function toArray()
+    {
         return [
             'title' => [
                 'text' => $this->title,
             ],
             'axisY' => [
-                'includeZero' => false
+                'includeZero' => false,
             ],
-            'legend' =>  [
-                'cursor' => "pointer",
-                'verticalAlign' => "top",
-                'horizontalAlign' => "center",
+            'legend' => [
+                'cursor' => 'pointer',
+                'verticalAlign' => 'top',
+                'horizontalAlign' => 'center',
                 'dockInsidePlotArea' => true,
             ],
             'data' => $this->chartData(),
@@ -151,12 +151,12 @@ class MultiMeter implements ChartInterface
      * Returns an JSON string representation of chart settings and data.
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function toJson()
     {
         return json_encode($this->toArray());
-
     }
 
     /**
@@ -164,7 +164,8 @@ class MultiMeter implements ChartInterface
      *
      * @return string
      */
-    public function pv(){
+    public function pv()
+    {
         return $this->pv;
     }
 
@@ -173,7 +174,8 @@ class MultiMeter implements ChartInterface
      *
      * @return \Carbon\Carbon
      */
-    public function beginsAt(){
+    public function beginsAt()
+    {
         return $this->begins_at;
     }
 
@@ -182,8 +184,8 @@ class MultiMeter implements ChartInterface
      *
      * @return \Carbon\Carbon
      */
-    public function endsAt(){
+    public function endsAt()
+    {
         return $this->ends_at;
     }
-
 }

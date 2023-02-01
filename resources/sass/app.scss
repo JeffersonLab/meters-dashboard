@@ -1,5 +1,34 @@
 
-// Variables
-@import "variables";
+// Bootstrap
+@import "~bootstrap/scss/bootstrap";
 
+// Datatables BS4
+@import "~datatables.net-bs4/css/dataTables.bootstrap4.css";
+
+// Bootstrap Vue styles
+@import '~bootstrap-vue/src/index.scss';
+
+// Fonts
+//@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic');
+$fa-font-path: "../webfonts";
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/brands";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+
+// OverlayScrollbars
+@import '~overlayscrollbars/css/OverlayScrollbars.css';
+// iCheck
+@import '~icheck-bootstrap/icheck-bootstrap.css';
+// AdminLTE
+@import '../../vendor/almasaeed2010/adminlte/dist/css/adminlte.css';
+
+// Local Styles
+.content-header h1 {
+    text-align: center;
+}
+// Hide the top navbar of adminlte
+.navbar-expand {
+    display: none;
+}
 

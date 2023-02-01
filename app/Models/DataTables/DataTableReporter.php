@@ -8,14 +8,11 @@
 
 namespace App\Models\DataTables;
 
-
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
-
 class DataTableReporter
 {
-
     use DateRangeTrait;
 
     /**
@@ -23,35 +20,33 @@ class DataTableReporter
      */
     protected $model;
 
-
-
     protected $dataTableFk = 'meter_id';
-
 
     /**
      * DataTableReporter constructor.
-     * @param DataTableInterface $meter
+     *
+     * @param  DataTableInterface  $meter
      */
-    function __construct(DataTableInterface $meter)
+    public function __construct(DataTableInterface $meter)
     {
         $this->model = $meter;
         $this->defaultDates();
     }
 
-
     /**
      * @param $var
      * @return mixed
+     *
      * @throws \Exception
      */
-    public function __get($var){
-        switch($var){
-            case 'begins_at' : return $this->begins_at;
-            case 'ends_at' : return $this->ends_at;
+    public function __get($var)
+    {
+        switch ($var) {
+            case 'begins_at': return $this->begins_at;
+            case 'ends_at': return $this->ends_at;
         }
         throw new \Exception('property not available');
     }
-
 
     /**
      * Accepts a collection of label/value objects where the values are readings of
@@ -62,20 +57,20 @@ class DataTableReporter
      * @param $data
      * @return Collection
      */
-    function intervalDifferences($data)
+    public function intervalDifferences($data)
     {
         $previous = null;
         $dataSeries = new Collection();
         foreach ($data as $datum) {
             if ($previous !== null) {
-                /** @noinspection PhpUndefinedFieldInspection */
-                $dataSeries->push((object)[
+                $dataSeries->push((object) [
                     'label' => $previous->label,
-                    'value' => $this->odometerDifference($previous->value, $datum->value)
+                    'value' => $this->odometerDifference($previous->value, $datum->value),
                 ]);
             }
             $previous = $datum;
         }
+
         return $dataSeries;
     }
 
@@ -83,29 +78,31 @@ class DataTableReporter
      * Accepts two sequential odometer readings $x, $y and returns their difference
      * accounting for the fact that the odometer may have "rolled over" in between.
      *
-     * @param int $x first reading
-     * @param int $y second reading
-     * @param int $rollover odometer limit
+     * @param  int  $x first reading
+     * @param  int  $y second reading
+     * @param  int  $rollover odometer limit
      * @return int
      */
-    function odometerDifference($x, $y, $rollover = 1000000)
+    public function odometerDifference($x, $y, $rollover = 1000000)
     {
         // Can't do math on null values!
-        if ($x === null || $y === null){
+        if ($x === null || $y === null) {
             return null;
         }
 
-        if ($x > $y ) {
+        if ($x > $y) {
             // A meter transitioning from a positive value to exactly 0 seems
             // generally not to be the result of odometer rollover,
             // but a sign of something being reset and/or initialized
-            // back to 0.  Therefore we will treat it as missing data and
+            // back to 0.  We will treat it as missing data and
             // return null.
-            if ($y == 0){
+            if ($y == 0) {
                 return null;
             }
-            return ($rollover - $x + $y);
+
+            return $rollover - $x + $y;
         }
+
         return $y - $x;
     }
 
@@ -119,9 +116,10 @@ class DataTableReporter
      * @param $pv
      * @return Collection
      */
-    function dailyPv($pv)
+    public function dailyPv($pv)
     {
         $data = $this->dateRangeQuery()->get(['date', "$pv as value"]);
+
         return $this->dailyDifferences($data);
     }
 
@@ -132,8 +130,10 @@ class DataTableReporter
      * @param $pv
      * @return Collection of {label, value} objects
      */
-    function pvReadings($pv){
+    public function pvReadings($pv)
+    {
         $data = $this->dateRangeQuery()->get(['date as label', "$pv as value"]);
+
         return $data;
     }
 
@@ -143,35 +143,29 @@ class DataTableReporter
      *
      * @return \Illuminate\Database\Query\Builder
      */
-    function dateRangeQuery()
+    public function dateRangeQuery($direction = 'asc')
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         return $this->model->dataTable()
             ->where($this->dataTableFk, '=', $this->model->id)
             ->where('date', '>=', $this->begins_at)
             ->where('date', '<=', $this->ends_at)
-            ->orderBy('date');
+            ->orderBy('date', $direction);
     }
 
     /**
-     * Returns first row of data in the date range query
+     * Returns the earliest row of data in the date range query
      */
-    function firstData(){
+    public function firstData()
+    {
         return $this->dateRangeQuery()->first();
     }
 
     /**
-     * Returns first row of data in the date range query
+     * Returns latest row of data in the date range query
      */
-    function lastData(){
-        // Eloquent doesn't provide a last() method as it does a first(),
-        // so we have to specify a reverse sort order so that first()
-        // will actually be equivalent of last();
-        return $this->model->dataTable()
-            ->where($this->dataTableFk, '=', $this->model->id)
-            ->where('date', '>=', $this->begins_at)
-            ->where('date', '<=', $this->ends_at)
-            ->orderBy('date','desc')->first();
+    public function lastData()
+    {
+        return $this->dateRangeQuery('desc')->first();
     }
 
     /**
@@ -180,10 +174,10 @@ class DataTableReporter
      * The value is computed as the difference between the first and last values of
      * the kWh property on the given day.
      *
-     * @param Collection $data {date, value} objects
+     * @param  Collection  $data {date, value} objects
      * @return Collection of objects {label, value}
      */
-    function dailyDifferences(Collection $data)
+    public function dailyDifferences(Collection $data)
     {
         $begin = Carbon::create($this->begins_at->year, $this->begins_at->month, $this->begins_at->day);
         $end = Carbon::create($this->ends_at->year, $this->ends_at->month, $this->ends_at->day);
@@ -191,7 +185,6 @@ class DataTableReporter
         $date = clone $begin;
         $dataSeries = new Collection();
         while ($date->timestamp <= $end->timestamp) {
-
             $label = $date->format('Y-m-d');
             $value = null;
 
@@ -219,13 +212,14 @@ class DataTableReporter
 
             if ($date->timestamp <= $end->timestamp) {
                 $dataSeries->push(
-                    (object)[
+                    (object) [
                         'label' => $label,
-                        'value' => $value
+                        'value' => $value,
                     ]
                 );
             }
         }
+
         return $dataSeries;
     }
 
@@ -233,11 +227,11 @@ class DataTableReporter
      * Returns a collection of items from the source that fall on the
      * specified day.
      *
-     * @param Collection $collection
-     * @param Carbon $date
+     * @param  Collection  $collection
+     * @param  Carbon  $date
      * @return Collection
      */
-    function dataForDay(Collection $collection, Carbon $date)
+    public function dataForDay(Collection $collection, Carbon $date)
     {
         return $collection->filter(function ($value) use ($date) {
             return date('Y-m-d', strtotime($value->date)) == $date->format('Y-m-d');
@@ -247,10 +241,10 @@ class DataTableReporter
     /**
      * Returns the maximum value of the specified PV column within the current date range
      *
-     * @param string $pv
+     * @param  string  $pv
      * @return Collection
      */
-    function maxPv($pv)
+    public function maxPv($pv)
     {
         return $this->dateRangeQuery()->max($pv);
     }
@@ -263,29 +257,29 @@ class DataTableReporter
      * @param $data
      * @return \Illuminate\Support\Collection
      */
-    function canvasTimeSeries(Collection $data)
+    public function canvasTimeSeries(Collection $data)
     {
         return $data->map(function ($item) {
-            return (object)[
+            return (object) [
                 'x' => strtotime($item->label) * 1000,
-                'y' => $this->number($item->value)
+                'y' => $this->number($item->value),
             ];
         });
-
     }
 
     /**
      * Function to cast a string to an integer or a float
      * as most appropriate.
-     * @param string $val
+     *
+     * @param  string  $val
      * @return float|int
      */
-   function number($val){
-	if ( (int) $val === (float) $val) {
-		return (int) $val;
-	}else{
-        return (float) round($val,1);
-	}
-   }
-
+    public function number($val)
+    {
+        if ((int) $val === (float) $val) {
+            return (int) $val;
+        } else {
+            return (float) round($val, 1);
+        }
+    }
 }

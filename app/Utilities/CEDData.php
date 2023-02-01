@@ -8,28 +8,30 @@
 
 namespace App\Utilities;
 
+use Exception;
 use GuzzleHttp\Client;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 abstract class CEDData implements DataFetchContract
 {
-
     protected $webClient;
 
-    function __construct()
+    protected $workspace;
+
+    public function __construct()
     {
-        $this->webClient = new Client(['base_uri'=>env('CED_URL')]);
+        $this->workspace = config('ced.workspace');
+        $this->webClient = new Client(['base_uri' => config('ced.url')]);
     }
 
     /**
      * Returns a collection of CED element objects
      *
      * @return mixed
+     *
      * @internal param $name
      */
-    abstract function getData();
-
+    abstract public function getData();
 
     /**
      * Returns the query parameters expected by mySampler
@@ -37,23 +39,23 @@ abstract class CEDData implements DataFetchContract
      *
      * @return array
      */
-    abstract function query();
-
+    abstract public function query();
 
     /**
      * @return mixed|null
+     *
      * @internal param array $query
      */
-    function httpGet(){
-        $response = $this->webClient->get('inventory',['query' => $this->query()]);
-        if ($response->getStatusCode() == 200){
+    public function httpGet()
+    {
+        $response = $this->webClient->get('inventory', ['query' => $this->query()]);
+        if ($response->getStatusCode() == 200) {
             $body = $response->getBody();
+
             return json_decode($body);
-        }else{
+        } else {
             Log::error($response->getBody());
             throw new Exception('CED Retrieval Error '.$response->getStatusCode());
         }
     }
-
-
 }

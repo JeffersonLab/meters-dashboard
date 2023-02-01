@@ -11,20 +11,17 @@
     },
     "devDependencies": {
         "acorn": "^8.0",
-        "acorn-dynamic-import": "^4.0.0",
         "ajv": "^6.9.1",
-        "axios": "^0.21",
-        "bootbox": "^4.4.0",
+        "axios": "^0.25",
         "bootstrap": "^4.0.0",
         "cross-env": "^5.1",
-        "flatpickr": "^4.5.2",
-        "font-awesome": "^4.7.0",
+        "datatables.net-bs4": "^1.11.4",
         "jquery": "^3.2",
-        "laravel-mix": "^6.0.6",
+        "laravel-mix": "^6.0.43",
         "lodash": "^4.17.19",
         "moment": "^2.24.0",
         "popper.js": "^1.14.7",
-        "resolve-url-loader": "^2.3.1",
+        "resolve-url-loader": "^5.0.0",
         "sass": "^1.49.0",
         "sass-loader": "^12.4.0",
         "select2": "^4.0.6-rc.1",
@@ -33,7 +30,14 @@
         "vue-template-compiler": "^2.6.14"
     },
     "dependencies": {
-        "acorn-dynamic-import": "^4.0.0",
-        "vue-axios": "^3.4.0"
+        "@fortawesome/fontawesome-free": "^5.15.4",
+        "bootstrap-vue": "^2.22.0",
+        "chartjs": "^0.3.24",
+        "icheck-bootstrap": "^3.0.1",
+        "overlayscrollbars": "^1.13.1",
+        "vue-axios": "^3.4.0",
+        "vue-chartjs": "^4.1.1",
+        "vue-select": "^2.6.4",
+        "webpack-shell-plugin": "^0.5.0"
     }
 }

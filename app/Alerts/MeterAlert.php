@@ -8,8 +8,7 @@
 
 namespace App\Alerts;
 
-
-use App\Meters\Meter;
+use App\Models\Meters\Meter;
 
 /**
  * Class MeterAlert
@@ -17,21 +16,20 @@ use App\Meters\Meter;
  * Meter-specific alerts that don't arise from simple EPICS value checks.
  * An example could be an alert that the number of gallons recorded on a water
  * meter during the preceding 24 hours was too high or too low.
- *
- * @package App\Alerts
  */
 class MeterAlert implements AlertInterface
 {
-
     protected $meter;
+
     protected $status;
+
     public $description;
+
     public $message;
+
     protected $lastCheck;
 
-
-
-    function __construct(Meter $meter, $status)
+    public function __construct(Meter $meter, $status)
     {
         $this->meter = $meter;
         $this->status = $status;
@@ -41,32 +39,38 @@ class MeterAlert implements AlertInterface
     /**
      * Identifies the type of alert
      */
-    function type(){
+    public function type()
+    {
         return $this->meter->type;
     }
 
-    function description(){
+    public function description()
+    {
         return $this->description;
     }
 
-    function message(){
+    public function message()
+    {
         return $this->message;
     }
 
-    function status(){
+    public function status()
+    {
         return $this->status;
     }
 
-    function isAcknowledged(){
+    public function isAcknowledged()
+    {
         return false;
     }
 
-    function lastCheck(){
+    public function lastCheck()
+    {
         return $this->lastCheck;
     }
 
-    function meter(){
+    public function meter()
+    {
         return $this->meter;
     }
-
 }

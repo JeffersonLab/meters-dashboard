@@ -9,61 +9,64 @@
 namespace App\Utilities;
 
 use GuzzleHttp\Client;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class FacilitiesClimateData extends ClimateData
 {
-
     const SOURCE_NAME = 'jlab-weather';
+
     protected $webClient;
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->webClient = new Client([
             'base_uri' => env('https://www.jlab.org/fm/wx/VWS/data/daily/'),
-            'verify' => false
+            'verify' => false,
         ]);
     }
 
-    function highTemp()
+    public function highTemp()
     {
         return $this->get('temperatureHigh');
     }
 
-    function lowTemp()
+    public function lowTemp()
     {
         return $this->get('temperatureLow');
     }
 
-    function extractData($fetched)
+    public function extractData($fetched)
     {
         $data = new \StdClass();
         $data->temperatureHigh = max($fetched);
         $data->temperatureLow = min($fetched);
+
         return $data;
     }
 
     protected function getApiData()
     {
-        $temps = array();
+        $temps = [];
         $data = $this->httpGet()->getContents();
-        foreach( explode("\n", $data) as $line){
-            if (preg_match('/^\d\d\:\d\d(am|pm)\s.*/', $line)){
+        foreach (explode("\n", $data) as $line) {
+            if (preg_match('/^\d\d\:\d\d(am|pm)\s.*/', $line)) {
                 $tokens = preg_split("/[\s]+/", $line);
                 $temps[] = $tokens[4];
             }
         }
+
         return $temps;
     }
 
     /**
      * Performs data retrieval over http(s)
+     *
      * @return array|null
+     *
      * @throws \Exception
      */
-    function httpGet()
+    public function httpGet()
     {
         $response = $this->webClient->get($this->url(), [
             'timeout' => 3, // Response timeout
@@ -74,8 +77,9 @@ class FacilitiesClimateData extends ClimateData
             return $response->getBody();
         } else {
             Log::error($response->getBody());
-            throw new \Exception('Web Data Retrieval Error ' . $response->getStatusCode());
+            throw new \Exception('Web Data Retrieval Error '.$response->getStatusCode());
         }
+
         return null;
     }
 
@@ -83,20 +87,14 @@ class FacilitiesClimateData extends ClimateData
      * Returns the filename pertinent to the date.
      *
      * Facilities weather station daily data is stored in text files of the format:
-     *
      */
-    function filename()
+    public function filename()
     {
-        return $this->date->format('ymd') . '.txt';
-
+        return $this->date->format('ymd').'.txt';
     }
 
-
-    function url(){
+    public function url()
+    {
         return config('FACILITIES_WEATHER_DIR', 'https://www.jlab.org/fm/wx/VWS/data/daily/').$this->filename();
     }
-
-
-
-
 }

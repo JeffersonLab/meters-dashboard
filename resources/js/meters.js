@@ -23,7 +23,6 @@ jlab.meters.changeChart = function (){
 };
 
 jlab.meters.getChartOptions = function(chartType, chartId) {
-    console.log(chartId);
     $.get(jlab.currentApiUrl, {
             'start' : jlab.currentDateRange.begins,
             'end'   : jlab.currentDateRange.ends,
@@ -31,7 +30,6 @@ jlab.meters.getChartOptions = function(chartType, chartId) {
             'model_id' : jlab.currentModel.id
         },
         function(response){
-            //console.log(response.data);
             if (response.status == 'ok') {
                 jlab.meters.chart[chartId].options = response.data;
                 jlab.meters.chart[chartId].render();

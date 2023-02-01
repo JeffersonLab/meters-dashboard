@@ -8,40 +8,39 @@
 
 namespace App\Models\Meters;
 
+use App\Models\BaseModel;
+use App\Models\DataTables\DataTableInterface;
+use App\Models\DataTables\DataTableReporter;
+use App\Models\DataTables\DataTableTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
-use DB;
-
 
 /**
  * Class VirtualMeter
  *
  * A virtual meter is an amalgam of multiple physical meters whose data is combined for
  * reporting purposes.
- *
- * @package App\Meters
  */
 class VirtualMeter extends BaseModel implements DataTableInterface
 {
     use DataTableTrait;
 
-    public static $rules = array(
+    public static $rules = [
         'name' => 'required | max:80',
         'description' => 'max:255',
 
-    );
-    public $fillable = array(
+    ];
+
+    public $fillable = [
         'name',
         'description',
-    );
+    ];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at', 'begins_at'];
+    protected $casts = [
+        'deleted_at' => 'datetime',
+        'begins_at' => 'datetime',
+    ];
 
     /*
      * @var string
@@ -53,12 +52,10 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      */
     protected $begins_at;
 
-
     /**
      * @var DataTableReporter
      */
     protected $reporter;
-
 
     /**
      * @var \Illuminate\Support\Collection
@@ -68,12 +65,13 @@ class VirtualMeter extends BaseModel implements DataTableInterface
     /**
      * Virtual Meter constructor.
      *
-     * @param array $attributes
+     * @param  array  $attributes
      */
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = [])
     {
         $this->dataTableFk = 'meter_id';
-        $this->begins_at = Carbon::now();
+        $this->begins_at = Carbon::now()->startOfDay();
+        $this->meters = new Collection();
         parent::__construct($attributes);
     }
 
@@ -82,10 +80,12 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * @return \Illuminate\Support\Collection
      */
-    public function meters(){
-        if ($this->meters == null){
+    public function meters()
+    {
+        if ($this->meters->isEmpty()) {
             $this->setMeters($this->physicalMeters()->get());
         }
+
         return $this->meters;
     }
 
@@ -94,10 +94,12 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * @return bool
      */
-    public function hasMeters(){
-        if ($this->meters && $this->meters->isNotEmpty()){
+    public function hasMeters()
+    {
+        if ($this->meters && $this->meters->isNotEmpty()) {
             return true;
         }
+
         return false;
     }
 
@@ -106,7 +108,8 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function physicalMeters(){
+    public function physicalMeters()
+    {
         return $this->belongsToMany(Meter::class, 'virtual_meter_meters',
             'virtual_meter_id', 'meter_id');
     }
@@ -115,11 +118,12 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      * Sets type of the virtual meter based on the type attribute
      * of the first physical meter it contains.
      */
-    function setMeterType(){
+    public function setMeterType()
+    {
         $types = $this->meters()->pluck('type')->unique();
-        if ($types->isNotEmpty()){
+        if ($types->isNotEmpty()) {
             $this->type = $types->first();
-        }else{
+        } else {
             $this->type = null;
         }
     }
@@ -132,13 +136,14 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * @return string
      */
-    function name(){
-        if (isset($this->attributes['name'])){
+    public function name()
+    {
+        if (isset($this->attributes['name'])) {
             return $this->attributes['name'];
         }
+
         return implode(' + ', $this->meters()->pluck('epics_name')->toArray());
     }
-
 
     /**
      * Returns the VirtualMeter's type (gas, power, water) which is
@@ -146,10 +151,12 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * @return mixed
      */
-    function type(){
-        if (! $this->type){
+    public function type()
+    {
+        if (! $this->type) {
             $this->setMeterType();
         }
+
         return $this->type;
     }
 
@@ -164,31 +171,44 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      * database.  A use case would be aggregating a user-defined set of meters to produce a multi-meter
      * report or chart.
      *
-     * @param Collection $meters
+     * @param  Collection  $meters
      */
-    function setMeters(Collection $meters){
+    public function setMeters(Collection $meters)
+    {
         $this->meters = $meters;
         $this->setMeterType();
     }
 
-
     /**
      * Returns the ids of the physical meters that comprise the virtual meter
+     *
      * @return array
      */
-    function meterIds(){
+    public function meterIds()
+    {
         return $this->meters()->pluck('id')->toArray();
     }
 
     /**
-     * @return \app\Meters\DataTableReporter
+     * @return DataTableReporter
      */
-    public function reporter()
+    public function reporter(): DataTableReporter
     {
-        if (!$this->reporter) {
+        if (! $this->reporter) {
             $this->reporter = new DataTableReporter($this);
         }
+
         return $this->reporter;
+    }
+
+    /**
+     * The name of the table where meter data points are stored.
+     *
+     * @return string
+     */
+    public function tableName(): string
+    {
+        return 'virtual_meter_data_'.$this->id;
     }
 
     /**
@@ -196,10 +216,14 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * @return Builder
      */
-    public function dataTable()
+    public function dataTable(): Builder
     {
-        $name = $this->type() . '_meter_data';
-        return DB::table($name);
+        $builder = null;
+        foreach ($this->meters() as $meter) {
+            $builder = $builder ? $builder->union($meter->dataTable()) : $meter->dataTable();
+        }
+
+        return $builder;
     }
 
     /**
@@ -207,17 +231,18 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * @return bool
      */
-    public function hasData()
+    public function hasData(): bool
     {
         if ($this->dataTable()->whereIn($this->dataTableFk(), $this->meterIds())->limit(1)->first()) {
             return true;
         }
+
         return false;
     }
 
     public function fillDataTable()
     {
-       //Noop - VirtualMeters don't insert data.
+        //Noop - VirtualMeters don't insert data.
     }
 
     /**
@@ -227,9 +252,8 @@ class VirtualMeter extends BaseModel implements DataTableInterface
     {
         $latest = $this->lastDataDate();
         if ($latest) {
-            return (date('Y-m-d H:i',
-                strtotime($latest->date) + config('meters.data_interval', 900))
-            );
+            return date('Y-m-d H:i',
+                strtotime($latest->date) + config('meters.data_interval', 900));
         } else {
             return $this->begins_at->format('Y-m-d H:00');
         }
@@ -242,9 +266,18 @@ class VirtualMeter extends BaseModel implements DataTableInterface
     {
         return $this->dataTable()
             ->whereIn($this->dataTableFk(), $this->meterIds())
-            ->latest()->first();
-
+            ->latest('date')->first();
     }
 
+    public function dbFields(): array
+    {
+        return $this->pvFields();
+    }
 
+    public function pvFields(): array
+    {
+        // All meters are required to be of the same type and will therefore
+        // have the same fields.
+        return $this->meters()->first()->pvFields();
+    }
 }

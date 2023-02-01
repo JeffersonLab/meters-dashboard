@@ -8,14 +8,11 @@
 
 namespace App\Exceptions;
 
-
 use App\Models\BaseModel;
 use Illuminate\Support\Arr;
-use Throwable;
 
 class ModelValidationException extends \Exception
 {
-
     protected $model;
 
     public function __construct(BaseModel $model)
@@ -24,13 +21,13 @@ class ModelValidationException extends \Exception
         parent::__construct($this->errorMessages());
     }
 
-    public function errors(){
+    public function errors()
+    {
         return $this->model->errors();
     }
 
-    public function errorMessages(){
+    public function errorMessages()
+    {
         return implode("\n", (Arr::flatten($this->errors()->all())));
     }
-
-
 }

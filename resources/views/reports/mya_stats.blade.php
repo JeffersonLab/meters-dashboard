@@ -228,7 +228,7 @@
         });
 
         $(document).ready(function () {
-            $('.date-range input').flatpickr({enableTime: true, dateFormat: "Y-m-d H:i"});
+            // $('.date-range input').flatpickr({enableTime: true, dateFormat: "Y-m-d H:i"});
             $('.select2').select2();
             $('#chart-multimeter').each(jlab.multimeters.makeChart);
             $('table.multimeter-data').DataTable({

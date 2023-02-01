@@ -1,10 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
-class AlterTableWaterMeterDataAddGpm extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +12,9 @@ class AlterTableWaterMeterDataAddGpm extends Migration
      */
     public function up()
     {
-        Schema::table('water_meter_data', function($table){
+        Schema::table('water_meter_data', function ($table) {
             $table->double('galPerMin')->nullable();
         });
-
     }
 
     /**
@@ -26,8 +24,8 @@ class AlterTableWaterMeterDataAddGpm extends Migration
      */
     public function down()
     {
-        Schema::table('water_meter_data', function($table){
+        Schema::table('water_meter_data', function ($table) {
             $table->dropColumn('galPerMin');
         });
     }
-}
+};

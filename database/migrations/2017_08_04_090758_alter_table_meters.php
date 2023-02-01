@@ -1,10 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
-class AlterTableMeters extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +12,7 @@ class AlterTableMeters extends Migration
      */
     public function up()
     {
-        Schema::table('meters', function($table)
-        {
+        Schema::table('meters', function ($table) {
             $table->integer('building_id')
                 ->unsigned()
                 ->nullable();
@@ -31,9 +29,9 @@ class AlterTableMeters extends Migration
      */
     public function down()
     {
-        Schema::table('meters', function($table){
+        Schema::table('meters', function ($table) {
             $table->dropForeign('meters_building_id_foreign');
             $table->dropColumn('building_id');
         });
     }
-}
+};

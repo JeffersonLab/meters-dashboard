@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Meters;
 
+use App\Models\Buildings\Building;
 use App\Models\Meters\Meter;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -25,7 +26,8 @@ class MeterFactory extends Factory
             'name' => $this->faker->word(),
             'epics_name' => $this->faker->word(),
             'name_alias' => $this->faker->sentence(3),
-            'type' => $this->faker->randomElement(['power','water','gas'])
+            'type' => $this->faker->randomElement(['power', 'water', 'gas']),
+            'building_id' => Building::factory(),
         ];
     }
 }

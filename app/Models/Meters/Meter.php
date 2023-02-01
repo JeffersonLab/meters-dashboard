@@ -5,12 +5,14 @@ namespace App\Models\Meters;
 use App\Exceptions\MeterDataException;
 use App\Exceptions\ModelValidationException;
 use App\Models\BaseModel;
+use App\Models\Buildings\Building;
+use App\Models\DataTables\DataTableCreator;
 use App\Models\DataTables\DataTableInterface;
 use App\Models\DataTables\DataTableReporter;
 use App\Models\DataTables\DataTableTrait;
+use App\Presenters\GasMeterPresenter;
 use App\Presenters\PowerMeterPresenter;
 use App\Presenters\WaterMeterPresenter;
-use App\Presenters\GasMeterPresenter;
 use App\Utilities\MySamplerData;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
@@ -20,18 +22,18 @@ use Robbo\Presenter\PresentableInterface;
 
 class Meter extends BaseModel implements PresentableInterface, DataTableInterface
 {
-
     use DataTableTrait;
 
     protected $table = 'meters';
 
-    public static $rules = array(
+    public static $rules = [
         'name' => 'required | max:80',
         'type' => 'required | in:power,water,gas',
         'epics_name' => 'max:40',
         'name_alias' => 'max:80',
-    );
-    public $fillable = array(
+    ];
+
+    public $fillable = [
         'name',
         'type',
         'building_id',
@@ -39,23 +41,20 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         'name_alias',
         'model_number',
         'housed_by',
-        'begins_at'
-    );
+        'begins_at',
+    ];
+
     protected $reporter;
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at', 'begins_at'];
-
+    protected $casts = [
+        'deleted_at' => 'datetime',
+        'begins_at' => 'datetime',
+    ];
 
     /**
      * Meter constructor.
-     *
      */
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = [])
     {
         $this->dataTableFk = 'meter_id';
         parent::__construct($attributes);
@@ -64,14 +63,20 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     public static function typeFromCEDType($cedType)
     {
         switch (strtolower($cedType)) {
-            case 'powermeter' :
+            case 'powermeter':
                 return 'power';
-            case 'watermeter' :
+            case 'watermeter':
                 return 'water';
-            case 'gasmeter' :
+            case 'gasmeter':
                 return 'gas';
         }
+
         return null;
+    }
+
+    public function building()
+    {
+        return $this->belongsTo(Building::class);
     }
 
     public function findByPv($pv)
@@ -79,10 +84,10 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         return Meter::fromPv($pv)->first();  // epics_name must be unique
     }
 
-    public function scopeFromPv($query, $pv){
+    public function scopeFromPv($query, $pv)
+    {
         return $query->where('epics_name', '=', self::epicsNameFromPv($pv));
     }
-
 
     public function meterLimits()
     {
@@ -94,7 +99,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         return $this->hasMany(RolloverEvent::class)->orderBy('rollover_at');
     }
 
-
     public function fieldLimits($field)
     {
         // we use first b/c we rely on database uniqueness to
@@ -105,17 +109,16 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     public function hasMeterLimits($field = null)
     {
         if ($field) {
-            return !$this->meterLimits->where('field', $field)->isEmpty();
+            return ! $this->meterLimits->where('field', $field)->isEmpty();
         }
-        return !$this->meterLimits->isEmpty();
-    }
 
+        return ! $this->meterLimits->isEmpty();
+    }
 
     public function lastRolloverEvent($field)
     {
         return $this->rolloverEvents()->where('field', $field)->get()->last();
     }
-
 
     /**
      * Examines the data table to discover if any rollovers (aka overflows)
@@ -146,7 +149,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
                 ->where('date', '>', $startDate)->orderBy('date');
             //var_dump($query->toSql());
             $data = $query->get();
-
 
             /*
              * Rollover Detection procedure
@@ -189,70 +191,92 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
                         $eventsMade++;
                     }
                 }
-
             }
         }
+
         return $eventsMade;
     }
 
+    public function save(array $options = [])
+    {
+        $saved = parent::save($options);
+        // Note that the presence if this DDL here means that save can't be called inside of a transaction
+        // because DDL statements implicitly close open transactions.  Calling this inside a transaction or
+        // inside saveOrFail (which creates a transaction to call save) will lead to error
+        // "There is no active transaction" because the DDL below closed it.
+        if ($this->wasRecentlyCreated) {
+            (new DataTableCreator($this))->createTable();
+        }
+
+        return $saved;
+    }
+
+    public function delete()
+    {
+        (new DataTableCreator($this))->dropTable();
+
+        return parent::delete();
+    }
 
     /**
-     * @param string $field
-     * @param float $accumulatedRollover
-     * @param Carbon $fromDate
-     * @param Carbon $toDate
+     * @param  string  $field
+     * @param  float  $accumulatedRollover
+     * @param  Carbon  $fromDate
+     * @param  Carbon  $toDate
      * @return mixed
      * @TODO recalculate the totMBTU column too (update power_meter_data set totMBTU = totkWh * 0.00341214)
+     *
      * @throws \Exception
      */
-    protected function applyRollover($field, $accumulatedRollover, Carbon $fromDate, Carbon $toDate){
+    protected function applyRollover($field, $accumulatedRollover, Carbon $fromDate, Carbon $toDate)
+    {
         $updated = $this->dataTable()->select('*')
             ->where('meter_id', $this->id)
             ->whereNull('rollover_accumulated')
             ->where('date', '>=', $fromDate)
             ->where('date', '<', $toDate)
             ->update(['rollover_accumulated' => $accumulatedRollover,
-                    $field => DB::raw("$field + $accumulatedRollover"),
-                    ]);
+                $field => DB::raw("$field + $accumulatedRollover"),
+            ]);
+
         return $updated;
     }
-
 
     /**
      * Updates the data table so that perpetually incrementing fields do in fact
      * increment perpetually by removing the effect of rollover events that have happened.
-     *
      */
     public function applyRolloverEvents()
     {
         $rowsUpdated = 0;
-        for ($i=0; $i<$this->rolloverEvents->count(); $i++){
-            $rolloverToApply = $this->rolloverEvents->slice($i,1)->first();
-            if ($i < $this->rolloverEvents->count() -1){
-                $stopAt = $this->rolloverEvents->slice($i+1,1)->first()->rollover_at;
-            }else{
+        for ($i = 0; $i < $this->rolloverEvents->count(); $i++) {
+            $rolloverToApply = $this->rolloverEvents->slice($i, 1)->first();
+            if ($i < $this->rolloverEvents->count() - 1) {
+                $stopAt = $this->rolloverEvents->slice($i + 1, 1)->first()->rollover_at;
+            } else {
                 $stopAt = Carbon::now();
             }
             $rowsUpdated += $this->applyRollover($rolloverToApply->field, $rolloverToApply->rollover_accumulated, $rolloverToApply->rollover_at, $stopAt);
         }
+
         return $rowsUpdated;
     }
-
-
 
     /**
      * Answers whether the provided value is within the limits for the
      * specified field.
-     * @param string $field
-     * @param mixed $value numeric value
-     * @return boolean
+     *
+     * @param  string  $field
+     * @param  mixed  $value numeric value
+     * @return bool
      */
     public function withinLimits($field, $value)
     {
-        if (!$this->hasMeterLimits($field)) {
+        if (! $this->hasMeterLimits($field)) {
             return true;
         }
         $limits = $this->fieldLimits($field);
+
         return $limits->isWithinLimits($value);
     }
 
@@ -262,6 +286,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         if ($limits) {
             return $limits->isTooHigh($value);
         }
+
         return false;
     }
 
@@ -271,10 +296,9 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         if ($limits) {
             return $limits->isTooLow($value);
         }
+
         return false;
     }
-
-
 
     /**
      * Returns the EpicsName portion of a pv string by stripping
@@ -296,65 +320,74 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
                 return substr($pv, 0, strlen($pv) - strlen($field));
             }
         }
+
         return null;
     }
 
     /**
      * Returns all epics field names defined by configuration.
+     *
      * @return array
      */
     public static function allPvFields()
     {
-        $fields = array();
+        $fields = [];
         $types = array_keys(config('meters.pvs'));
         foreach ($types as $type) {
-            $key = 'meters.pvs.' . $type;
+            $key = 'meters.pvs.'.$type;
             $fields = array_merge($fields, array_keys(config($key)));
         }
+
         return $fields;
     }
-
 
     public function getHelper()
     {
         switch ($this->type) {
-            case 'power' :
+            case 'power':
                 return new PowerMeterHelper($this);
-            case 'water' :
+            case 'water':
                 return new WaterMeterHelper($this);
-            case 'gas' :
+            case 'gas':
                 return new MeterHelper($this);
         }
+
         return null;
     }
-
 
     public function getPresenter()
     {
         switch ($this->type) {
-            case 'power' :
+            case 'power':
                 return new PowerMeterPresenter($this);
-            case 'water' :
+            case 'water':
                 return new WaterMeterPresenter($this);
-            case 'gas' :
+            case 'gas':
                 return new GasMeterPresenter($this);
         }
+
         return null;
     }
 
-
-    function hasRolloverIncrement($field)
+    public function hasRolloverIncrement($field)
     {
         if ($this->rolloverIncrement($field) !== null) {
             return true;
         }
+
         return false;
     }
 
-    function rolloverIncrement($field)
+    public function hasRolloverEvents()
     {
-        $key = 'meters.rollover.' . $this->model_number . '.' . $field;
+        return $this->rolloverEvents->isNotEmpty();
+    }
+
+    public function rolloverIncrement($field)
+    {
+        $key = 'meters.rollover.'.$this->model_number.'.'.$field;
         $increment = config($key, null);
+
         return $increment;
     }
 
@@ -362,13 +395,15 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Returns the most current accumulated rollover for the meter or zero
      * if there is none.
      *
-     * @param string $field
-     * @return integer
+     * @param  string  $field
+     * @return int
      */
-    function accumulatedRollover($field){
-        if ($this->lastRolloverEvent($field)){
+    public function accumulatedRollover($field)
+    {
+        if ($this->lastRolloverEvent($field)) {
             return $this->lastRolloverEvent($field)->rollover_accumulated;
         }
+
         return 0;
     }
 
@@ -376,25 +411,26 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Returns the names of the fields for which rollover
      * limits are defined.
      */
-    function rolloverFields()
+    public function rolloverFields()
     {
-        $key = 'meters.rollover.' . $this->model_number;
+        $key = 'meters.rollover.'.$this->model_number;
         $fields = config($key, null);
         if ($fields) {
             return array_keys($fields);
         }
-        return array();
+
+        return [];
     }
 
-
     /**
-     * @param Carbon $fromDate
-     * @param Carbon $toDate
+     * @param  Carbon  $fromDate
+     * @param  Carbon  $toDate
      * @param $field
      * @return null
+     *
      * @throws MeterDataException
      */
-    function consumedBetween($field, Carbon $fromDate, Carbon $toDate)
+    public function consumedBetween($field, Carbon $fromDate, Carbon $toDate)
     {
         $query = $this->dataTable()
             ->select(['date', $field])
@@ -407,117 +443,217 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         $firstVal = $data->first() ? $data->first()->$field : null;
         $lastVal = $data->last() ? $data->last()->$field : null;
 
-        if (!$firstVal === null || $lastVal === null) {
-            $message = sprintf("Encountered null data in the %s column", $field);
+        if (! $firstVal === null || $lastVal === null) {
+            $message = sprintf('Encountered null data in the %s column', $field);
             throw new MeterDataException($message, $this);
         }
 
         if ($firstVal == 0 && $fromDate->greaterThan($this->begins_at)) {
-            $message = sprintf("Encountered unexpected 0 in the %s column at %s", $field, $fromDate);
+            $message = sprintf('Encountered unexpected 0 in the %s column at %s', $field, $fromDate);
             throw new MeterDataException($message, $this);
         }
 
         if ($firstVal > $lastVal) {
-            $message = sprintf("Value of %s decreased from %s between %s", $field, $fromDate, $toDate);
+            $message = sprintf('Value of %s decreased from %s between %s', $field, $fromDate, $toDate);
             throw new MeterDataException($message, $this);
         }
 
         return $lastVal - $firstVal;
-
     }
-
 
     /**
      * Return the timestamp and value of the first data value available
      * on or after the specified date.
+     *
      * @param $field
-     * @param Carbon $atDate
+     * @param  Carbon  $atDate
      * @return \Illuminate\Database\Eloquent\Model|Builder|object
+     *
      * @throws \Exception
      */
-    function firstDataOnOrBefore($field, Carbon $atDate)
+    public function firstDataOnOrBefore($field, Carbon $atDate)
     {
-        $query = $this->dataTable()
-            ->select(['date', $field])
-            ->where('meter_id', $this->id)
-            ->where('date', '<=', $atDate)
-            ->whereNotNull($field)
-            ->orderBy('date', 'desc')
-            ->limit(1);
+        $query = $this->lastDataQuery($field)
+            ->where('date', '<=', $atDate);
         $datum = $query->first();
-        //dd($query->toSql());
         if (isset($datum->date)) {
             $datum->date = Carbon::createFromFormat('Y-m-d H:i:s', $datum->date);
         }
+
         return $datum;
     }
 
+    /**
+     * Get the earliest available non-null data for the meter.
+     * Optionally restrict the context to a specific PV field.
+     *
+     * @param  null  $field
+     * @return Builder
+     *
+     * @throws \Exception
+     */
+    public function firstDataQuery($field = null)
+    {
+        // base query
+        $query = $this->baseFirstOrLastQuery(false);
+        // include a field in the select or just the date?
+        if ($field) {
+            $query->addSelect($field)->whereNotNull($field);
+        }
+        // Return the prepared query object
+        return $query;
+    }
+
+    /**
+     * Get the earliest available non-null data for the meter.
+     * Optionally restrict the context to a specific PV field.
+     *
+     * @param  null  $field
+     * @return Builder
+     *
+     * @throws \Exception
+     */
+    public function lastDataQuery($field = null)
+    {
+        $query = $this->baseFirstOrLastQuery(true);
+        if ($field) {
+            $query->addSelect($field);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Returns a query to select the first or last date
+     *
+     * @param $last
+     * @return Builder
+     *
+     * @throws \Exception
+     */
+    protected function baseFirstOrLastQuery($last = false)
+    {
+        $query = $this->dataTable()
+            ->select('date')
+            ->where('meter_id', $this->id)
+            ->limit(1);
+        if ($last) {
+            $query->orderBy('date', 'desc');
+        } else {
+            $query->orderBy('date');
+        }
+
+        return $query;
+    }
 
     /**
      * Return the timestamp and value of the first data value available
      * on or after the specified date.
+     *
      * @param $field
-     * @param Carbon $atDate
+     * @param  Carbon  $atDate
+     *
      * @throws \Exception
      */
-    function firstDataOnOrAfter($field, Carbon $atDate)
+    public function firstDataOnOrAfter($field, Carbon $atDate)
     {
-        $query = $this->dataTable()
-            ->select(['date', $field])
-            ->where('meter_id', $this->id)
-            ->where('date', '>=', $atDate)
-            ->whereNotNull($field)
-            ->orderBy('date', 'asc')
-            ->limit(1);
+        $query = $this->firstDataQuery($field)
+            ->where('date', '>=', $atDate);
         $datum = $query->first();
-        //dd($query->toSql());
         if (isset($datum->date)) {
             $datum->date = Carbon::createFromFormat('Y-m-d H:i:s', $datum->date);
         }
+
+        return $datum;
+    }
+
+    /**
+     * Return the timestamp and value of the first data value available
+     * between two dates.
+     *
+     * @param $field
+     * @param  Carbon  $atDate
+     *
+     * @throws \Exception
+     */
+    public function firstDataBetween($field, Carbon $beginDate, Carbon $endDate)
+    {
+        $query = $this->firstDataQuery($field)
+            ->whereBetween('date', [$beginDate, $endDate]);
+        $datum = $query->first();
+        if (isset($datum->date)) {
+            $datum->date = Carbon::createFromFormat('Y-m-d H:i:s', $datum->date);
+        }
+
+        return $datum;
+    }
+
+    /**
+     * Return the timestamp and value of the first data value available
+     * between two dates.
+     *
+     * @param $field
+     * @param  Carbon  $atDate
+     *
+     * @throws \Exception
+     */
+    public function lastDataBetween($field, Carbon $beginDate, Carbon $endDate)
+    {
+        $query = $this->lastDataQuery($field)
+            ->whereBetween('date', [$beginDate, $endDate]);
+        $datum = $query->first();
+        if (isset($datum->date)) {
+            $datum->date = Carbon::createFromFormat('Y-m-d H:i:s', $datum->date);
+        }
+
         return $datum;
     }
 
     /**
      * Returns statistics for the given interval
+     *
      * @param $field
-     * @param Carbon $fromDate
-     * @param Carbon $toDate
+     * @param  Carbon  $fromDate
+     * @param  Carbon  $toDate
      * @return mixed object(avg, stddev, min, max) | null
+     *
      * @throws \Exception
      */
-    function statsBetween($field, Carbon $fromDate, Carbon $toDate)
+    public function statsBetween($field, Carbon $fromDate, Carbon $toDate)
     {
-        // Not compatible with sqllite used for testing:
-        //      STDDEV($field) as stddev
-        // If we actually need it, perhaps
-        // @see https://stackoverflow.com/questions/2298339/standard-deviation-for-sqlite/24423341
+        if (config('database.default') == 'mysql') {
+            $query = $this->dataTable()
+                ->select(DB::raw("AVG($field) as avg,  MIN($field) as min, MAX($field) as max, STDDEV($field) as stddev"));
+        } else {
+            // sqlite used for testing doesn't have thes STDEV function like mysql does above.
+            $query = $this->dataTable()
+                ->select(DB::raw("AVG($field) as avg,  MIN($field) as min, MAX($field) as max"));
+        }
+        $query->where('meter_id', $this->id)
+              ->where('date', '>=', $fromDate)
+              ->where('date', '<=', $toDate)
+              ->whereNotNull($field);
 
-        $query = $this->dataTable()
-            ->select(DB::raw("AVG($field) as avg,  MIN($field) as min, MAX($field) as max"))
-            ->where('meter_id', $this->id)
-            ->where('date', '>=', $fromDate)
-            ->where('date', '<=', $toDate)
-            ->whereNotNull($field);
         return $query->first();
     }
-
 
     /**
      * @return DataTableReporter
      */
-    public function reporter()
+    public function reporter(): DataTableReporter
     {
-        if (!$this->reporter) {
+        if (! $this->reporter) {
             $this->reporter = new DataTableReporter($this);
         }
+
         return $this->reporter;
     }
-
 
     /**
      * Insert new meter data rows.
      *
      * @return int|mixed
+     *
      * @throws \Exception
      */
     public function fillDataTable()
@@ -538,23 +674,25 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             Log::error($e->getMessage());
         }
+
         return $inserted;
     }
 
     /**
      * Update fields for existing meter data rows.
      *
-     * @param Carbon $begin
-     * @param array $fields
+     * @param  Carbon  $begin
+     * @param  array  $fields
      * @return int
+     *
      * @throws \Exception
      */
-    public function updateDataTable(Carbon $begin, $fields=[])
+    public function updateDataTable(Carbon $begin, $fields = [])
     {
         // Default to updating all channels
-        if (empty($fields)){
+        if (empty($fields)) {
             $channels = $this->channels();
-        }else{
+        } else {
             $channels = $this->makeChannels($fields);
         }
 
@@ -576,30 +714,32 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             Log::error($e->getMessage());
         }
+
         return $updated;
     }
 
-
     /**
-     * Turns an array of field namese into an array of PV channel names
+     * Turns an array of field names into an array of PV channel names
      * by prepending the meter's epics name.
      *
-     * @param array $fields
+     * @param  array  $fields
      * @return array
      */
-    protected function makeChannels(array $fields){
+    protected function makeChannels(array $fields)
+    {
         $channels = [];
         foreach ($fields as $field) {
-            if (substr($field, 0, 1) != ':'){
+            if (substr($field, 0, 1) != ':') {
                 $field = ':'.$field;
             }
-            $channels[] = $this->epics_name . $field;
+            $channels[] = $this->epics_name.$field;
         }
+
         return $channels;
     }
 
     /**
-     * Returns the full list of PV channel names for the current meter.
+     * The list of fully qualified PV channel names for the current meter.
      *
      * @return array
      */
@@ -608,28 +748,32 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         return $this->makeChannels($this->pvFields());
     }
 
+    public function dbFields(): array
+    {
+        return $this->pvFields();
+    }
+
     /**
      * Returns the array of fields that can be appended to
      * epics_name to form pvs.
+     *
      * @return array
      */
-    public function pvFields()
+    public function pvFields(): array
     {
-        $key = 'meters.pvs.' . $this->type;
+        $key = 'meters.pvs.'.$this->type;
+
         return array_keys(config($key));
     }
 
     /**
-     * Returns a Query Builder for the appropriate data table.
+     * The name of the table where meter data points are stored.
      *
-     * @return Builder
-     * @throws \Exception if physical meters are of different types;
+     * @return string
      */
-    public function dataTable()
+    public function tableName(): string
     {
-        //$name = $this->type . '_meter_daily_consumption';
-        $name = $this->type . '_meter_data';
-        return DB::table($name);
+        return $this->type.'_meter_data_'.$this->id;
     }
 
     /**
@@ -651,7 +795,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
                 $columns[$name] = $value;
             }
         }
+
         return $columns;
     }
-
 }

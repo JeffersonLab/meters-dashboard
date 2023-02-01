@@ -3,15 +3,6 @@
 return [
 
     /*
-     * IMPORTANT NOTE
-     * In order to make the sidebar search work while waiting for the real fix in adminlte 3.2,
-     * we have to edit the public/vendor/adminlte/dist/js/adminlte.min.js file
-     *   search for escape(a.link) -> it will probably be in line 6, column 32987, position 33174
-     *   replace escape(a.link) by just a.link
-     * @see https://github.com/jeroennoten/Laravel-AdminLTE/issues/900
-     */
-
-    /*
     |--------------------------------------------------------------------------
     | Title
     |--------------------------------------------------------------------------
@@ -39,7 +30,7 @@ return [
     |
     */
 
-    'use_ico_only' => false,
+    'use_ico_only' => true,
     'use_full_favicon' => false,
 
     /*
@@ -55,11 +46,35 @@ return [
     */
 
     'logo' => '<b>M</b>eters',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo_img' => '/img/volts.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
     'logo_img_alt' => 'Meters',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Preloader Animation
+    |--------------------------------------------------------------------------
+    |
+    | Here you can change the preloader animation configuration.
+    |
+    | For detailed instructions you can look the preloader section here:
+    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
+    |
+    */
+
+    'preloader' => [
+        'enabled' => true,
+        'img' => [
+            'path' => '/img/volts.png',
+            'alt' => 'AdminLTE Preloader Image',
+            'effect' => 'animation__shake',
+            //            'effect' => 'animation__wobble',
+            'width' => 96,
+            'height' => 96,
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -94,8 +109,8 @@ return [
 
     'layout_topnav' => null,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
-    'layout_fixed_navbar' => null,
+    'layout_fixed_sidebar' => true,
+    'layout_fixed_navbar' => false,
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
 
@@ -217,9 +232,9 @@ return [
     |
     */
 
-    'enabled_laravel_mix' => false,
-    'laravel_mix_css_path' => 'css/app.css',
-    'laravel_mix_js_path' => 'js/app.js',
+    'enabled_laravel_mix' => true,
+    'laravel_mix_css_path' => env('LARAVEL_MIX_CSS_PATH', 'css/app.css'),
+    'laravel_mix_js_path' => env('LARAVEL_MIX_JS_PATH', 'js/app.js'),
 
     /*
     |--------------------------------------------------------------------------
@@ -234,39 +249,38 @@ return [
     */
 
     'menu' => [
-//        // Navbar items:
-//        [
-//            'type'         => 'navbar-search',
-//            'text'         => 'search',
-//            'topnav_right' => true,
-//        ],
-        [
-            'type'         => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
+        //        // Navbar items:
+        //        [
+        //            'type'         => 'navbar-search',
+        //            'text'         => 'search',
+        //            'topnav_right' => true,
+        //        ],
+        //        [
+        //            'type'         => 'fullscreen-widget',
+        //            'topnav_right' => true,
+        //        ],
 
         // Sidebar items:
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
-        [   'text' => 'Reports',
-            'url' => '/reports',
-            'icon' => 'area-chart',
-            'icon_color' => 'green'
-        ],
-//        ['header' => 'account_settings'],
-//        [
-//            'text' => 'profile',
-//            'url'  => 'admin/settings',
-//            'icon' => 'fas fa-fw fa-user',
-//        ],
-//        [
-//            'text' => 'change_password',
-//            'url'  => 'admin/settings',
-//            'icon' => 'fas fa-fw fa-lock',
-//        ],
-
+        //        [
+        //            'type' => 'sidebar-menu-search',
+        //            'text' => 'search',
+        //        ],
+        //        [   'text' => 'Reports',
+        //            'url' => '/reports',
+        //            'icon' => 'area-chart',
+        //            'icon_color' => 'green'
+        //        ],
+        //        ['header' => 'account_settings'],
+        //        [
+        //            'text' => 'profile',
+        //            'url'  => 'admin/settings',
+        //            'icon' => 'fas fa-fw fa-user',
+        //        ],
+        //        [
+        //            'text' => 'change_password',
+        //            'url'  => 'admin/settings',
+        //            'icon' => 'fas fa-fw fa-lock',
+        //        ],
 
     ],
 

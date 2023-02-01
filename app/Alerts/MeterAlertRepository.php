@@ -8,25 +8,18 @@
 
 namespace App\Alerts;
 
-
-use App\Meters\Meter;
-use App\Meters\MeterDataException;
-use App\Utilities\NagiosServicelist;
+use App\Exceptions\MeterDataException;
+use App\Models\Meters\Meter;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Class MeterAlertRepository
  *
  * Repository used to retrieve MeterAlerts.
- *
- * @package App\Alerts
  */
 class MeterAlertRepository
 {
-
-
     /**
      * @var Collection
      */
@@ -35,7 +28,7 @@ class MeterAlertRepository
     /**
      * MeterAlertRepository constructor.
      */
-    function __construct()
+    public function __construct()
     {
         $this->alerts = new Collection();
         $this->populateAlerts();
@@ -44,7 +37,8 @@ class MeterAlertRepository
     /**
      * Populates the alerts collection from Nagios Service alerts
      */
-    function populateAlerts(){
+    public function populateAlerts()
+    {
         $this->populateWaterFlowAlerts();
         //@TODO cleanup data before enabling
         //$this->populateDataHasZerosAlerts();
@@ -54,26 +48,26 @@ class MeterAlertRepository
      * Populates the alerts collection with alerts related to
      * excessive or insufficient water consumption
      */
-    function populateWaterFlowAlerts(){
+    public function populateWaterFlowAlerts()
+    {
         $meters = Meter::with('meterLimits')
-            ->where('type','water')->get()->all();
+            ->where('type', 'water')->get()->all();
         foreach ($meters as $meter) {
             try {
                 $consumedYesterday = $this->gallonsConsumed($meter, Carbon::yesterday(), Carbon::today());
-                if (!$meter->withinLimits('gal', $consumedYesterday)) {
+                if (! $meter->withinLimits('gal', $consumedYesterday)) {
                     $alert = new MeterAlert($meter, 'warning');
                     $alert->description = 'Threshold';
                     if ($meter->isTooHigh('gal', $consumedYesterday)) {
-                        $alert->message = sprintf("%s gal consumed on %s exceeded threshold of %s gal/day",
+                        $alert->message = sprintf('%s gal consumed on %s exceeded threshold of %s gal/day',
                             $consumedYesterday, Carbon::yesterday()->format('Y-m-d'), $meter->fieldLimits('gal')->hi);
                     } else {
-                        $alert->message = sprintf("%s gal consumed on %s was below threshold of %s gal/day",
+                        $alert->message = sprintf('%s gal consumed on %s was below threshold of %s gal/day',
                             $consumedYesterday, Carbon::yesterday()->format('Y-m-d'), $meter->fieldLimits('gal')->lo);
                     }
                     $this->pushAlert($alert);
                 }
-            }
-            catch (MeterDataException $e){
+            } catch (MeterDataException $e) {
                 $alert = new MeterAlert($meter, 'warning');
                 $alert->description = 'Data Anomaly';
                 $alert->message = $e->getMessage();
@@ -81,38 +75,40 @@ class MeterAlertRepository
         }
     }
 
-    function gallonsConsumed(Meter $meter, Carbon $fromDate, Carbon $toDate){
-        return $meter->consumedBetween('gal',$fromDate, $toDate);
+    public function gallonsConsumed(Meter $meter, Carbon $fromDate, Carbon $toDate)
+    {
+        return $meter->consumedBetween('gal', $fromDate, $toDate);
     }
 
-
-    function populateDataHasZerosAlerts(){
+    public function populateDataHasZerosAlerts()
+    {
         // Water Meters
-        foreach ($this->waterMetersWithZeroGalReadings() as $meter){
+        foreach ($this->waterMetersWithZeroGalReadings() as $meter) {
             $alert = new MeterAlert($meter, 'warning');
             $alert->description = 'Data Anomaly';
-            $alert->message = sprintf("%s has zero value for gal at %s", $meter->epics_name, $meter->date);
+            $alert->message = sprintf('%s has zero value for gal at %s', $meter->epics_name, $meter->date);
             $this->pushAlert($alert);
         }
     }
 
-    function waterMetersWithZeroGalReadings(){
+    public function waterMetersWithZeroGalReadings()
+    {
         return Meter::join('water_meter_data', 'meters.id', '=', 'water_meter_data.meter_id')
-            ->where('gal',0)
-            ->where('water_meter_data.date','>','meters.begins_at')
+            ->where('gal', 0)
+            ->where('water_meter_data.date', '>', 'meters.begins_at')
             ->get();
     }
 
-
-    function pushAlert(MeterAlert $alert){
+    public function pushAlert(MeterAlert $alert)
+    {
         $this->alerts->push($alert);
     }
 
     /**
      * Returns a collection of alerts
      */
-    function alerts(){
+    public function alerts()
+    {
         return $this->alerts;
     }
-
 }

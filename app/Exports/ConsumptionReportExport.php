@@ -13,34 +13,35 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use PhpOffice\PhpSpreadsheet\Cell\Hyperlink;
 
-class ConsumptionReportExport
-    implements FromCollection, WithMapping, WithHeadings, WithEvents, ShouldAutoSize, WithStrictNullComparison
+class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadings, WithEvents, ShouldAutoSize, WithStrictNullComparison
 {
-
     protected $report;
 
     /**
      * ConsumptionReportExport constructor.
-     * @param ConsumptionReport $report
+     *
+     * @param  ConsumptionReport  $report
      */
     public function __construct(ConsumptionReport $report)
     {
         $this->report = $report;
     }
 
-
-    protected function firstDatum($row){
-        if (isset($row->first)){
+    protected function firstDatum($row)
+    {
+        if (isset($row->first)) {
             return $row->first->{$this->report->pv};
         }
+
         return null;
     }
 
-
-    protected function lastDatum($row){
-        if (isset($row->last)){
+    protected function lastDatum($row)
+    {
+        if (isset($row->last)) {
             return $row->last->{$this->report->pv};
         }
+
         return null;
     }
 
@@ -50,36 +51,39 @@ class ConsumptionReportExport
      * @param $row
      * @return bool
      */
-    protected function isEmptyRow($row){
-        return ! ( isset($row->first) && isset($row->last));
+    protected function isEmptyRow($row)
+    {
+        return ! (isset($row->first) && isset($row->last));
     }
-
 
     /**
      * Generates content for the note column.
+     *
      * @param $row
      * @return string
      */
-    protected function note($row){
-        if ($this->isEmptyRow($row)){
+    protected function note($row)
+    {
+        if ($this->isEmptyRow($row)) {
             return 'N/A';
         }
-        if(! $row->isComplete){
-            return sprintf("Incomplete Data: %s to %s",
+        if (! $row->isComplete) {
+            return sprintf('Incomplete Data: %s to %s',
                     date('Y-m-d H:i', strtotime($row->first->date)),
                     date('Y-m-d H:i', strtotime($row->last->date)));
         }
+
         return '';
     }
-
 
     /**
      * Transform row data.
      *
-     * @param mixed $row
+     * @param  mixed  $row
      * @return array
      */
-    public function map($row): array {
+    public function map($row): array
+    {
         return [
             $row->label,
             $this->firstDatum($row),
@@ -92,14 +96,16 @@ class ConsumptionReportExport
 
     /**
      * Custom column headings.
+     *
      * @return array
      */
-    function headings(): array {
+    public function headings(): array
+    {
         return [
             ucfirst($this->report->itemType()),
             $this->report->beginsAt(),
             $this->report->endsAt(),
-            sprintf("Consumed (%s)", $this->report->pv),
+            sprintf('Consumed (%s)', $this->report->pv),
             'Note',
             'Url',
         ];
@@ -108,13 +114,12 @@ class ConsumptionReportExport
     /**
      * Returns the data collection used to make the spreadsheet.
      *
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
         return $this->report->data();
     }
-
 
     /**
      * Register handlers to do manipulation of the underlying spreadsheet at
@@ -128,14 +133,13 @@ class ConsumptionReportExport
     public function registerEvents(): array
     {
         return [
-            BeforeSheet::class => function(BeforeSheet $event){
-                $event->sheet->append([$this->report->title()],'A1');
+            BeforeSheet::class => function (BeforeSheet $event) {
+                $event->sheet->append([$this->report->title()], 'A1');
                 $cellRange = 'A1:F1'; // All headers
                 $event->sheet->getDelegate()->mergeCells($cellRange);
-
             },
 
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class => function (AfterSheet $event) {
                 $cellRange = 'A1:F2'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()
                     ->setSize(14)
@@ -158,13 +162,12 @@ class ConsumptionReportExport
                             $event->sheet->getStyle($cell->getCoordinate())->applyFromArray([
                                 'font' => [
                                     'color' => ['rgb' => '0000FF'],
-                                    'underline' => 'single'
-                                ]
+                                    'underline' => 'single',
+                                ],
                             ]);
                         }
                     }
                 }
-
             },
         ];
     }

@@ -9,54 +9,58 @@
 namespace App\Presenters;
 
 use App\Charts\DailyKWH;
-use Robbo\Presenter\Presenter;
 use Collective\Html\HtmlFacade as Html;
-
+use Robbo\Presenter\Presenter;
 
 class BuildingPresenter extends Presenter implements BoxInterface
 {
-
-    function menuLabel()
+    public function menuLabel()
     {
         $label = (strlen($this->name) > 20) ? $this->abbreviation : $this->name;
-        return $this->building_num . ' ' . $label;
+
+        return $this->building_num.' '.$label;
     }
 
-    function reportLabel(){
-        if ( $this->getAttribute('name_alias') ){
+    public function reportLabel()
+    {
+        if ($this->getAttribute('name_alias')) {
             $label = $this->getAttribute('name_alias');
-        }elseif( $this->getAttribute('epics_name') ){
+        } elseif ($this->getAttribute('epics_name')) {
             $label = $this->getAttribute('epics_name');
-        }else{
+        } else {
             $label = $this->getAttribute('name');
         }
+
         return $this->getAttribute('building_num').' '.$label;
     }
 
-    function url(){
+    public function url()
+    {
         return route('buildings.show', [$this->getAttribute('id')]);
     }
 
-    function linkToEpicsDetailScreen($attributes = ['target' => '_blank'])
+    public function linkToEpicsDetailScreen($attributes = ['target' => '_blank'])
     {
         if (isset($this->name)) {
-            $var = urlencode(epics_macro_variable('building')) . '=' . $this->name;  // macro var passed to screen
-            $screen = env('BASE_SCREEN_URL') . '/building.edl';
-            $url = $screen . '&' . $var;
+            $var = urlencode(epics_macro_variable('building')).'='.$this->name;  // macro var passed to screen
+            $screen = env('BASE_SCREEN_URL').'/building.edl';
+            $url = $screen.'&'.$var;
+
             return link_to($url, 'EPICS Detail Screen', $attributes);
         }
+
         return null;
     }
 
-    function linkToCedElement($attributes = ['target' => '_blank'])
+    public function linkToCedElement($attributes = ['target' => '_blank'])
     {
         /** @noinspection PhpUndefinedMethodInspection */
         return Html::linkToCedElement($this->name, 'CED Element Page', $attributes);
     }
 
-    function icon()
+    public function icon()
     {
-        return "<i class=\"fa fa-fw fa-building-o\"></i>";
+        return '<i class="fa fa-fw fa-building"></i>';
     }
 
     /**
@@ -64,7 +68,7 @@ class BuildingPresenter extends Presenter implements BoxInterface
      *
      * @return array
      */
-    function infoBoxItems()
+    public function infoBoxItems()
     {
         return [
             'Abbreviation' => $this->abbreviation,
@@ -73,18 +77,18 @@ class BuildingPresenter extends Presenter implements BoxInterface
         ];
     }
 
+    public function meterLinks($type = null)
+    {
+        $meterCollection = $this->meters()->get();
 
-
-    function meterLinks($type=null){
-        $meterCollection =  $this->meters()->get();
-
-        if ($type){
-            $meterCollection = $meterCollection->where('type','=',$type);
+        if ($type) {
+            $meterCollection = $meterCollection->where('type', '=', $type);
         }
         //dd($meterCollection);
         $links = $meterCollection->map(function (Meter $meter) {
-            return link_to_route('meters.show',$meter->getPresenter()->nameWithAlias(), [$meter->id])->__toString();
+            return link_to_route('meters.show', $meter->getPresenter()->nameWithAlias(), [$meter->id])->__toString();
         });
+
         return $links;
     }
 
@@ -95,6 +99,4 @@ class BuildingPresenter extends Presenter implements BoxInterface
     {
         return 'dailykwh';
     }
-
-
 }

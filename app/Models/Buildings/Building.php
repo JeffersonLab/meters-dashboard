@@ -2,15 +2,17 @@
 
 namespace App\Models\Buildings;
 
-
+use App\Exceptions\ReportingException;
 use App\Models\BaseModel;
 use App\Models\DataTables\BuildingDataTableReporter;
+use App\Models\DataTables\DataTableCreator;
 use App\Models\DataTables\DataTableInterface;
+use App\Models\DataTables\DataTableReporter;
 use App\Models\DataTables\DataTableTrait;
 use App\Models\Meters\Meter;
 use App\Presenters\BuildingPresenter;
 use App\Utilities\MySamplerData;
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Robbo\Presenter\PresentableInterface;
 
@@ -20,38 +22,35 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
 
     protected $reporter;
 
-    protected $nonBuildingFields = array(':llVolt');
+    protected $nonBuildingFields = [':llVolt'];
 
-    public static $rules = array(
+    public static $rules = [
         'name' => 'required | max:80',
         'abbreviation' => 'max:20',
         'building_num' => 'max:20',
         'jlab_name' => 'max:80',
-        'square_footage' => 'numeric | min:0',
+        'square_footage' => 'nullable | numeric | min:0',
 
-    );
+    ];
 
-    public $fillable = array('name','abbreviation','building_num','square_footage','jlab_name');
+    public $fillable = ['name', 'element_id', 'type', 'abbreviation', 'building_num', 'square_footage', 'jlab_name'];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at', 'begins_at'];
+    protected $casts = [
+        'deleted_at' => 'datetime',
+        'begins_at' => 'datetime',
+    ];
 
     /**
      * Building constructor.
-     *
      */
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = [])
     {
         $this->dataTableFk = 'building_id';
         parent::__construct($attributes);
     }
 
-
-    public function meters(){
+    public function meters()
+    {
         return $this->hasMany(Meter::class);
     }
 
@@ -59,28 +58,108 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
      * Returns a list of the types of meters (power, water, gas)
      * the building contains.
      */
-    public function meterTypes(){
+    public function meterTypes()
+    {
         return $this->meters()->pluck('type')->unique()->all();
     }
 
-    public function hasMeterType($type){
+    public function hasMeterType($type)
+    {
         return in_array($type, $this->meterTypes());
     }
 
-    public function metersOfType($type){
-        return $this->meters()->where('type','=',$type);
+    public function metersOfType($type)
+    {
+        return $this->meters()->where('type', '=', $type);
     }
 
-    public function gasMeters(){
+    public function gasMeters()
+    {
         return $this->metersOfType('gas');
     }
 
-    public function powerMeters(){
+    public function powerMeters()
+    {
         return $this->metersOfType('power');
     }
 
-    public function waterMeters(){
+    public function waterMeters()
+    {
         return $this->metersOfType('water');
+    }
+
+    public function waterSupplyMeters()
+    {
+        return $this->waterMeters()->where('epics_name', 'LIKE', '%SUPPLY%');
+    }
+
+    public function waterDrainMeters()
+    {
+        return $this->waterMeters()->where('epics_name', 'LIKE', '%DRAIN%');
+    }
+
+    /**
+     * The sum of the gallons through the building's water supply meters.
+     *
+     * @param  Carbon  $fromDate
+     * @param  Carbon  $toDate
+     * @return float
+     */
+    public function waterConsumption(Carbon $fromDate, Carbon $toDate): float
+    {
+        $consumed = 0.0;
+        foreach ($this->waterSupplyMeters()->get() as $meter) {
+            $consumed += $meter->consumedBetween('gal', $fromDate, $toDate);
+        }
+
+        return $consumed;
+    }
+
+    /**
+     * The sum of the gallons through the building's water drain meters.
+     *
+     * @param  Carbon  $fromDate
+     * @param  Carbon  $toDate
+     * @return float
+     */
+    public function waterToSewer(Carbon $fromDate, Carbon $toDate): float
+    {
+        $consumed = 0.0;
+        foreach ($this->waterDrainMeters()->get() as $meter) {
+            $consumed += $meter->consumedBetween('gal', $fromDate, $toDate);
+        }
+
+        return $consumed;
+    }
+
+    /**
+     * The sum of the gallons through the building's water drain meters.
+     *
+     * @param  Carbon  $fromDate
+     * @param  Carbon  $toDate
+     * @return float|null
+     */
+    public function waterToEvaporation(Carbon $fromDate, Carbon $toDate): float
+    {
+        return $this->waterConsumption($fromDate, $toDate) - $this->waterToSewer($fromDate, $toDate);
+    }
+
+    /**
+     * The sum of the gallons through the building's water drain meters.
+     *
+     * @param  Carbon  $fromDate
+     * @param  Carbon  $toDate
+     * @return float|null
+     *
+     * @throws ReportingException
+     */
+    public function waterCyclesOfConcentration(Carbon $fromDate, Carbon $toDate): float
+    {
+        $toSewer = $this->waterToSewer($fromDate, $toDate);
+        if ($toSewer != 0) {
+            return $this->waterConsumption($fromDate, $toDate) / $toSewer;
+        }
+        throw new ReportingException('Divide by 0 error computing cycles of concentration '.$this->id);
     }
 
     public function getPresenter()
@@ -88,23 +167,24 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
         return new BuildingPresenter($this);
     }
 
-    public function reporter()
+    public function reporter(): DataTableReporter
     {
-        if (!$this->reporter) {
+        if (! $this->reporter) {
             $this->reporter = new BuildingDataTableReporter($this);
         }
+
         return $this->reporter;
     }
 
-
     /**
-     * @return \Illuminate\Database\Query\Builder
+     * The name of the table where meter data points are stored.
+     *
+     * @return string
      */
-    public function dataTable(){
-        return DB::table('building_data');
+    public function tableName(): string
+    {
+        return 'building_data_'.$this->id;
     }
-
-
 
     public function fillDataTable()
     {
@@ -114,10 +194,8 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
             // until we are all caught up.
             while (strtotime($this->nextDataDate()) < time()) {
                 $mySampler = new MySamplerData($this->nextDataDate(), $this->channels());
-                var_dump($this->nextDataDate());
-                var_dump($inserted);
                 $items = $mySampler->getData();
-                if ($items->isEmpty()){
+                if ($items->isEmpty()) {
                     break;  // must escape the while loop when no more data
                 }
                 foreach ($items as $item) {
@@ -126,26 +204,26 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
                         $inserted++;
                     } catch (\PDOException $e) {
                         Log::error($e);
+                        throw $e;
                     }
                 }
             }
-        }catch (\GuzzleHttp\Exception\ClientException $e){
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             Log::error($e->getMessage());
             //throw ($e);
         }
-        var_dump('inserted '.$inserted);
+        //var_dump('inserted '.$inserted);
         return $inserted;
     }
-
-
 
     public function channels()
     {
         $channels = [];
         foreach ($this->pvFields() as $field) {
             // buildings only have name, not epics_name
-            $channels[] = $this->name . $field;
+            $channels[] = $this->name.$field;
         }
+
         return $channels;
     }
 
@@ -169,44 +247,87 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
                 $columns[$name] = $value;
             }
         }
+
         return $columns;
     }
 
     /**
      * Removes from an array of field names those which do not apply to buildings.
      *
-     * The default assumption that a building has all of the
+     * The default assumption that a building has all the
      * pv fields of the meter types it houses may not be entirely
      * valid.  For example buildings with power meters do not
      * have an llVolt field.
      */
-    protected function removeNonBuildingFields(array $fields){
+    protected function removeNonBuildingFields(array $fields)
+    {
         // strip out llVolt which doesn't apply to buildings
         return array_diff($fields, $this->nonBuildingFields);
     }
-
 
     /**
      * Returns the array of fields that can be appended to
      * epics_name to form pvs.
      *
      * Buildings can have a mix of power, water, and gas readings.
-     * This function will only return a list of fields relevant to
-     * the types of meters associated with the building.
+     * This function will return the master list of possible fields.
+     * Use pvFields() to limit the list based on the type of meters
+     * actively associated with the building.
      *
      * @return array
      */
-    public function pvFields()
+    public function dbFields(): array
     {
         //They are total for the building and could be from a single
         //meter or by summing multiple.  Gary takes care of this
         //at the IOC level and simply provides a single building PV
         //for each.
-        $fields = array();
-        foreach ($this->meterTypes() as $type){
+        $fields = [];
+        foreach (array_keys(config('meters.pvs')) as $type) {
             $fields = array_merge($fields, array_keys(config('meters.pvs.'.$type)));
         }
 
         return $this->removeNonBuildingFields($fields);
+    }
+
+    /**
+     * Returns the array of fields that can be stored in the database
+     *
+     * Buildings can have a mix of power, water, and gas readings.
+     * This function will only return a list of fields relevant to
+     * the types of meters associated with the building.
+     *
+     *
+     * @return array
+     */
+    public function pvFields(): array
+    {
+        //They are total for the building and could be from a single
+        //meter or by summing multiple.  Gary takes care of this
+        //at the IOC level and simply provides a single building PV
+        //for each.
+        $fields = [];
+        foreach ($this->meterTypes() as $type) {
+            $fields = array_merge($fields, array_keys(config('meters.pvs.'.$type)));
+        }
+
+        return $this->removeNonBuildingFields($fields);
+    }
+
+    public function save(array $options = [])
+    {
+        $saved = parent::save($options);
+        if ($this->wasRecentlyCreated) {
+            (new DataTableCreator($this))->createTable();
+        }
+
+        return $saved;
+    }
+
+    public function delete()
+    {
+        (new DataTableCreator($this))->dropTable();
+
+        return parent::delete();
     }
 }

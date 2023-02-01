@@ -8,7 +8,6 @@
 
 namespace App\Presenters;
 
-
 class WaterMeterPresenter extends MeterPresenter
 {
     /**
@@ -19,9 +18,11 @@ class WaterMeterPresenter extends MeterPresenter
         return 'dailygallons';
     }
 
-    function epicsMacroVariables(){
+    public function epicsMacroVariables()
+    {
         $vars = parent::epicsMacroVariables();
-        $vars[] = urlencode(epics_macro_variable('units')) . '=gal';  // macro var passed to screen
+        $vars[] = urlencode(epics_macro_variable('units')).'=gal';  // macro var passed to screen
+
         return $vars;
     }
 }
