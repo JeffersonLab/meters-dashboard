@@ -20,10 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::match(['GET', 'POST'], '/login', [
-    'as' => 'login',
-    'uses' => [AuthController::class, 'login'],
-]);
+Route::match(['GET', 'POST'], '/login', [AuthController::class, 'login'])->name('login');
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -52,22 +49,5 @@ Route::get('buildings/substation-summary', [BuildingController::class, 'substati
 Route::get('buildings/{building}', [BuildingController::class, 'show'])->name('buildings.show');
 
 Route::get('cooling-towers/{building}', [CoolingTowerController::class, 'show'])->name('cooling_towers.show');
-
-Route::get('/test', function () {
-//    dd(file_get_contents('http://epics2web:8080/epics2web/caget?pv=87-L1%3AllVolt'));
-    return view('Test');
-
-//    $c = new \App\Utilities\FacilitiesClimateData();
-//    $c->setDate('2019-01-29');
-//    var_dump($c->heatingDegreeDays());
-//    var_dump($c->coolingDegreeDays());
-//    dd($c->data());
-
-//    $vm = new \App\Meters\VirtualMeter();
-//    $vm->setMeters(Meter::whereIn('id',[49,50])->get());
-//    $chart = new \App\Charts\MultiMeter($vm);
-//
-//    dd($chart->toArray());
-});
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
