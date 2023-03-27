@@ -126,8 +126,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
 
     /**
      * The sum of the gallons through the building's water drain meters.
-     *
-     * @return float|null
      */
     public function waterToEvaporation(Carbon $fromDate, Carbon $toDate): float
     {
@@ -137,7 +135,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
     /**
      * The sum of the gallons through the building's water drain meters.
      *
-     * @return float|null
      *
      * @throws ReportingException
      */
@@ -218,7 +215,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
      * suitable for use with a DB::insert().
      *
      * @param $item - element of array returned by MySampler
-     * @return array
      */
     protected function columnsFromMySampler($item): array
     {

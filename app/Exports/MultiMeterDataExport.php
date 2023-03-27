@@ -21,8 +21,6 @@ class MultiMeterDataExport implements FromCollection, WithMapping, WithHeadings,
 
     /**
      * ConsumptionReportExport constructor.
-     *
-     * @param  ConsumptionReport  $report
      */
     public function __construct(MultiMeter $report)
     {
@@ -46,8 +44,6 @@ class MultiMeterDataExport implements FromCollection, WithMapping, WithHeadings,
 
     /**
      * Is the given row considered empty?
-     *
-     * @return bool
      */
     protected function isEmptyRow($row): bool
     {
@@ -100,8 +96,6 @@ class MultiMeterDataExport implements FromCollection, WithMapping, WithHeadings,
 
     /**
      * Returns the data collection used to make the spreadsheet.
-     *
-     * @return \Illuminate\Support\Collection
      */
     public function collection(): Collection
     {

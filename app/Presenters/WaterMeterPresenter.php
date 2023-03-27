@@ -10,9 +10,6 @@ namespace App\Presenters;
 
 class WaterMeterPresenter extends MeterPresenter
 {
-    /**
-     * @return string
-     */
     public function defaultChart(): string
     {
         return 'dailygallons';

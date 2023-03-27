@@ -85,7 +85,6 @@ class DataTableModifier
      * Add PV columns to a building's data table after it has already been created.
      * For examples if gas meters were added to a building that did not previously have them.
      *
-     * @param  string  $tableName
      * @param  string  $type (gas, power, water)
      */
     protected function addMeterColumns(string $tableName, string $type)

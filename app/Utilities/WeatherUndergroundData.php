@@ -60,8 +60,6 @@ class WeatherUndergroundData implements DataFetchContract
     /**
      * Returns the query parameters expected by mySampler
      * as an array.
-     *
-     * @return array
      */
     public function query(): array
     {
@@ -71,7 +69,6 @@ class WeatherUndergroundData implements DataFetchContract
     /**
      * Performs data retrieval over http(s)
      *
-     * @return array|null
      *
      * @throws \Exception
      */

@@ -51,8 +51,6 @@ class DataTableReporter
      * an accumulative variable (e.g. kWh) and returns a new
      * collection of label/value objects
      * where the values are the differences between successive items.
-     *
-     * @return Collection
      */
     public function intervalDifferences($data): Collection
     {
@@ -78,7 +76,6 @@ class DataTableReporter
      * @param  int  $x first reading
      * @param  int  $y second reading
      * @param  int  $rollover odometer limit
-     * @return int
      */
     public function odometerDifference(int $x, int $y, int $rollover = 1000000): int
     {
@@ -109,8 +106,6 @@ class DataTableReporter
      *
      * The value is computed as the difference between the first and last values of
      * the PV property on the given day.
-     *
-     * @return Collection
      */
     public function dailyPv($pv): Collection
     {
@@ -135,8 +130,6 @@ class DataTableReporter
     /**
      * Query to obtain data for specified meter within current objects
      * begins_at and ends_at timestamps.
-     *
-     * @return \Illuminate\Database\Query\Builder
      */
     public function dateRangeQuery($direction = 'asc'): Builder
     {
@@ -221,8 +214,6 @@ class DataTableReporter
     /**
      * Returns a collection of items from the source that fall on the
      * specified day.
-     *
-     * @return Collection
      */
     public function dataForDay(Collection $collection, Carbon $date): Collection
     {
@@ -233,9 +224,6 @@ class DataTableReporter
 
     /**
      * Returns the maximum value of the specified PV column within the current date range
-     *
-     * @param  string  $pv
-     * @return Collection
      */
     public function maxPv(string $pv): Collection
     {
@@ -246,8 +234,6 @@ class DataTableReporter
      * Accepts a collection of objects containing label and value properties and converts
      * returns a collection containing x and y where x is a javascript timestamp integer
      * and y is the value.
-     *
-     * @return \Illuminate\Support\Collection
      */
     public function canvasTimeSeries(Collection $data): Collection
     {
@@ -263,7 +249,6 @@ class DataTableReporter
      * Function to cast a string to an integer or a float
      * as most appropriate.
      *
-     * @param  string  $val
      * @return float|int
      */
     public function number(string $val)

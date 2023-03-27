@@ -41,7 +41,6 @@ trait MySamplerTrait
      * array.
      *
      *
-     * @param  array  $data
      * @return array
      */
     abstract public function organize(array $data);
@@ -49,10 +48,6 @@ trait MySamplerTrait
     /**
      * Initialize a webClient that will interact with web-based
      * Mya utlitiles.
-     *
-     * @param  string  $baseUri
-     * @param  bool  $verifyCerts
-     * @return void
      */
     public function initWebClient(string $baseUri, bool $verifyCerts = true): void
     {
@@ -65,8 +60,6 @@ trait MySamplerTrait
     /**
      * Use stepSize to compute the number of steps to bridge
      * the time span between the specified begins date and now.
-     *
-     * @return int
      */
     public function calcNumSteps(): int
     {
@@ -93,7 +86,6 @@ trait MySamplerTrait
      * Returns a collection of data retrieved from mySampler organized
      * by channel.
      *
-     * @return Collection
      *
      * @throws WebClientException
      */

@@ -39,8 +39,6 @@ class MySamplerData implements DataFetchContract
     /**
      * Returns the query parameters expected by mySampler
      * as an array.
-     *
-     * @return array
      */
     public function query(): array
     {
@@ -65,9 +63,6 @@ class MySamplerData implements DataFetchContract
      *   'chan2' => $chan2,
      *  ],
      *]
-     *
-     * @param  array  $data
-     * @return array
      */
     public function organize(array $data): array
     {

@@ -93,8 +93,6 @@ class MyaStats extends MultiMeter
 
     /**
      * Apply filters from the provided HTTP request.
-     *
-     * @return $this
      */
     public function applyRequest(Request $request): static
     {
@@ -129,10 +127,6 @@ class MyaStats extends MultiMeter
 
     /**
      * Uses the provided name and value to set up a report filter.
-     *
-     *
-     * @param  string  $filterName
-     * @param  string  $value
      */
     public function applyNamedFilter(string $filterName, string $value)
     {
@@ -149,8 +143,6 @@ class MyaStats extends MultiMeter
 
     /**
      * Returns the view that should be used to render the report.
-     *
-     * @return Collection
      */
     public function view(): Collection
     {
@@ -160,8 +152,6 @@ class MyaStats extends MultiMeter
 
     /**
      * The item names used to filter report output.
-     *
-     * @return string
      */
     public function names(): string
     {
@@ -170,8 +160,6 @@ class MyaStats extends MultiMeter
 
     /**
      * The report title.
-     *
-     * @return string
      */
     public function title(): string
     {
@@ -180,8 +168,6 @@ class MyaStats extends MultiMeter
 
     /**
      * The report description.
-     *
-     * @return string
      */
     public function description(): string
     {
@@ -200,8 +186,6 @@ class MyaStats extends MultiMeter
 
     /**
      * Returns the data collection of the report.
-     *
-     * @return Collection
      */
     public function data(): Collection
     {
@@ -210,8 +194,6 @@ class MyaStats extends MultiMeter
 
     /**
      * Returns the data for all items.
-     *
-     * @return Collection
      */
     public function allData(): Collection
     {
@@ -238,8 +220,6 @@ class MyaStats extends MultiMeter
 
     /**
      * Have filters been specified?
-     *
-     * @return bool
      */
     protected function hasFilters(): bool
     {
@@ -270,7 +250,6 @@ class MyaStats extends MultiMeter
      * of report data table.
      *
      * @param  string  $label -- specify non-standard label
-     * @return object
      */
     protected function makeDataItem($model, string $label = ''): object
     {
@@ -285,7 +264,6 @@ class MyaStats extends MultiMeter
      * Returns a record structure containing data for a line of report data table.
      *
      * @param  string  $label -- specify non-standard label
-     * @return array
      */
     protected function makeDataItems($model, string $label = ''): array
     {
@@ -308,8 +286,6 @@ class MyaStats extends MultiMeter
      * Returns a mostly empty record with fields identical to those of makeDataItem().
      *
      * With the exception of label, all values are null.
-     *
-     * @return object
      */
     protected function makeDataPlaceholder($label = 'N/A'): object
     {
@@ -329,8 +305,6 @@ class MyaStats extends MultiMeter
     /**
      * Calculates the quantity between first and last values after checking to ensure that
      * those values are actually set for the .  Returns null when either the first or last values
-     *
-     * @return float|null
      */
     public function consumed($first, $last): ?float
     {
@@ -347,7 +321,6 @@ class MyaStats extends MultiMeter
      *
      * @param  object  $first {date}
      * @param  object  $last {date}
-     * @return bool
      */
     public function isComplete(object $first, object $last): bool
     {
@@ -368,8 +341,6 @@ class MyaStats extends MultiMeter
 
     /**
      * Is Excel (spreadsheet) output available for this report.
-     *
-     * @return bool
      */
     public function hasExcel(): bool
     {

@@ -54,8 +54,6 @@ class SyncMeters extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle(): void
     {
@@ -182,8 +180,6 @@ class SyncMeters extends Command
     /**
      * Acquires building data from CED and saves it as a local Building object
      * which is then returned.
-     *
-     * @return Building|null
      */
     protected function getBuildingFromCed($name): ?Building
     {

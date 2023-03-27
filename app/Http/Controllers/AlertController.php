@@ -12,8 +12,6 @@ class AlertController extends Controller
 {
     /**
      * Display the buildings index page
-     *
-     * @return Response
      */
     public function index(NagiosHostlist $hostlist, NagiosServicelist $servicelist): Response
     {

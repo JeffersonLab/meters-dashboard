@@ -92,7 +92,6 @@ class MultiMeter implements ChartInterface
     /**
      * Returns the collection of data points to be plotted.
      *
-     * @return array
      *
      * @throws \Exception
      */
@@ -123,7 +122,6 @@ class MultiMeter implements ChartInterface
     /**
      * Returns an array representation of chart settings and data.
      *
-     * @return array
      *
      * @throws \Exception
      */
@@ -149,7 +147,6 @@ class MultiMeter implements ChartInterface
     /**
      * Returns an JSON string representation of chart settings and data.
      *
-     * @return string
      *
      * @throws \Exception
      */
@@ -160,8 +157,6 @@ class MultiMeter implements ChartInterface
 
     /**
      * Returns the PV field being plotted.
-     *
-     * @return string
      */
     public function pv(): string
     {
@@ -170,8 +165,6 @@ class MultiMeter implements ChartInterface
 
     /**
      * Returns the date at which the chart begins.
-     *
-     * @return \Carbon\Carbon
      */
     public function beginsAt(): Carbon
     {
@@ -180,8 +173,6 @@ class MultiMeter implements ChartInterface
 
     /**
      * Returns the date at which the chart ends.
-     *
-     * @return \Carbon\Carbon
      */
     public function endsAt(): Carbon
     {

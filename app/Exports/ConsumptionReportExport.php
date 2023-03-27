@@ -46,8 +46,6 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
 
     /**
      * Is the given row considered empty?
-     *
-     * @return bool
      */
     protected function isEmptyRow($row): bool
     {
@@ -56,8 +54,6 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
 
     /**
      * Generates content for the note column.
-     *
-     * @return string
      */
     protected function note($row): string
     {
@@ -107,8 +103,6 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
 
     /**
      * Returns the data collection used to make the spreadsheet.
-     *
-     * @return \Illuminate\Support\Collection
      */
     public function collection(): Collection
     {

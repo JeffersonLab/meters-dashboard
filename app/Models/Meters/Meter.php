@@ -219,8 +219,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     }
 
     /**
-     * @param  string  $field
-     * @param  float  $accumulatedRollover
      * @return mixed
      *
      * @TODO recalculate the totMBTU column too (update power_meter_data set totMBTU = totkWh * 0.00341214)
@@ -265,9 +263,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Answers whether the provided value is within the limits for the
      * specified field.
      *
-     * @param  string  $field
      * @param  mixed  $value numeric value
-     * @return bool
      */
     public function withinLimits(string $field, $value): bool
     {
@@ -324,8 +320,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
 
     /**
      * Returns all epics field names defined by configuration.
-     *
-     * @return array
      */
     public static function allPvFields(): array
     {
@@ -392,9 +386,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     /**
      * Returns the most current accumulated rollover for the meter or zero
      * if there is none.
-     *
-     * @param  string  $field
-     * @return int
      */
     public function accumulatedRollover(string $field): int
     {
@@ -481,7 +472,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Optionally restrict the context to a specific PV field.
      *
      * @param  null  $field
-     * @return Builder
      *
      * @throws \Exception
      */
@@ -502,7 +492,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Optionally restrict the context to a specific PV field.
      *
      * @param  null  $field
-     * @return Builder
      *
      * @throws \Exception
      */
@@ -519,7 +508,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     /**
      * Returns a query to select the first or last date
      *
-     * @return Builder
      *
      * @throws \Exception
      */
@@ -663,8 +651,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     /**
      * Update fields for existing meter data rows.
      *
-     * @param  array  $fields
-     * @return int
      *
      * @throws \Exception
      */
@@ -702,8 +688,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     /**
      * Turns an array of field names into an array of PV channel names
      * by prepending the meter's epics name.
-     *
-     * @return array
      */
     protected function makeChannels(array $fields): array
     {
@@ -720,8 +704,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
 
     /**
      * The list of fully qualified PV channel names for the current meter.
-     *
-     * @return array
      */
     public function channels(): array
     {
@@ -757,7 +739,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * suitable for use with a DB::insert().
      *
      * @param $item - element of array returned by MySampler
-     * @return array
      */
     protected function columnsFromMySampler($item): array
     {

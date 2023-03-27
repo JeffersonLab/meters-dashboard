@@ -24,8 +24,6 @@ class MenuServiceProvider extends ServiceProvider
 
     /**
      * Register services.
-     *
-     * @return void
      */
     public function register(): void
     {
@@ -34,8 +32,6 @@ class MenuServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -232,7 +228,6 @@ class MenuServiceProvider extends ServiceProvider
      * Return array representation of a substation menu item.
      *
      * @param  Building  $substation - substations are a type of building
-     * @return array
      */
     public function substationMenuItem(Building $substation): array
     {
@@ -245,8 +240,6 @@ class MenuServiceProvider extends ServiceProvider
 
     /**
      * Return array representation of a building menu item.
-     *
-     * @return array
      */
     public function buildingMenuItem(Building $building): array
     {
@@ -261,7 +254,6 @@ class MenuServiceProvider extends ServiceProvider
      * Return array representation of a substation menu item.
      *
      * @param  Building  $tower - substations are a type of building
-     * @return array
      */
     public function coolingTowerMenuItem(Building $tower): array
     {

@@ -76,8 +76,6 @@ class VirtualMeter extends BaseModel implements DataTableInterface
 
     /**
      * Returns the collection physical meters comprising the VirtualMeter
-     *
-     * @return \Illuminate\Support\Collection
      */
     public function meters(): Collection
     {
@@ -90,8 +88,6 @@ class VirtualMeter extends BaseModel implements DataTableInterface
 
     /**
      * Answers whether the VirtualMeter has physicalMeters.
-     *
-     * @return bool
      */
     public function hasMeters(): bool
     {
@@ -104,8 +100,6 @@ class VirtualMeter extends BaseModel implements DataTableInterface
 
     /**
      * Eloquent Relation for retrieving/querying associated Physical Meters from database.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function physicalMeters(): BelongsToMany
     {
@@ -132,8 +126,6 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * If an explicit meter name is not set, a generic name is returned that
      * is comprised of the concatenate physical meter names.
-     *
-     * @return string
      */
     public function name(): string
     {
@@ -178,8 +170,6 @@ class VirtualMeter extends BaseModel implements DataTableInterface
 
     /**
      * Returns the ids of the physical meters that comprise the virtual meter
-     *
-     * @return array
      */
     public function meterIds(): array
     {

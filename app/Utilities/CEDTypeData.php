@@ -38,8 +38,6 @@ class CEDTypeData extends CEDData
     /**
      * Returns the query parameters expected by mySampler
      * as an array.
-     *
-     * @return array
      */
     public function query(): array
     {

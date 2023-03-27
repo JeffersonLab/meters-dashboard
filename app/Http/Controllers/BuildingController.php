@@ -12,8 +12,6 @@ class BuildingController extends Controller
 {
     /**
      * Display the buildings index page
-     *
-     * @return \Illuminate\Contracts\View\View
      */
     public function index(): \Illuminate\View\View
     {
@@ -40,8 +38,6 @@ class BuildingController extends Controller
 
     /**
      * Display the buildings index page
-     *
-     * @return \Illuminate\Contracts\View\View
      */
     public function siteMap(): \Illuminate\View\View
     {
@@ -50,8 +46,6 @@ class BuildingController extends Controller
 
     /**
      * Display a building
-     *
-     * @return \Illuminate\Contracts\View\View
      */
     public function show(Building $building, Request $request): \Illuminate\View\View
     {

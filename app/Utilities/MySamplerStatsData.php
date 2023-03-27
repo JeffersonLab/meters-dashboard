@@ -33,8 +33,6 @@ class MySamplerStatsData
     /**
      * Returns the query parameters expected by mySampler
      * as an array.
-     *
-     * @return array
      */
     public function query(): array
     {
@@ -62,8 +60,6 @@ class MySamplerStatsData
      *  ],
      *]
      *
-     * @param  array  $data
-     * @return array
      *
      * @throws \Exception
      */

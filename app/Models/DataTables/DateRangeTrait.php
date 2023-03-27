@@ -39,9 +39,6 @@ trait DateRangeTrait
 
     /**
      * Chainable method to set the beginning of the reporting date range.
-     *
-     * @param  string  $date
-     * @return static
      */
     public function beginning(string $date): static
     {
@@ -73,9 +70,6 @@ trait DateRangeTrait
 
     /**
      * Chainable method to set the ending of the reporting date range.
-     *
-     * @param  string  $date
-     * @return static
      */
     public function ending(string $date): static
     {
@@ -84,10 +78,6 @@ trait DateRangeTrait
         return $this;
     }
 
-    /**
-     * @param  string  $format
-     * @return string
-     */
     public function beginsAt(string $format = null): string
     {
         if ($format === null) {
@@ -101,10 +91,6 @@ trait DateRangeTrait
         return $this->begins_at->format($format);
     }
 
-    /**
-     * @param  string  $format
-     * @return string
-     */
     public function endsAt(string $format = null): string
     {
         if ($format === null) {

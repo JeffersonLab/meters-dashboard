@@ -62,7 +62,6 @@ class FacilitiesClimateData extends ClimateData
     /**
      * Performs data retrieval over http(s)
      *
-     * @return array|null
      *
      * @throws \Exception
      */

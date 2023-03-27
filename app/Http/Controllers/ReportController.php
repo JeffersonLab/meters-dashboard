@@ -22,8 +22,6 @@ class ReportController extends Controller
 {
     /**
      * Display the buildings index page
-     *
-     * @return \Illuminate\Contracts\View\View
      */
     public function index(): \Illuminate\View\View
     {
@@ -82,9 +80,6 @@ class ReportController extends Controller
         $this->meterData(Meter::all());
     }
 
-    /**
-     * @return Collection
-     */
     protected function buildingData(Collection $buildings): Collection
     {
         return $buildings->map(function ($item) {
@@ -103,7 +98,6 @@ class ReportController extends Controller
      * Output a report as an Excel spreadsheet
      *
      * @param  string  $name - the name of the report to return
-     * @return BinaryFileResponse
      *
      * @throws \Exception
      */

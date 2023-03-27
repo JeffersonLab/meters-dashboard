@@ -20,8 +20,6 @@ class MyaStatsDataExport implements FromCollection, WithMapping, WithHeadings, W
 
     /**
      * ConsumptionReportExport constructor.
-     *
-     * @param  ConsumptionReport  $report
      */
     public function __construct(MultiMeter $report)
     {
@@ -30,8 +28,6 @@ class MyaStatsDataExport implements FromCollection, WithMapping, WithHeadings, W
 
     /**
      * Is the given row considered empty?
-     *
-     * @return bool
      */
     protected function isEmptyRow($row): bool
     {
@@ -70,8 +66,6 @@ class MyaStatsDataExport implements FromCollection, WithMapping, WithHeadings, W
 
     /**
      * Returns the data collection used to make the spreadsheet.
-     *
-     * @return \Illuminate\Support\Collection
      */
     public function collection(): Collection
     {

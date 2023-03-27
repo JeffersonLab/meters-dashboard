@@ -241,7 +241,6 @@ trait DataTableTrait
     /**
      * Throw an exception if field is not a valid.
      *
-     * @return true
      *
      * @throws MeterDataException
      */

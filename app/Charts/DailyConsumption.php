@@ -31,7 +31,6 @@ class DailyConsumption implements ChartInterface
     /**
      * DailyConsumption constructor.
      *
-     * @param  string  $pv
      * @param  string  $title (optional)
      */
     public function __construct(DataTableInterface $model, string $pv, string $title = null)
@@ -82,8 +81,6 @@ class DailyConsumption implements ChartInterface
     /**
      * Returns an array representation of chart settings and data in the format expected
      * by canvasjs client library.
-     *
-     * @return array
      */
     public function toArray(): array
     {
@@ -104,8 +101,6 @@ class DailyConsumption implements ChartInterface
 
     /**
      * Returns an JSON string representation of chart settings and data.
-     *
-     * @return string
      */
     public function toJson(): string
     {

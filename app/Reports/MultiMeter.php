@@ -79,8 +79,6 @@ class MultiMeter implements ReportInterface
 
     /**
      * Returns the view that should be used to render the report.
-     *
-     * @return View
      */
     public function view(): View
     {
@@ -154,9 +152,6 @@ class MultiMeter implements ReportInterface
         return $this->chart()->endsAt();
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
     public function data(): Collection
     {
         if ($this->virtualMeter->hasMeters()) {

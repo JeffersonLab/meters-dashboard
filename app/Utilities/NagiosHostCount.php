@@ -61,8 +61,6 @@ class NagiosHostCount extends NagiosData
     /**
      * Returns the query parameters expected by mySampler
      * as an array.
-     *
-     * @return array
      */
     public function query(): array
     {

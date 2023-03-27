@@ -26,8 +26,6 @@ class CoolingTowerController extends Controller
 
     /**
      * Display a building
-     *
-     * @return \Illuminate\Contracts\View\View
      */
     public function show(Building $building, Request $request): \Illuminate\View\View
     {

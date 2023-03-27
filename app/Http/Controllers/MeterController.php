@@ -13,8 +13,6 @@ class MeterController extends Controller
 {
     /**
      * Display the meter index page
-     *
-     * @return \Illuminate\Contracts\View\View
      */
     public function index(): \Illuminate\View\View
     {
@@ -24,8 +22,6 @@ class MeterController extends Controller
 
     /**
      * Display a meter
-     *
-     * @return \Illuminate\Contracts\View\View
      */
     public function show(Meter $meter, Request $request): \Illuminate\View\View
     {

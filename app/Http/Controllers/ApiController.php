@@ -34,7 +34,6 @@ class ApiController extends Controller
     /**
      * Return data for a meter
      *
-     * @param  ChartRequest  $request
      * @return \Illuminate\Http\Response;
      */
     public function meterTableData(HttpRequest $request)
@@ -117,8 +116,6 @@ class ApiController extends Controller
     /**
      * Returns a json error response.
      *
-     * @param  string  $msg
-     * @param  int  $code
      * @return mixed
      */
     public function error(string $msg, int $code = 404)

@@ -23,9 +23,6 @@ class MeterReadings implements ChartInterface
 
     /**
      * MeterReadings constructor.
-     *
-     * @param  string  $pv
-     * @param  string  $title
      */
     public function __construct(DataTableInterface $model, string $pv, string $title = null)
     {
@@ -55,8 +52,6 @@ class MeterReadings implements ChartInterface
 
     /**
      * Returns the collection of data points to be plotted.
-     *
-     * @return \Illuminate\Support\Collection
      */
     public function chartData(): Collection
     {
@@ -68,8 +63,6 @@ class MeterReadings implements ChartInterface
 
     /**
      * Returns an array representation of chart settings and data.
-     *
-     * @return array
      */
     public function toArray(): array
     {
@@ -93,8 +86,6 @@ class MeterReadings implements ChartInterface
 
     /**
      * Returns an JSON string representation of chart settings and data.
-     *
-     * @return string
      */
     public function toJson(): string
     {

@@ -41,8 +41,6 @@ class DataTableCreator
 
     /**
      * Create a database table with columns appropriate to the meter type.
-     *
-     * @return void
      */
     public function createTable(): void
     {
@@ -113,8 +111,6 @@ class DataTableCreator
 
     /**
      * The name of the data table before conversion to table-per-meter/building.
-     *
-     * @return string|null
      */
     public function oldTableName(): ?string
     {
@@ -137,8 +133,6 @@ class DataTableCreator
 
     /**
      * Migrate data from the old monolithic single data table into the new per-meter table.
-     *
-     * @return void
      */
     public function migrateData(): void
     {
@@ -155,8 +149,6 @@ class DataTableCreator
 
     /**
      * Drop the meter's data table.
-     *
-     * @return void
      */
     public function dropTable(): void
     {

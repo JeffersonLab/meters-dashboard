@@ -93,8 +93,6 @@ class MeterLimit extends BaseModel
 
     /**
      * The low and high limits are both not null.
-     *
-     * @return bool
      */
     public function hasMinorLimits(): bool
     {
@@ -103,8 +101,6 @@ class MeterLimit extends BaseModel
 
     /**
      * The lolo and hihi limits are both not null.
-     *
-     * @return bool
      */
     public function hasMajorLimits(): bool
     {
@@ -198,8 +194,6 @@ class MeterLimit extends BaseModel
 
     /**
      * Exceeds major or minor upper limit.
-     *
-     * @return bool
      */
     public function isTooHigh($value): bool
     {
@@ -208,8 +202,6 @@ class MeterLimit extends BaseModel
 
     /**
      * Exceeds major or minor lower limit.
-     *
-     * @return bool
      */
     public function isTooLow($value): bool
     {
