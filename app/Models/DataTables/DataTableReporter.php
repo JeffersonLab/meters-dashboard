@@ -8,8 +8,8 @@
 
 namespace App\Models\DataTables;
 
-use Illuminate\Database\Query\Builder;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class DataTableReporter

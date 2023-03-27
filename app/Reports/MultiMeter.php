@@ -131,11 +131,11 @@ class MultiMeter implements ReportInterface
     {
         switch ($this->meterType()) {
             case 'power': $query = Meter::where('type', 'power');
-            break;
+                break;
             case 'water' : $query = Meter::where('type', 'water');
-            break;
+                break;
             case 'gas' : $query = Meter::where('type', 'gas');
-            break;
+                break;
             default: return [];
         }
 

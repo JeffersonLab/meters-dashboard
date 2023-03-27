@@ -132,11 +132,11 @@ class MyaStats extends MultiMeter
     {
         switch ($filterName) {
             case 'start': $this->beginning($value);
-            break;
+                break;
             case 'end': $this->ending($value);
-            break;
+                break;
             case 'pv': $this->pv = $value;
-            break;
+                break;
             case 'names': $this->makeNameFilter($value);
         }
     }

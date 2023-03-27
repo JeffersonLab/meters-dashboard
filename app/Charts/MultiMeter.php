@@ -2,9 +2,9 @@
 
 namespace App\Charts;
 
-use Carbon\Carbon;
 use App\Models\DataTables\DateRangeTrait;
 use App\Models\Meters\VirtualMeter;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**

@@ -26,19 +26,19 @@ class ChartFactory
     {
         switch (strtolower($name)) {
             case 'dailykwh': $chart = new DailyConsumption($model, 'totkWh', 'Daily KwH');
-            break;
+                break;
             case 'dailymbtu': $chart = new DailyConsumption($model, 'totMBTU', 'Daily MBTU');
-            break;
+                break;
             case 'dailygallons': $chart = new DailyConsumption($model, 'gal', 'Daily Gallons');
-            break;
+                break;
             case 'dailyccf': $chart = new DailyConsumption($model, 'ccf', 'Daily CCF');
-            break;
+                break;
             case 'readingskw': $chart = new MeterReadings($model, 'totkw', 'kW Readings');
-            break;
+                break;
             case 'readingsllvolt': $chart = new MeterReadings($model, 'llVolt', 'Voltage Readings');
-            break;
+                break;
             case 'readingsgpm': $chart = new MeterReadings($model, 'galPerMin', 'GPM Readings');
-            break;
+                break;
             case 'multimeter': /** @noinspection PhpParamsInspection */
                 $chart = new MultiMeter($model);
                 break;

@@ -2,9 +2,9 @@
 
 namespace App\Charts;
 
-use Illuminate\Support\Collection;
 use App\Models\DataTables\DataTableInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 /**
  * Class MeterReadings

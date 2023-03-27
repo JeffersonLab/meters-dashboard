@@ -2,9 +2,8 @@
 
 namespace App\Exports;
 
-use Illuminate\Support\Collection;
-use App\Reports\Consumption as ConsumptionReport;
 use App\Reports\MultiMeter;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;

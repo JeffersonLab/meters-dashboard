@@ -8,12 +8,12 @@
 
 namespace App\Models\Meters;
 
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\BaseModel;
 use App\Models\DataTables\DataTableInterface;
 use App\Models\DataTables\DataTableReporter;
 use App\Models\DataTables\DataTableTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
