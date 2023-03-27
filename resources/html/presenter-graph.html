@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<!--
+Purpose:
+This is a temporary page with javascript to generate a graph of the power draw at the
+33 and 40 MVA substations as well as the sum of the two and the current demand power limit.
+The functionality of this script is expected to be replaced by a more general purpose power
+meters reporting tool in the future.
+
+Usage:
+With no query parameters, a graph will be generated for the 24 hour period up to midnight yesterday.
+With a query parameter of ?date=YYYY-MM-DD (ex: ?date=2017-07-04) that specific 24 hour period will be plotted.
+
+-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Site Power Readings</title>
+    <link href="css/presenter-graph.css" rel="stylesheet" type="text/css">
+    <script language="javascript" type="text/javascript" src="https://ace.jlab.org/cdn/jquery/1.10.2.min.js"></script>
+    <script language="javascript" type="text/javascript"
+            src="https://ace.jlab.org/cdn/jquery-plugins/flot/0.8.3/jquery.flot.js"></script>
+    <script language="javascript" type="text/javascript"
+            src="https://ace.jlab.org/cdn/jquery-plugins/flot/axislabels/2.2.js"></script>
+    <script language="javascript" type="text/javascript"
+            src="https://ace.jlab.org/cdn/jquery-plugins/flot/errorbars/1.0.js"></script>
+    <script language="javascript" type="text/javascript"
+            src="https://ace.jlab.org/cdn/jquery-plugins/flot/0.8.3/jquery.flot.time.js"></script>
+    <script language="javascript" type="text/javascript"
+            src="https://ace.jlab.org/cdn/lodash/4.17.4/lodash.min.js"></script>
+    <script language="javascript" type="text/javascript"
+            src="https://ace.jlab.org/cdn/moment/2.18.1/moment.min.js"></script>
+    <script language="javascript" type="text/javascript"
+            src="https://ace.jlab.org/cdn/moment-timezone/0.5.13/moment-timezone-with-data.min.js"></script>
+
+
+    <script type="text/javascript">
+
+        // Read a page's GET URL variables and return them as an associative array.
+        function getUrlVars() {
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        $(function () {
+
+            // var mySampler = "https://myaweb.acc.jlab.org/myStatsSampler/data?sUnit=second&jsonp=?";
+            var mySampler = "presenter-graph/data?sUnit=second&jsonp=?";
+            var firstValidDate = '2017-06-25';
+            var samples = 48;  // samples to retrieve
+            var size = 1800;   // sample size in seconds
+            var channels = '40MVA:totkW,33MVA:totkW,substn:totkW,substn:actDemkW';    // PVs
+            var demandkW = 14572;
+            var urlVars = getUrlVars();
+            var fetchedData;
+
+            var plotMoment = (new moment()).subtract(1, 'days'); // Default to yesterday
+
+            // Did user specify a valid specific date?
+            if (urlVars.date) {
+                var requestedMoment = new moment(urlVars.date);
+                if (requestedMoment.isValid() && !requestedMoment.isAfter(moment.now())) {
+                    plotMoment = requestedMoment;
+                }
+            }
+
+            plotMoment.hours(7);  // Start at 7:00 AM
+            toMoment = (new moment(plotMoment)).add(1, 'days');
+
+
+            var beginsAt = plotMoment.format('MM/DD/YYYY') + ' - ' + toMoment.format('MM/DD/YYYY');
+
+            $('#begins-at').text(beginsAt);
+            //console.log(beginsAt);
+
+            if (plotMoment.isSameOrAfter(firstValidDate)) {
+                $.getJSON(mySampler, {
+                    'n': samples,
+                    's': size,
+
+                    'b': plotMoment.format('YYYY-MM-DD HH:mm'),
+                    'l': channels
+                }, function (data) {
+		    console.log(data);
+                    myPlot(data);
+                });
+            } else {
+                $("#placeholder").html('<b>No data before ' + firstValidDate + '.</b>');
+            }
+
+
+            // Generate a graph using flot library
+            var myPlot = function (data) {
+                var mva40 = [];
+                var mva33 = [];
+                var demand = [];
+                var mvaTotal = [];
+
+                //console.log(data);
+
+                $.each(data, function (stepK, stepV) {
+                    console.log(stepV);
+                    $.each(stepV, function (statK, statV) {
+                        console.log('raw ' + statV.start, statV);
+                        var jsMoment = new moment.tz(statV.start, 'America/New_York');   // We know the Archiver's timezone!
+                        var integerDate = jsMoment.valueOf() + jsMoment.utcOffset() * 60 * 1000;
+                        var total = 0;
+			console.log('debug 1', integerDate, statV.output);
+                        $.each(statV.output, function (m, n) {
+                            //console.log('m,n ', m,n);
+
+                                if (n.name == '40MVA:totkW' && n.mean != '<undefined>') {
+                                    mva40.push([integerDate, n.mean, n.mean - n.min, n.max - n.mean]);
+                                    //total += parseFloat(value);
+                                }
+                                if (n.name == '33MVA:totkW' && n.mean != '<undefined>') {
+                                    mva33.push([integerDate, n.mean, n.mean - n.min, n.max - n.mean]);
+                                    //total += parseFloat(value);
+                                }
+                                if (n.name == 'substn:totkW' && n.mean != '<undefined>') {
+                                    mvaTotal.push([integerDate, n.mean, n.mean - n.min, n.max - n.mean]);
+                                    //total += parseFloat(value);
+                                }
+                                if (n.name == 'substn:actDemkW' && n.mean != '<undefined>') {
+                                    demand.push([integerDate, n.mean, 0, 0]);
+                                    //total += parseFloat(value);
+                                }
+
+
+                        });
+                        //demand.push([integerDate, demandkW,0,0]);
+                    });
+                });
+
+                console.log(mvaTotal);
+                var options = {
+                    series: {
+                        points: {
+                            show: true,
+                            fill: true,
+                            fillColor: false,
+                            errorbars: 'y',
+                            yerr: {
+                                show: true,
+                                asymmetric: true,
+                                upperCap: '-',
+                                lowerCap: '-'
+                            }}
+                    },
+                    colors: ['blue', 'yellow', 'green', 'red'],
+                    axisLabels: {
+                        show: true
+                    },
+                    legend: {
+                        position: 'nw',
+                        noColumns: 8,
+                        labelFormatter: function (label, series) {
+                            return '<span class="powerLabel">' + label + '</span>';
+                        }
+
+                    },
+                    yaxis: {
+                        axisLabel: 'kW',
+                        axisLabelColor: 'black',
+                        font: {
+                            size: 16,
+                            lineHeight: 16,
+                            weight: "bold",
+                            color: 'black'
+                        }
+                    },
+                    xaxis: {
+                        mode: "time",
+                        timeformat: "%H:%M",
+                        font: {
+                            size: 15,
+                            lineHeight: 15,
+                            weight: "bold",
+                            color: 'black'
+                        }
+                    }
+                };
+
+                $.plot("#placeholder", [
+                    {label: '40MVA', data: mva40, points: {show: true}},
+                    {label: '33MVA', data: mva33, points: {show: true}},
+                    {label: 'Total', data: mvaTotal, points: {show: true}},
+                    {label: 'Demand Threshold', data: demand, lines: {show: true}, points: {show: false}}
+                ], options);
+
+
+                window.onresize = function (event) {
+                    console.log('resize');
+                    $.plot($("#placeholder"), [
+                        {label: '40MVA', data: mva40, points: {show: true}},
+                        {label: '33MVA', data: mva33, points: {show: true}},
+                        {label: 'Total', data: mvaTotal, points: {show: true}},
+                        {label: 'Demand Threshold', data: demand, lines: {show: true}, points: {show: false}}
+                    ], options);
+
+                };
+
+
+            }
+
+        });
+
+
+    </script>
+
+    <style>
+        div.axisLabels.yaxisLabel {
+            font-size: 1.5em;
+	    font-weight: bold;
+            color: black !important;
+        }
+
+        span.powerLabel {
+            font-size: 1.5em !important;
+            font-weight: bold;
+            color: black !important;
+        }
+
+        #placeholder {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="header" style="text-align: center">
+    <h2>Site Power Readings</h2>
+    <h3 id="begins-at"></h3>
+</div>
+
+<div id="content">
+
+    <div class="demo-container" style="padding: 10px;">
+        <div id="placeholder" class="demo-placeholder"></div>
+    </div>
+
+
+</div>
+
+
+</body>
+</html>
+

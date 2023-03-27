@@ -42,8 +42,12 @@ mix.copy('resources/js/canvasjs-1.9.10.min.js','public/js/canvasjs-1.9.10.min.js
 mix.copy('resources/js/jquery.dynameter.js','public/js/jquery.dynameter.js');
 mix.copy('resources/js/jquery.maphilight.min.js','public/js/jquery.maphilight.min.js');
 
+// Special Pages
+mix.copy('resources/html/presenter-graph.html','public/presenter-graph.html');
+
 // SASS and CSS
 mix.sass('resources/sass/app.scss', 'public/css');
+mix.copy('resources/css/presenter-graph.css','public/css/presenter-graph.css');
 mix.copy('resources/css/ionicons-2.0.1.min.css','public/css/ionicons-2.0.1.min.css');
 mix.copy('resources/css/jquery.dynameter.css','public/css/jquery.dynameter.css');
 mix.copy('resources/css/odometer-theme-plaza.css','public/css/odometer-theme-plaza.css');
