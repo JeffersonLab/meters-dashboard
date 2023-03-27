@@ -31,7 +31,6 @@ class DailyConsumption implements ChartInterface
     /**
      * DailyConsumption constructor.
      *
-     * @param  DataTableInterface  $model
      * @param  string  $pv
      * @param  string  $title (optional)
      */
@@ -64,8 +63,6 @@ class DailyConsumption implements ChartInterface
 
     /**
      * Returns the collection of data points to be plotted.
-     *
-     * @return \Illuminate\Support\Collection
      */
     public function chartData(): \Illuminate\Support\Collection
     {

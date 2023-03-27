@@ -47,7 +47,6 @@ class MultiMeter implements ChartInterface
     /**
      * MultiMeter constructor.
      *
-     * @param  VirtualMeter  $model
      *
      * @throws \Exception
      */
@@ -61,7 +60,6 @@ class MultiMeter implements ChartInterface
     /**
      * Apply HTTP Request parameters to customize the chart.
      *
-     * @param  Request  $request
      * @return mixed|void
      */
     public function applyRequest(Request $request)

@@ -17,7 +17,6 @@ class ApiController extends Controller
     /**
      * Return data for a canvasJs chart
      *
-     * @param  ChartRequest  $request
      * @return \Illuminate\Http\Response;
      */
     public function meterChartData(ChartRequest $request)
@@ -59,7 +58,6 @@ class ApiController extends Controller
     /**
      * Return data for a canvasJs chart
      *
-     * @param  ChartRequest  $request
      * @return \Illuminate\Http\Response;
      */
     public function buildingChartData(ChartRequest $request)
@@ -77,7 +75,6 @@ class ApiController extends Controller
     /**
      * Return data for a canvasJs chart
      *
-     * @param  HttpRequest  $request
      * @return \Illuminate\Http\Response;
      */
     public function reportChartData(HttpRequest $request)
@@ -96,7 +93,6 @@ class ApiController extends Controller
     /**
      * Returns a json success response.
      *
-     * @param $data
      * @return mixed
      */
     public function response($data)

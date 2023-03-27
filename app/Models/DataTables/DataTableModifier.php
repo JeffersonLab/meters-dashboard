@@ -27,8 +27,6 @@ class DataTableModifier
 
     /**
      * DataTableModifier constructor.
-     *
-     * @param  DataTableInterface  $model
      */
     public function __construct(DataTableInterface $model)
     {
@@ -40,7 +38,6 @@ class DataTableModifier
     /**
      * Assert that a table exists before attempting to modify it.
      *
-     * @param $table
      *
      * @throws DataConversionException
      */

@@ -199,7 +199,6 @@ class MeterLimit extends BaseModel
     /**
      * Exceeds major or minor upper limit.
      *
-     * @param $value
      * @return bool
      */
     public function isTooHigh($value)
@@ -210,7 +209,6 @@ class MeterLimit extends BaseModel
     /**
      * Exceeds major or minor lower limit.
      *
-     * @param $value
      * @return bool
      */
     public function isTooLow($value)

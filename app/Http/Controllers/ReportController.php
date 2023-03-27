@@ -34,7 +34,6 @@ class ReportController extends Controller
      * Display a report
      *
      * @param  string  $name - the name of the report to return
-     * @param  Request  $request
      * @return Application|Factory|\Illuminate\Contracts\View\View|Collection|\Illuminate\View\View
      */
     public function show($name, Request $request)
@@ -67,7 +66,6 @@ class ReportController extends Controller
     /**
      * Return meter data for the types of meters that are appropriate for the report type.
      *
-     * @param  ReportInterface  $report
      * @return Collection|void
      */
     protected function getMeterData(ReportInterface $report)
@@ -85,7 +83,6 @@ class ReportController extends Controller
     }
 
     /**
-     * @param  Collection  $buildings
      * @return Collection
      */
     protected function buildingData(Collection $buildings)
@@ -106,7 +103,6 @@ class ReportController extends Controller
      * Output a report as an Excel spreadsheet
      *
      * @param  string  $name - the name of the report to return
-     * @param  Request  $request
      * @return BinaryFileResponse
      *
      * @throws \Exception

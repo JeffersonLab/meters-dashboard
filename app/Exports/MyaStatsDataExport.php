@@ -30,7 +30,6 @@ class MyaStatsDataExport implements FromCollection, WithMapping, WithHeadings, W
     /**
      * Is the given row considered empty?
      *
-     * @param $row
      * @return bool
      */
     protected function isEmptyRow($row)
@@ -42,7 +41,6 @@ class MyaStatsDataExport implements FromCollection, WithMapping, WithHeadings, W
      * Transform row data.
      *
      * @param  mixed  $row
-     * @return array
      */
     public function map($row): array
     {
@@ -57,8 +55,6 @@ class MyaStatsDataExport implements FromCollection, WithMapping, WithHeadings, W
 
     /**
      * Custom column headings.
-     *
-     * @return array
      */
     public function headings(): array
     {
@@ -85,7 +81,6 @@ class MyaStatsDataExport implements FromCollection, WithMapping, WithHeadings, W
      * Register handlers to do manipulation of the underlying spreadsheet at
      * different phases of the export cycle.
      *
-     * @return array
      *
      * @see https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/
      * @see https://laraveldaily.com/laravel-excel-export-formatting-and-styling-cells/

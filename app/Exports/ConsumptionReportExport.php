@@ -19,8 +19,6 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
 
     /**
      * ConsumptionReportExport constructor.
-     *
-     * @param  ConsumptionReport  $report
      */
     public function __construct(ConsumptionReport $report)
     {
@@ -48,7 +46,6 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
     /**
      * Is the given row considered empty?
      *
-     * @param $row
      * @return bool
      */
     protected function isEmptyRow($row)
@@ -59,7 +56,6 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
     /**
      * Generates content for the note column.
      *
-     * @param $row
      * @return string
      */
     protected function note($row)
@@ -69,8 +65,8 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
         }
         if (! $row->isComplete) {
             return sprintf('Incomplete Data: %s to %s',
-                    date('Y-m-d H:i', strtotime($row->first->date)),
-                    date('Y-m-d H:i', strtotime($row->last->date)));
+                date('Y-m-d H:i', strtotime($row->first->date)),
+                date('Y-m-d H:i', strtotime($row->last->date)));
         }
 
         return '';
@@ -80,7 +76,6 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
      * Transform row data.
      *
      * @param  mixed  $row
-     * @return array
      */
     public function map($row): array
     {
@@ -96,8 +91,6 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
 
     /**
      * Custom column headings.
-     *
-     * @return array
      */
     public function headings(): array
     {
@@ -125,7 +118,6 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
      * Register handlers to do manipulation of the underlying spreadsheet at
      * different phases of the export cycle.
      *
-     * @return array
      *
      * @see https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/
      * @see https://laraveldaily.com/laravel-excel-export-formatting-and-styling-cells/

@@ -100,7 +100,6 @@ abstract class Consumption implements ReportInterface
     /**
      * Apply filters from the provided HTTP request.
      *
-     * @param  Request  $request
      * @return $this
      */
     public function applyRequest(Request $request)
@@ -271,8 +270,6 @@ abstract class Consumption implements ReportInterface
 
     /**
      * Parses the provided string into an array of meter names and stores it in nameFilter property
-     *
-     * @param $string
      */
     protected function makeNameFilter($string)
     {
@@ -345,8 +342,6 @@ abstract class Consumption implements ReportInterface
      * Calculates the quantity between first and last values after checking to ensure that
      * those values are actually set for the .  Returns null when either the first or last values
      *
-     * @param $first
-     * @param $last
      * @return float|null
      */
     public function consumed($first, $last)
@@ -381,7 +376,6 @@ abstract class Consumption implements ReportInterface
     /**
      * The initial value of the report PV at the beginning of the time interval.
      *
-     * @param  Meter  $item
      * @param  string  $pv
      * @return null
      */

@@ -23,7 +23,6 @@ class MeterReadings implements ChartInterface
     /**
      * MeterReadings constructor.
      *
-     * @param  DataTableInterface  $model
      * @param  string  $pv
      * @param  string  $title
      */

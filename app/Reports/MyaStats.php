@@ -94,7 +94,6 @@ class MyaStats extends MultiMeter
     /**
      * Apply filters from the provided HTTP request.
      *
-     * @param  Request  $request
      * @return $this
      */
     public function applyRequest(Request $request)
@@ -138,9 +137,12 @@ class MyaStats extends MultiMeter
     public function applyNamedFilter($filterName, $value)
     {
         switch ($filterName) {
-            case 'start': $this->beginning($value); break;
-            case 'end': $this->ending($value); break;
-            case 'pv': $this->pv = $value; break;
+            case 'start': $this->beginning($value);
+            break;
+            case 'end': $this->ending($value);
+            break;
+            case 'pv': $this->pv = $value;
+            break;
             case 'names': $this->makeNameFilter($value);
         }
     }
@@ -228,8 +230,6 @@ class MyaStats extends MultiMeter
     /**
      * Parses the provided string into an array of names to be used for filtering
      * which items get reported.
-     *
-     * @param $string
      */
     protected function makeNameFilter($string)
     {
@@ -252,7 +252,6 @@ class MyaStats extends MultiMeter
      * The provided name is tested against the name_alias, epics_name, and name
      * fields of the item in that order.
      *
-     * @param $name
      * @return mixed
      */
     protected function findItemByName($name)
@@ -270,7 +269,6 @@ class MyaStats extends MultiMeter
      * Returns a record structure containing data for a single line
      * of report data table.
      *
-     * @param $model
      * @param  string  $label -- specify non-standard label
      * @return object
      */
@@ -286,7 +284,6 @@ class MyaStats extends MultiMeter
     /**
      * Returns a record structure containing data for a line of report data table.
      *
-     * @param $model
      * @param  string  $label -- specify non-standard label
      * @return array
      */
@@ -312,7 +309,6 @@ class MyaStats extends MultiMeter
      *
      * With the exception of label, all values are null.
      *
-     * @param $label
      * @return object
      */
     protected function makeDataPlaceholder($label = 'N/A')
@@ -334,8 +330,6 @@ class MyaStats extends MultiMeter
      * Calculates the quantity between first and last values after checking to ensure that
      * those values are actually set for the .  Returns null when either the first or last values
      *
-     * @param $first
-     * @param $last
      * @return float|null
      */
     public function consumed($first, $last)

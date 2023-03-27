@@ -25,7 +25,6 @@ class MeterController extends Controller
     /**
      * Display a meter
      *
-     * @param  Meter  $meter
      * @return \Illuminate\Contracts\View\View
      */
     public function show(Meter $meter, Request $request)
@@ -57,7 +56,6 @@ class MeterController extends Controller
             case 'water-gpm': return $this->waterStatusGpm();
             case 'gas-ccf': return $this->gasStatusCcf();
             case 'gas-ccfpm': return $this->gasStatusCcfpm();
-
         }
     }
 

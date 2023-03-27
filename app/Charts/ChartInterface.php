@@ -15,7 +15,6 @@ interface ChartInterface
     /**
      * Accepts and applies parameters from an HTTP request.
      *
-     * @param  Request  $request
      * @return mixed
      */
     public function applyRequest(Request $request);

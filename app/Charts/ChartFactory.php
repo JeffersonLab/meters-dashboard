@@ -26,15 +26,23 @@ class ChartFactory
     public static function make($name, DataTableInterface $model, Request $request)
     {
         switch (strtolower($name)) {
-            case 'dailykwh': $chart = new DailyConsumption($model, 'totkWh', 'Daily KwH'); break;
-            case 'dailymbtu': $chart = new DailyConsumption($model, 'totMBTU', 'Daily MBTU'); break;
-            case 'dailygallons': $chart = new DailyConsumption($model, 'gal', 'Daily Gallons'); break;
-            case 'dailyccf': $chart = new DailyConsumption($model, 'ccf', 'Daily CCF'); break;
-            case 'readingskw': $chart = new MeterReadings($model, 'totkw', 'kW Readings'); break;
-            case 'readingsllvolt': $chart = new MeterReadings($model, 'llVolt', 'Voltage Readings'); break;
-            case 'readingsgpm': $chart = new MeterReadings($model, 'galPerMin', 'GPM Readings'); break;
+            case 'dailykwh': $chart = new DailyConsumption($model, 'totkWh', 'Daily KwH');
+            break;
+            case 'dailymbtu': $chart = new DailyConsumption($model, 'totMBTU', 'Daily MBTU');
+            break;
+            case 'dailygallons': $chart = new DailyConsumption($model, 'gal', 'Daily Gallons');
+            break;
+            case 'dailyccf': $chart = new DailyConsumption($model, 'ccf', 'Daily CCF');
+            break;
+            case 'readingskw': $chart = new MeterReadings($model, 'totkw', 'kW Readings');
+            break;
+            case 'readingsllvolt': $chart = new MeterReadings($model, 'llVolt', 'Voltage Readings');
+            break;
+            case 'readingsgpm': $chart = new MeterReadings($model, 'galPerMin', 'GPM Readings');
+            break;
             case 'multimeter': /** @noinspection PhpParamsInspection */
-                $chart = new MultiMeter($model); break;
+                $chart = new MultiMeter($model);
+                break;
             default: $chart = null;
         }
 

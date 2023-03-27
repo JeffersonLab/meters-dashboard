@@ -39,7 +39,6 @@ class MenuServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
         // Listen for menu being built event so that we can inject dynamic items into it.
         Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
             if (! Auth::user()) {
@@ -247,7 +246,6 @@ class MenuServiceProvider extends ServiceProvider
     /**
      * Return array representation of a building menu item.
      *
-     * @param  Building  $building
      * @return array
      */
     public function buildingMenuItem(Building $building)

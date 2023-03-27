@@ -51,7 +51,6 @@ class BuildingController extends Controller
     /**
      * Display a building
      *
-     * @param  Building  $building
      * @return \Illuminate\Contracts\View\View
      */
     public function show(Building $building, Request $request)

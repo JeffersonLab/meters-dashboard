@@ -69,8 +69,6 @@ abstract class TestCase extends BaseTestCase
     /**
      * Ensure that we call delete on all created meters and buildings so that they can
      * remove their associated data table.
-     *
-     * @return void
      */
     protected function tearDown(): void
     {
@@ -89,8 +87,6 @@ abstract class TestCase extends BaseTestCase
      *
      * For example a variable sent to a view.
      *
-     * @param $response
-     * @param $key
      * @return mixed
      */
     protected function getResponseData($response, $key)

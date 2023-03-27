@@ -46,7 +46,6 @@ class MultiMeterDataExport implements FromCollection, WithMapping, WithHeadings,
     /**
      * Is the given row considered empty?
      *
-     * @param $row
      * @return bool
      */
     protected function isEmptyRow($row)
@@ -57,7 +56,6 @@ class MultiMeterDataExport implements FromCollection, WithMapping, WithHeadings,
     /**
      * Generates content for the note column.
      *
-     * @param $row
      * @return string
      */
 //    protected function note($row){
@@ -76,7 +74,6 @@ class MultiMeterDataExport implements FromCollection, WithMapping, WithHeadings,
      * Transform row data.
      *
      * @param  mixed  $row
-     * @return array
      */
     public function map($row): array
     {
@@ -90,8 +87,6 @@ class MultiMeterDataExport implements FromCollection, WithMapping, WithHeadings,
 
     /**
      * Custom column headings.
-     *
-     * @return array
      */
     public function headings(): array
     {
@@ -116,7 +111,6 @@ class MultiMeterDataExport implements FromCollection, WithMapping, WithHeadings,
      * Register handlers to do manipulation of the underlying spreadsheet at
      * different phases of the export cycle.
      *
-     * @return array
      *
      * @see https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/
      * @see https://laraveldaily.com/laravel-excel-export-formatting-and-styling-cells/

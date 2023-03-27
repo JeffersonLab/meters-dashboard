@@ -44,9 +44,6 @@ class SyncMeters extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @param  CEDTypeData  $cedTypeData
-     * @param  CEDElemData  $cedElemData
      */
     public function __construct(CEDTypeData $cedTypeData, CEDElemData $cedElemData)
     {
@@ -76,7 +73,6 @@ class SyncMeters extends Command
      * Uses retrieved data to create Meters that don't yet exist in the database
      * and to update
      *
-     * @param $data
      *
      * @throws \Throwable
      */
@@ -147,8 +143,6 @@ class SyncMeters extends Command
 
     /**
      * Ensures that the building housing the meter is also in the local database.
-     *
-     * @param  Meter  $meter
      */
     public function syncBuilding(Meter $meter)
     {
@@ -173,7 +167,6 @@ class SyncMeters extends Command
      * Obtain building object by its name.
      * Goes to CED if not found in local DB
      *
-     * @param $name
      * @return Building|mixed|null
      */
     protected function getBuilding($name)
@@ -190,7 +183,6 @@ class SyncMeters extends Command
      * Acquires building data from CED and saves it as a local Building object
      * which is then returned.
      *
-     * @param $name
      * @return Building|null
      */
     protected function getBuildingFromCed($name)

@@ -64,8 +64,6 @@ class VirtualMeter extends BaseModel implements DataTableInterface
 
     /**
      * Virtual Meter constructor.
-     *
-     * @param  array  $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -170,8 +168,6 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      * This alternative can allow the creation of ephemeral virtual meters that don't get stored in the
      * database.  A use case would be aggregating a user-defined set of meters to produce a multi-meter
      * report or chart.
-     *
-     * @param  Collection  $meters
      */
     public function setMeters(Collection $meters)
     {
@@ -189,9 +185,6 @@ class VirtualMeter extends BaseModel implements DataTableInterface
         return $this->meters()->pluck('id')->toArray();
     }
 
-    /**
-     * @return DataTableReporter
-     */
     public function reporter(): DataTableReporter
     {
         if (! $this->reporter) {
@@ -203,8 +196,6 @@ class VirtualMeter extends BaseModel implements DataTableInterface
 
     /**
      * The name of the table where meter data points are stored.
-     *
-     * @return string
      */
     public function tableName(): string
     {
@@ -213,8 +204,6 @@ class VirtualMeter extends BaseModel implements DataTableInterface
 
     /**
      * Returns a Query Builder for the appropriate data table.
-     *
-     * @return Builder
      */
     public function dataTable(): Builder
     {
@@ -228,8 +217,6 @@ class VirtualMeter extends BaseModel implements DataTableInterface
 
     /**
      * Answer whether the data table has any rows for the current object.
-     *
-     * @return bool
      */
     public function hasData(): bool
     {

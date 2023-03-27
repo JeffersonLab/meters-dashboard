@@ -100,10 +100,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
 
     /**
      * The sum of the gallons through the building's water supply meters.
-     *
-     * @param  Carbon  $fromDate
-     * @param  Carbon  $toDate
-     * @return float
      */
     public function waterConsumption(Carbon $fromDate, Carbon $toDate): float
     {
@@ -117,10 +113,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
 
     /**
      * The sum of the gallons through the building's water drain meters.
-     *
-     * @param  Carbon  $fromDate
-     * @param  Carbon  $toDate
-     * @return float
      */
     public function waterToSewer(Carbon $fromDate, Carbon $toDate): float
     {
@@ -135,8 +127,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
     /**
      * The sum of the gallons through the building's water drain meters.
      *
-     * @param  Carbon  $fromDate
-     * @param  Carbon  $toDate
      * @return float|null
      */
     public function waterToEvaporation(Carbon $fromDate, Carbon $toDate): float
@@ -147,8 +137,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
     /**
      * The sum of the gallons through the building's water drain meters.
      *
-     * @param  Carbon  $fromDate
-     * @param  Carbon  $toDate
      * @return float|null
      *
      * @throws ReportingException
@@ -178,8 +166,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
 
     /**
      * The name of the table where meter data points are stored.
-     *
-     * @return string
      */
     public function tableName(): string
     {
@@ -273,8 +259,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
      * This function will return the master list of possible fields.
      * Use pvFields() to limit the list based on the type of meters
      * actively associated with the building.
-     *
-     * @return array
      */
     public function dbFields(): array
     {
@@ -296,9 +280,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
      * Buildings can have a mix of power, water, and gas readings.
      * This function will only return a list of fields relevant to
      * the types of meters associated with the building.
-     *
-     *
-     * @return array
      */
     public function pvFields(): array
     {

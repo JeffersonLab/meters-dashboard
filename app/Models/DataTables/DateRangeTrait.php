@@ -12,14 +12,8 @@ use Carbon\Carbon;
 
 trait DateRangeTrait
 {
-    /**
-     * @var
-     */
     protected $begins_at;  // earliest data of range
 
-    /**
-     * @var
-     */
     protected $ends_at;    // latest data of range
 
     /**

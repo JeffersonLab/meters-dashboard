@@ -24,8 +24,6 @@ class DataTableReporter
 
     /**
      * DataTableReporter constructor.
-     *
-     * @param  DataTableInterface  $meter
      */
     public function __construct(DataTableInterface $meter)
     {
@@ -34,7 +32,6 @@ class DataTableReporter
     }
 
     /**
-     * @param $var
      * @return mixed
      *
      * @throws \Exception
@@ -54,7 +51,6 @@ class DataTableReporter
      * collection of label/value objects
      * where the values are the differences between successive items.
      *
-     * @param $data
      * @return Collection
      */
     public function intervalDifferences($data)
@@ -113,7 +109,6 @@ class DataTableReporter
      * The value is computed as the difference between the first and last values of
      * the PV property on the given day.
      *
-     * @param $pv
      * @return Collection
      */
     public function dailyPv($pv)
@@ -127,7 +122,6 @@ class DataTableReporter
      * Returns the available readings for a PV within the current date range.
      *
      *
-     * @param $pv
      * @return Collection of {label, value} objects
      */
     public function pvReadings($pv)
@@ -227,8 +221,6 @@ class DataTableReporter
      * Returns a collection of items from the source that fall on the
      * specified day.
      *
-     * @param  Collection  $collection
-     * @param  Carbon  $date
      * @return Collection
      */
     public function dataForDay(Collection $collection, Carbon $date)
@@ -254,7 +246,6 @@ class DataTableReporter
      * returns a collection containing x and y where x is a javascript timestamp integer
      * and y is the value.
      *
-     * @param $data
      * @return \Illuminate\Support\Collection
      */
     public function canvasTimeSeries(Collection $data)
