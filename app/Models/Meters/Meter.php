@@ -227,7 +227,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      *
      * @throws \Exception
      */
-    protected function applyRollover($field, $accumulatedRollover, Carbon $fromDate, Carbon $toDate)
+    protected function applyRollover(string $field, float $accumulatedRollover, Carbon $fromDate, Carbon $toDate)
     {
         $updated = $this->dataTable()->select('*')
             ->where('meter_id', $this->id)
@@ -269,7 +269,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * @param  mixed  $value numeric value
      * @return bool
      */
-    public function withinLimits($field, $value)
+    public function withinLimits(string $field, $value): bool
     {
         if (! $this->hasMeterLimits($field)) {
             return true;
@@ -327,7 +327,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      *
      * @return array
      */
-    public static function allPvFields()
+    public static function allPvFields(): array
     {
         $fields = [];
         $types = array_keys(config('meters.pvs'));
@@ -396,7 +396,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * @param  string  $field
      * @return int
      */
-    public function accumulatedRollover($field)
+    public function accumulatedRollover(string $field): int
     {
         if ($this->lastRolloverEvent($field)) {
             return $this->lastRolloverEvent($field)->rollover_accumulated;
@@ -485,7 +485,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      *
      * @throws \Exception
      */
-    public function firstDataQuery($field = null)
+    public function firstDataQuery($field = null): Builder
     {
         // base query
         $query = $this->baseFirstOrLastQuery(false);
@@ -506,7 +506,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      *
      * @throws \Exception
      */
-    public function lastDataQuery($field = null)
+    public function lastDataQuery($field = null): Builder
     {
         $query = $this->baseFirstOrLastQuery(true);
         if ($field) {
@@ -523,7 +523,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      *
      * @throws \Exception
      */
-    protected function baseFirstOrLastQuery($last = false)
+    protected function baseFirstOrLastQuery($last = false): Builder
     {
         $query = $this->dataTable()
             ->select('date')
@@ -668,7 +668,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      *
      * @throws \Exception
      */
-    public function updateDataTable(Carbon $begin, $fields = [])
+    public function updateDataTable(Carbon $begin, array $fields = []): int
     {
         // Default to updating all channels
         if (empty($fields)) {
@@ -705,7 +705,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      *
      * @return array
      */
-    protected function makeChannels(array $fields)
+    protected function makeChannels(array $fields): array
     {
         $channels = [];
         foreach ($fields as $field) {
@@ -723,7 +723,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      *
      * @return array
      */
-    public function channels()
+    public function channels(): array
     {
         return $this->makeChannels($this->pvFields());
     }
@@ -759,7 +759,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * @param $item - element of array returned by MySampler
      * @return array
      */
-    protected function columnsFromMySampler($item)
+    protected function columnsFromMySampler($item): array
     {
         $columns = ['meter_id' => $this->id];
         foreach ($item as $key => $value) {

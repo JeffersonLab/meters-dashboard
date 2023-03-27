@@ -2,6 +2,7 @@
 
 namespace App\Charts;
 
+use Carbon\Carbon;
 use App\Models\DataTables\DateRangeTrait;
 use App\Models\Meters\VirtualMeter;
 use Illuminate\Http\Request;
@@ -95,7 +96,7 @@ class MultiMeter implements ChartInterface
      *
      * @throws \Exception
      */
-    public function chartData()
+    public function chartData(): array
     {
         $data = [];
         foreach ($this->virtualMeter->meters() as $meter) {
@@ -126,7 +127,7 @@ class MultiMeter implements ChartInterface
      *
      * @throws \Exception
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'title' => [
@@ -152,7 +153,7 @@ class MultiMeter implements ChartInterface
      *
      * @throws \Exception
      */
-    public function toJson()
+    public function toJson(): string
     {
         return json_encode($this->toArray());
     }
@@ -162,7 +163,7 @@ class MultiMeter implements ChartInterface
      *
      * @return string
      */
-    public function pv()
+    public function pv(): string
     {
         return $this->pv;
     }
@@ -172,7 +173,7 @@ class MultiMeter implements ChartInterface
      *
      * @return \Carbon\Carbon
      */
-    public function beginsAt()
+    public function beginsAt(): Carbon
     {
         return $this->begins_at;
     }
@@ -182,7 +183,7 @@ class MultiMeter implements ChartInterface
      *
      * @return \Carbon\Carbon
      */
-    public function endsAt()
+    public function endsAt(): Carbon
     {
         return $this->ends_at;
     }

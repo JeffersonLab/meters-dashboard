@@ -66,7 +66,7 @@ class FacilitiesClimateData extends ClimateData
      *
      * @throws \Exception
      */
-    public function httpGet()
+    public function httpGet(): ?array
     {
         $response = $this->webClient->get($this->url(), [
             'timeout' => 3, // Response timeout

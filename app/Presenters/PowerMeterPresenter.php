@@ -13,7 +13,7 @@ class PowerMeterPresenter extends MeterPresenter
     /**
      * @return string
      */
-    public function defaultChart()
+    public function defaultChart(): string
     {
         return 'dailykwh';
     }

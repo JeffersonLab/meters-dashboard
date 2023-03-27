@@ -37,7 +37,7 @@ class CoolingTowerConsumption extends Consumption
      *
      * @return void
      */
-    protected function updateItems()
+    protected function updateItems(): void
     {
         $this->items = Building::whereIn('name', $this->nameFilter)
             ->with('meters')->get()
@@ -57,7 +57,7 @@ class CoolingTowerConsumption extends Consumption
      * @param  Meter  $model
      * @return object
      */
-    protected function makeDataItem($model)
+    protected function makeDataItem(Meter $model): object
     {
         $dataItem = [
             'building' => $model,

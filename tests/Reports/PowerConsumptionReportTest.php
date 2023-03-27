@@ -26,7 +26,7 @@ class PowerConsumptionReportTest extends TestCase
         }
     }
 
-    public function test_it_sets_day_start_hour()
+    public function test_it_sets_day_start_hour(): void
     {
         Config::set('reports.day_start_hour', 8);
         $r = new PowerConsumption();
@@ -37,7 +37,7 @@ class PowerConsumptionReportTest extends TestCase
         $this->assertEquals(0, $r->begins_at->hour);
     }
 
-    public function test_it_reports_using_correct_default_start_hour()
+    public function test_it_reports_using_correct_default_start_hour(): void
     {
         Config::set('reports.day_start_hour', 8);
         $report = new PowerConsumption();
@@ -53,7 +53,7 @@ class PowerConsumptionReportTest extends TestCase
         $this->assertEquals(1110, $item->consumed);
     }
 
-    public function test_it_reports_using_explicit_day_start_hour()
+    public function test_it_reports_using_explicit_day_start_hour(): void
     {
         // Let's test midnight to midnight reporting
         Config::set('reports.day_start_hour', 0);

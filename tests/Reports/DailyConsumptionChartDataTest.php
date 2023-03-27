@@ -50,7 +50,7 @@ class DailyConsumptionChartDataTest extends TestCase
         }
     }
 
-    public function test_it_returns_correct_chart_data_for_meter()
+    public function test_it_returns_correct_chart_data_for_meter(): void
     {
         $chart = new DailyConsumption($this->meter, 'totkWh');
 
@@ -84,7 +84,7 @@ class DailyConsumptionChartDataTest extends TestCase
         $this->assertEquals(360, $data->first()->y);
     }
 
-    public function test_it_returns_correct_chart_data_for_building()
+    public function test_it_returns_correct_chart_data_for_building(): void
     {
         $chart = new DailyConsumption($this->building, 'totkWh');
 

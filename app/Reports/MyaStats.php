@@ -96,7 +96,7 @@ class MyaStats extends MultiMeter
      *
      * @return $this
      */
-    public function applyRequest(Request $request)
+    public function applyRequest(Request $request): static
     {
         parent::applyRequest($request);
 
@@ -134,7 +134,7 @@ class MyaStats extends MultiMeter
      * @param  string  $filterName
      * @param  string  $value
      */
-    public function applyNamedFilter($filterName, $value)
+    public function applyNamedFilter(string $filterName, string $value)
     {
         switch ($filterName) {
             case 'start': $this->beginning($value);
@@ -152,7 +152,7 @@ class MyaStats extends MultiMeter
      *
      * @return Collection
      */
-    public function view()
+    public function view(): Collection
     {
         return view('reports.mya_stats')
             ->with('report', $this);
@@ -163,7 +163,7 @@ class MyaStats extends MultiMeter
      *
      * @return string
      */
-    public function names()
+    public function names(): string
     {
         return implode(',', $this->nameFilter);
     }
@@ -173,7 +173,7 @@ class MyaStats extends MultiMeter
      *
      * @return string
      */
-    public function title()
+    public function title(): string
     {
         return $this->title;
     }
@@ -183,7 +183,7 @@ class MyaStats extends MultiMeter
      *
      * @return string
      */
-    public function description()
+    public function description(): string
     {
         return $this->description;
     }
@@ -203,7 +203,7 @@ class MyaStats extends MultiMeter
      *
      * @return Collection
      */
-    public function data()
+    public function data(): Collection
     {
         return $this->allData();
     }
@@ -213,7 +213,7 @@ class MyaStats extends MultiMeter
      *
      * @return Collection
      */
-    public function allData()
+    public function allData(): Collection
     {
         $data = new Collection();
         foreach ($this->items as $item) {
@@ -241,7 +241,7 @@ class MyaStats extends MultiMeter
      *
      * @return bool
      */
-    protected function hasFilters()
+    protected function hasFilters(): bool
     {
         return ! empty($this->nameFilter);
     }
@@ -272,7 +272,7 @@ class MyaStats extends MultiMeter
      * @param  string  $label -- specify non-standard label
      * @return object
      */
-    protected function makeDataItem($model, $label = '')
+    protected function makeDataItem($model, string $label = ''): object
     {
         // Not much to do right now but we expact to have to add
         // fields to the data item later.
@@ -287,7 +287,7 @@ class MyaStats extends MultiMeter
      * @param  string  $label -- specify non-standard label
      * @return array
      */
-    protected function makeDataItems($model, $label = '')
+    protected function makeDataItems($model, string $label = ''): array
     {
         if (is_array($model->output)) {
             $items = [];
@@ -311,7 +311,7 @@ class MyaStats extends MultiMeter
      *
      * @return object
      */
-    protected function makeDataPlaceholder($label = 'N/A')
+    protected function makeDataPlaceholder($label = 'N/A'): object
     {
         $placeHolder = [
             'start' => null,
@@ -332,7 +332,7 @@ class MyaStats extends MultiMeter
      *
      * @return float|null
      */
-    public function consumed($first, $last)
+    public function consumed($first, $last): ?float
     {
         if (isset($first->{$this->pv}) && isset($last->{$this->pv})) {
             return round($last->{$this->pv} - $first->{$this->pv}, 1);
@@ -349,7 +349,7 @@ class MyaStats extends MultiMeter
      * @param  object  $last {date}
      * @return bool
      */
-    public function isComplete($first, $last)
+    public function isComplete(object $first, object $last): bool
     {
         if (isset($first->date) && isset($last->date)) {
             $beginMatches = (strtotime($first->date) === $this->begins_at->timestamp);
@@ -371,7 +371,7 @@ class MyaStats extends MultiMeter
      *
      * @return bool
      */
-    public function hasExcel()
+    public function hasExcel(): bool
     {
         return true;
     }

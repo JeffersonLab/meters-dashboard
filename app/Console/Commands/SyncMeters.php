@@ -57,7 +57,7 @@ class SyncMeters extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         try {
             $this->cedTypeData->type = 'Meter';
@@ -185,7 +185,7 @@ class SyncMeters extends Command
      *
      * @return Building|null
      */
-    protected function getBuildingFromCed($name)
+    protected function getBuildingFromCed($name): ?Building
     {
         $this->cedElemData->elem = $name;
         $item = $this->cedElemData->getData();

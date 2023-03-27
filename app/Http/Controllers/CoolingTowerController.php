@@ -29,7 +29,7 @@ class CoolingTowerController extends Controller
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function show(Building $building, Request $request)
+    public function show(Building $building, Request $request): \Illuminate\View\View
     {
         JavaScript::put([
             'currentApiUrl' => route('buildings.chart_data'),
@@ -45,7 +45,7 @@ class CoolingTowerController extends Controller
             ->with('building', $building);
     }
 
-    public function substationSummary()
+    public function substationSummary(): \Illuminate\View\View
     {
         return view('buildings.substation_summary');
     }

@@ -88,7 +88,7 @@ class DataTableModifier
      * @param  string  $tableName
      * @param  string  $type (gas, power, water)
      */
-    protected function addMeterColumns($tableName, $type)
+    protected function addMeterColumns(string $tableName, string $type)
     {
         // TODO strip out unnecessary columns?
         $this->schema->table($tableName, function ($table) use ($type) {

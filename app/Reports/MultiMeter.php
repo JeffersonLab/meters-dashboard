@@ -82,7 +82,7 @@ class MultiMeter implements ReportInterface
      *
      * @return View
      */
-    public function view()
+    public function view(): View
     {
         JavaScript::put([
             'currentApiUrl' => route('reports.chart_data'),
@@ -157,7 +157,7 @@ class MultiMeter implements ReportInterface
     /**
      * @return \Illuminate\Support\Collection
      */
-    public function data()
+    public function data(): Collection
     {
         if ($this->virtualMeter->hasMeters()) {
             return $this->virtualMeter->dataTable()

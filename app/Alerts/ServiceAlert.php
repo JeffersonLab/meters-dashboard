@@ -83,7 +83,7 @@ class ServiceAlert implements AlertInterface
      * @param  int  $nagiosTime
      * @return int
      */
-    public function unixTime($nagiosTime)
+    public function unixTime(int $nagiosTime): int
     {
         return intval($nagiosTime / 1000);
     }

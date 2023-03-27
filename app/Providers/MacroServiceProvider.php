@@ -11,7 +11,7 @@ class MacroServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }
@@ -21,7 +21,7 @@ class MacroServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         foreach (glob(base_path().'/resources/macros/*.php') as $macroFile) {
             require_once $macroFile;

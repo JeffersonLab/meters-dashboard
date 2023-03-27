@@ -39,7 +39,7 @@ class ReportControllerTest extends TestCase
         $this->fillMeterWithData($this->meter2, 10, 25);
     }
 
-    public function test_show()
+    public function test_show(): void
     {
 //        dd(config('reports.day_start_hour'));
         $start = Carbon::today()->subDays(5)->format('Y-m-d');

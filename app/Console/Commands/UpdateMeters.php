@@ -57,7 +57,7 @@ class UpdateMeters extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): int
     {
         if ($this->option('meter') && $this->option('type')) {
             $this->error('Please specify either meter OR type, not both!');

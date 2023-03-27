@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('virtual_meter_meters', function (Blueprint $table) {
             $table->unsignedInteger('virtual_meter_id');
@@ -35,7 +35,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('virtual_meter_meters');
     }

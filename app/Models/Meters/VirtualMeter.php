@@ -8,6 +8,7 @@
 
 namespace App\Models\Meters;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\BaseModel;
 use App\Models\DataTables\DataTableInterface;
 use App\Models\DataTables\DataTableReporter;
@@ -78,7 +79,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * @return \Illuminate\Support\Collection
      */
-    public function meters()
+    public function meters(): Collection
     {
         if ($this->meters->isEmpty()) {
             $this->setMeters($this->physicalMeters()->get());
@@ -92,7 +93,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * @return bool
      */
-    public function hasMeters()
+    public function hasMeters(): bool
     {
         if ($this->meters && $this->meters->isNotEmpty()) {
             return true;
@@ -106,7 +107,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function physicalMeters()
+    public function physicalMeters(): BelongsToMany
     {
         return $this->belongsToMany(Meter::class, 'virtual_meter_meters',
             'virtual_meter_id', 'meter_id');
@@ -134,7 +135,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * @return string
      */
-    public function name()
+    public function name(): string
     {
         if (isset($this->attributes['name'])) {
             return $this->attributes['name'];
@@ -180,7 +181,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
      *
      * @return array
      */
-    public function meterIds()
+    public function meterIds(): array
     {
         return $this->meters()->pluck('id')->toArray();
     }

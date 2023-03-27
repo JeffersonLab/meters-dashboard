@@ -38,7 +38,7 @@ class ConvertData extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         $status = 0;
         $status += $this->convert(Building::all());

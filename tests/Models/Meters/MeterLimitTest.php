@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class MeterLimitTest extends TestCase
 {
-    public function test_it_rejects_hihi_less_than_lolo()
+    public function test_it_rejects_hihi_less_than_lolo(): void
     {
         $meter = Meter::factory()->create(['type' => 'water', 'name' => 'm1', 'epics_name' => 'en1']);
         $limit = new MeterLimit([
@@ -22,7 +22,7 @@ class MeterLimitTest extends TestCase
         $this->assertFalse($limit->save());
     }
 
-    public function test_it_rejects_high_less_than_low()
+    public function test_it_rejects_high_less_than_low(): void
     {
         $meter = Meter::factory()->create(['type' => 'water', 'name' => 'm1', 'epics_name' => 'en1']);
         $limit = new MeterLimit([
@@ -36,7 +36,7 @@ class MeterLimitTest extends TestCase
         $this->assertFalse($limit->save());
     }
 
-    public function test_it_works_with_only_major()
+    public function test_it_works_with_only_major(): void
     {
         $meter = Meter::factory()->create(['type' => 'water', 'name' => 'm1', 'epics_name' => 'en1']);
         $limit = new MeterLimit([
@@ -66,7 +66,7 @@ class MeterLimitTest extends TestCase
         $this->assertTrue($limit->isTooLow(0));  //exceeds minor
     }
 
-    public function test_it_works_with_minor_and_major()
+    public function test_it_works_with_minor_and_major(): void
     {
         $meter = Meter::factory()->create(['type' => 'water', 'name' => 'm1', 'epics_name' => 'en1']);
         $limit = new MeterLimit([

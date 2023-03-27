@@ -25,7 +25,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         return View::make('reports.index');
     }
@@ -36,7 +36,7 @@ class ReportController extends Controller
      * @param  string  $name - the name of the report to return
      * @return Application|Factory|\Illuminate\Contracts\View\View|Collection|\Illuminate\View\View
      */
-    public function show($name, Request $request)
+    public function show(string $name, Request $request)
     {
         $report = ReportFactory::make($name, $request);
         $view = $report->view();
@@ -85,7 +85,7 @@ class ReportController extends Controller
     /**
      * @return Collection
      */
-    protected function buildingData(Collection $buildings)
+    protected function buildingData(Collection $buildings): Collection
     {
         return $buildings->map(function ($item) {
             return [
@@ -107,7 +107,7 @@ class ReportController extends Controller
      *
      * @throws \Exception
      */
-    public function excel($name, Request $request)
+    public function excel(string $name, Request $request): BinaryFileResponse
     {
         $report = ReportFactory::make($name, $request);
         if ($report->hasExcel()) {

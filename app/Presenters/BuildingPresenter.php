@@ -68,7 +68,7 @@ class BuildingPresenter extends Presenter implements BoxInterface
      *
      * @return array
      */
-    public function infoBoxItems()
+    public function infoBoxItems(): array
     {
         return [
             'Abbreviation' => $this->abbreviation,
@@ -95,7 +95,7 @@ class BuildingPresenter extends Presenter implements BoxInterface
     /**
      * @return DailyKWH
      */
-    public function defaultChart()
+    public function defaultChart(): DailyKWH
     {
         return 'dailykwh';
     }

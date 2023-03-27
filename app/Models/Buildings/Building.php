@@ -220,7 +220,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
      * @param $item - element of array returned by MySampler
      * @return array
      */
-    protected function columnsFromMySampler($item)
+    protected function columnsFromMySampler($item): array
     {
         $columns = ['building_id' => $this->id];
         foreach ($item as $key => $value) {

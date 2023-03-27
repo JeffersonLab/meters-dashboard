@@ -11,7 +11,7 @@ trait SyncTrait
      * @param  string  $property
      * @return mixed
      */
-    protected function propertyFromItem($item, $property)
+    protected function propertyFromItem(object $item, string $property)
     {
         if (isset($item->properties) && isset($item->properties->$property)) {
             return $item->properties->$property;

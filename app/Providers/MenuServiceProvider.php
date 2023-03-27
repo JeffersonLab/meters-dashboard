@@ -27,7 +27,7 @@ class MenuServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }
@@ -37,7 +37,7 @@ class MenuServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         // Listen for menu being built event so that we can inject dynamic items into it.
         Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
@@ -234,7 +234,7 @@ class MenuServiceProvider extends ServiceProvider
      * @param  Building  $substation - substations are a type of building
      * @return array
      */
-    public function substationMenuItem(Building $substation)
+    public function substationMenuItem(Building $substation): array
     {
         return [
             'text' => $substation->name,
@@ -248,7 +248,7 @@ class MenuServiceProvider extends ServiceProvider
      *
      * @return array
      */
-    public function buildingMenuItem(Building $building)
+    public function buildingMenuItem(Building $building): array
     {
         return [
             'text' => $building->getPresenter()->menuLabel(),
@@ -263,7 +263,7 @@ class MenuServiceProvider extends ServiceProvider
      * @param  Building  $tower - substations are a type of building
      * @return array
      */
-    public function coolingTowerMenuItem(Building $tower)
+    public function coolingTowerMenuItem(Building $tower): array
     {
         return [
             'text' => $tower->name,

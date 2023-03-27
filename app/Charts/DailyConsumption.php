@@ -34,7 +34,7 @@ class DailyConsumption implements ChartInterface
      * @param  string  $pv
      * @param  string  $title (optional)
      */
-    public function __construct(DataTableInterface $model, $pv, $title = null)
+    public function __construct(DataTableInterface $model, string $pv, string $title = null)
     {
         $this->model = $model;
         $this->reporter = $model->reporter();
@@ -85,7 +85,7 @@ class DailyConsumption implements ChartInterface
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'title' => [
@@ -107,7 +107,7 @@ class DailyConsumption implements ChartInterface
      *
      * @return string
      */
-    public function toJson()
+    public function toJson(): string
     {
         return json_encode($this->toArray());
     }

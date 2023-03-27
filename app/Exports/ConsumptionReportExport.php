@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Illuminate\Support\Collection;
 use App\Reports\Consumption as ConsumptionReport;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -48,7 +49,7 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
      *
      * @return bool
      */
-    protected function isEmptyRow($row)
+    protected function isEmptyRow($row): bool
     {
         return ! (isset($row->first) && isset($row->last));
     }
@@ -58,7 +59,7 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
      *
      * @return string
      */
-    protected function note($row)
+    protected function note($row): string
     {
         if ($this->isEmptyRow($row)) {
             return 'N/A';
@@ -109,7 +110,7 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
      *
      * @return \Illuminate\Support\Collection
      */
-    public function collection()
+    public function collection(): Collection
     {
         return $this->report->data();
     }

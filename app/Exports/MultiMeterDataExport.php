@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Illuminate\Support\Collection;
 use App\Reports\Consumption as ConsumptionReport;
 use App\Reports\MultiMeter;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -48,7 +49,7 @@ class MultiMeterDataExport implements FromCollection, WithMapping, WithHeadings,
      *
      * @return bool
      */
-    protected function isEmptyRow($row)
+    protected function isEmptyRow($row): bool
     {
         return empty($row);
     }
@@ -102,7 +103,7 @@ class MultiMeterDataExport implements FromCollection, WithMapping, WithHeadings,
      *
      * @return \Illuminate\Support\Collection
      */
-    public function collection()
+    public function collection(): Collection
     {
         return $this->report->data();
     }

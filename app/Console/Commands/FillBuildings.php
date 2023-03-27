@@ -28,7 +28,7 @@ class FillBuildings extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): int
     {
         $existing = Building::all();
         foreach ($existing as $building) {
@@ -57,7 +57,7 @@ class FillBuildings extends Command
      *
      * @throws \App\Exceptions\DataConversionException
      */
-    protected function addGasMeterColumns($building)
+    protected function addGasMeterColumns(Building $building)
     {
         $modifier = new DataTableModifier($building);
         $modifier->addGasMeterColumns();

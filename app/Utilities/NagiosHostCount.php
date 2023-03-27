@@ -64,7 +64,7 @@ class NagiosHostCount extends NagiosData
      *
      * @return array
      */
-    public function query()
+    public function query(): array
     {
         //?query=hostlist&formatoptions=whitespace+enumerate+bitmask+duration&hoststatus=up+down+unreachable';
         return [

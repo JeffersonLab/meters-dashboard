@@ -44,7 +44,7 @@ trait MySamplerTrait
      * @param  array  $data
      * @return array
      */
-    abstract public function organize($data);
+    abstract public function organize(array $data);
 
     /**
      * Initialize a webClient that will interact with web-based
@@ -54,7 +54,7 @@ trait MySamplerTrait
      * @param  bool  $verifyCerts
      * @return void
      */
-    public function initWebClient($baseUri, $verifyCerts = true)
+    public function initWebClient(string $baseUri, bool $verifyCerts = true): void
     {
         $this->webClient = new Client([
             'base_uri' => $baseUri,
@@ -68,7 +68,7 @@ trait MySamplerTrait
      *
      * @return int
      */
-    public function calcNumSteps()
+    public function calcNumSteps(): int
     {
         $seconds = Carbon::now()->diffInSeconds($this->begin);
 
@@ -97,7 +97,7 @@ trait MySamplerTrait
      *
      * @throws WebClientException
      */
-    public function getData()
+    public function getData(): Collection
     {
         $data = $this->httpGet($this->query());
 

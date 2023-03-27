@@ -63,7 +63,7 @@ class WeatherUndergroundData implements DataFetchContract
      *
      * @return array
      */
-    public function query()
+    public function query(): array
     {
         return [];  // The base URL suffices - for now.
     }
@@ -75,7 +75,7 @@ class WeatherUndergroundData implements DataFetchContract
      *
      * @throws \Exception
      */
-    public function httpGet()
+    public function httpGet(): ?array
     {
         try {
             $response = $this->webClient->get('yesterday/q/KPHF.json', [

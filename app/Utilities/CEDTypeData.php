@@ -41,7 +41,7 @@ class CEDTypeData extends CEDData
      *
      * @return array
      */
-    public function query()
+    public function query(): array
     {
         return [
             'wrkspc' => $this->workspace,

@@ -43,7 +43,7 @@ trait DateRangeTrait
      * @param  string  $date
      * @return static
      */
-    public function beginning($date)
+    public function beginning(string $date): static
     {
         $this->begins_at = Carbon::parse($date);
 
@@ -77,7 +77,7 @@ trait DateRangeTrait
      * @param  string  $date
      * @return static
      */
-    public function ending($date)
+    public function ending(string $date): static
     {
         $this->ends_at = Carbon::parse($date);
 
@@ -88,7 +88,7 @@ trait DateRangeTrait
      * @param  string  $format
      * @return string
      */
-    public function beginsAt($format = null)
+    public function beginsAt(string $format = null): string
     {
         if ($format === null) {
             if (0 == $this->begins_at->hour && 0 == $this->begins_at->minute) {
@@ -105,7 +105,7 @@ trait DateRangeTrait
      * @param  string  $format
      * @return string
      */
-    public function endsAt($format = null)
+    public function endsAt(string $format = null): string
     {
         if ($format === null) {
             if (0 == $this->ends_at->hour && 0 == $this->ends_at->minute) {

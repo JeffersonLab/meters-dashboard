@@ -8,6 +8,7 @@
 
 namespace App\Models\DataTables;
 
+use Illuminate\Database\Query\Builder;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
@@ -53,7 +54,7 @@ class DataTableReporter
      *
      * @return Collection
      */
-    public function intervalDifferences($data)
+    public function intervalDifferences($data): Collection
     {
         $previous = null;
         $dataSeries = new Collection();
@@ -79,7 +80,7 @@ class DataTableReporter
      * @param  int  $rollover odometer limit
      * @return int
      */
-    public function odometerDifference($x, $y, $rollover = 1000000)
+    public function odometerDifference(int $x, int $y, int $rollover = 1000000): int
     {
         // Can't do math on null values!
         if ($x === null || $y === null) {
@@ -111,7 +112,7 @@ class DataTableReporter
      *
      * @return Collection
      */
-    public function dailyPv($pv)
+    public function dailyPv($pv): Collection
     {
         $data = $this->dateRangeQuery()->get(['date', "$pv as value"]);
 
@@ -124,7 +125,7 @@ class DataTableReporter
      *
      * @return Collection of {label, value} objects
      */
-    public function pvReadings($pv)
+    public function pvReadings($pv): Collection
     {
         $data = $this->dateRangeQuery()->get(['date as label', "$pv as value"]);
 
@@ -137,7 +138,7 @@ class DataTableReporter
      *
      * @return \Illuminate\Database\Query\Builder
      */
-    public function dateRangeQuery($direction = 'asc')
+    public function dateRangeQuery($direction = 'asc'): Builder
     {
         return $this->model->dataTable()
             ->where($this->dataTableFk, '=', $this->model->id)
@@ -171,7 +172,7 @@ class DataTableReporter
      * @param  Collection  $data {date, value} objects
      * @return Collection of objects {label, value}
      */
-    public function dailyDifferences(Collection $data)
+    public function dailyDifferences(Collection $data): Collection
     {
         $begin = Carbon::create($this->begins_at->year, $this->begins_at->month, $this->begins_at->day);
         $end = Carbon::create($this->ends_at->year, $this->ends_at->month, $this->ends_at->day);
@@ -223,7 +224,7 @@ class DataTableReporter
      *
      * @return Collection
      */
-    public function dataForDay(Collection $collection, Carbon $date)
+    public function dataForDay(Collection $collection, Carbon $date): Collection
     {
         return $collection->filter(function ($value) use ($date) {
             return date('Y-m-d', strtotime($value->date)) == $date->format('Y-m-d');
@@ -236,7 +237,7 @@ class DataTableReporter
      * @param  string  $pv
      * @return Collection
      */
-    public function maxPv($pv)
+    public function maxPv(string $pv): Collection
     {
         return $this->dateRangeQuery()->max($pv);
     }
@@ -248,7 +249,7 @@ class DataTableReporter
      *
      * @return \Illuminate\Support\Collection
      */
-    public function canvasTimeSeries(Collection $data)
+    public function canvasTimeSeries(Collection $data): Collection
     {
         return $data->map(function ($item) {
             return (object) [
@@ -265,7 +266,7 @@ class DataTableReporter
      * @param  string  $val
      * @return float|int
      */
-    public function number($val)
+    public function number(string $val)
     {
         if ((int) $val === (float) $val) {
             return (int) $val;

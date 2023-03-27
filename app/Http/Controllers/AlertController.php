@@ -15,7 +15,7 @@ class AlertController extends Controller
      *
      * @return Response
      */
-    public function index(NagiosHostlist $hostlist, NagiosServicelist $servicelist)
+    public function index(NagiosHostlist $hostlist, NagiosServicelist $servicelist): Response
     {
         try {
             $serviceAlertRepository = new ServiceAlertRepository($servicelist);

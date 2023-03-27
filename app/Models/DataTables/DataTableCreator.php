@@ -44,7 +44,7 @@ class DataTableCreator
      *
      * @return void
      */
-    public function createTable()
+    public function createTable(): void
     {
         $this->assertTableDoesNotExist($this->model->tableName());
         $this->schema->create($this->model->tableName(), function ($table) {
@@ -116,7 +116,7 @@ class DataTableCreator
      *
      * @return string|null
      */
-    public function oldTableName()
+    public function oldTableName(): ?string
     {
         if ($this->model instanceof Building) {
             return 'building_data';
@@ -140,7 +140,7 @@ class DataTableCreator
      *
      * @return void
      */
-    public function migrateData()
+    public function migrateData(): void
     {
         $sql = sprintf('insert into %s (%s) select %s from %s where %s = %s',
             $this->model->tableName(),
@@ -158,7 +158,7 @@ class DataTableCreator
      *
      * @return void
      */
-    public function dropTable()
+    public function dropTable(): void
     {
         $this->schema->dropIfExists($this->model->tableName());
     }

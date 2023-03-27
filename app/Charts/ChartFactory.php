@@ -23,7 +23,7 @@ class ChartFactory
      *
      * @throws \Exception
      */
-    public static function make($name, DataTableInterface $model, Request $request)
+    public static function make(string $name, DataTableInterface $model, Request $request): ChartInterface
     {
         switch (strtolower($name)) {
             case 'dailykwh': $chart = new DailyConsumption($model, 'totkWh', 'Daily KwH');

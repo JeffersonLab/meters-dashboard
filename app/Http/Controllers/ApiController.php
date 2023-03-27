@@ -121,7 +121,7 @@ class ApiController extends Controller
      * @param  int  $code
      * @return mixed
      */
-    public function error($msg, $code = 404)
+    public function error(string $msg, int $code = 404)
     {
         $struct['status'] = 'fail';
         $struct['message'] = $msg;

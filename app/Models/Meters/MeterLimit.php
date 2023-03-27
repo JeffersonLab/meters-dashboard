@@ -96,7 +96,7 @@ class MeterLimit extends BaseModel
      *
      * @return bool
      */
-    public function hasMinorLimits()
+    public function hasMinorLimits(): bool
     {
         return $this->hasLowerLimitMinor() && $this->hasUpperLimitMinor();
     }
@@ -106,7 +106,7 @@ class MeterLimit extends BaseModel
      *
      * @return bool
      */
-    public function hasMajorLimits()
+    public function hasMajorLimits(): bool
     {
         return $this->hasLowerLimitMajor() && $this->hasUpperLimitMajor();
     }
@@ -201,7 +201,7 @@ class MeterLimit extends BaseModel
      *
      * @return bool
      */
-    public function isTooHigh($value)
+    public function isTooHigh($value): bool
     {
         return $this->isTooHighMinor($value) || $this->isTooHighMajor($value);
     }
@@ -211,7 +211,7 @@ class MeterLimit extends BaseModel
      *
      * @return bool
      */
-    public function isTooLow($value)
+    public function isTooLow($value): bool
     {
         return $this->isTooLowMinor($value) || $this->isTooLowMajor($value);
     }
