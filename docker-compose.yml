@@ -35,7 +35,7 @@ services:
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
-        image: sail-8.0/app
+        image: sail-8.1/app
         hostname: webserver
         container_name: meters-app
         extra_hosts:
