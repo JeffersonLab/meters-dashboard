@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
-class PowerConsumptionReportTest extends TestCase
+final class PowerConsumptionReportTest extends TestCase
 {
     protected $meter;
 

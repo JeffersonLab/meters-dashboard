@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
-class DataTableReporterTest extends TestCase
+final class DataTableReporterTest extends TestCase
 {
     protected $sampleData = [
         ['date' => '2017-07-01 00:00', 'totkWh' => '10'],
