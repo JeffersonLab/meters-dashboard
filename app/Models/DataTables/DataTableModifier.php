@@ -27,8 +27,6 @@ class DataTableModifier
 
     /**
      * DataTableModifier constructor.
-     *
-     * @param  DataTableInterface  $model
      */
     public function __construct(DataTableInterface $model)
     {
@@ -40,7 +38,6 @@ class DataTableModifier
     /**
      * Assert that a table exists before attempting to modify it.
      *
-     * @param $table
      *
      * @throws DataConversionException
      */
@@ -88,10 +85,9 @@ class DataTableModifier
      * Add PV columns to a building's data table after it has already been created.
      * For examples if gas meters were added to a building that did not previously have them.
      *
-     * @param  string  $tableName
      * @param  string  $type (gas, power, water)
      */
-    protected function addMeterColumns($tableName, $type)
+    protected function addMeterColumns(string $tableName, string $type)
     {
         // TODO strip out unnecessary columns?
         $this->schema->table($tableName, function ($table) use ($type) {

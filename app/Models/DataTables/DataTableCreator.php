@@ -41,10 +41,8 @@ class DataTableCreator
 
     /**
      * Create a database table with columns appropriate to the meter type.
-     *
-     * @return void
      */
-    public function createTable()
+    public function createTable(): void
     {
         $this->assertTableDoesNotExist($this->model->tableName());
         $this->schema->create($this->model->tableName(), function ($table) {
@@ -113,10 +111,8 @@ class DataTableCreator
 
     /**
      * The name of the data table before conversion to table-per-meter/building.
-     *
-     * @return string|null
      */
-    public function oldTableName()
+    public function oldTableName(): ?string
     {
         if ($this->model instanceof Building) {
             return 'building_data';
@@ -137,10 +133,8 @@ class DataTableCreator
 
     /**
      * Migrate data from the old monolithic single data table into the new per-meter table.
-     *
-     * @return void
      */
-    public function migrateData()
+    public function migrateData(): void
     {
         $sql = sprintf('insert into %s (%s) select %s from %s where %s = %s',
             $this->model->tableName(),
@@ -155,10 +149,8 @@ class DataTableCreator
 
     /**
      * Drop the meter's data table.
-     *
-     * @return void
      */
-    public function dropTable()
+    public function dropTable(): void
     {
         $this->schema->dropIfExists($this->model->tableName());
     }

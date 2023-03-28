@@ -12,10 +12,8 @@ class BuildingController extends Controller
 {
     /**
      * Display the buildings index page
-     *
-     * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         JavaScript::put([
             'buildingsData' => $this->buildingStatusData(Building::all()),
@@ -40,21 +38,16 @@ class BuildingController extends Controller
 
     /**
      * Display the buildings index page
-     *
-     * @return \Illuminate\Contracts\View\View
      */
-    public function siteMap()
+    public function siteMap(): \Illuminate\View\View
     {
         return View::make('buildings.map');
     }
 
     /**
      * Display a building
-     *
-     * @param  Building  $building
-     * @return \Illuminate\Contracts\View\View
      */
-    public function show(Building $building, Request $request)
+    public function show(Building $building, Request $request): \Illuminate\View\View
     {
         JavaScript::put([
             'currentApiUrl' => route('buildings.chart_data'),
@@ -70,7 +63,7 @@ class BuildingController extends Controller
             ->with('building', $building);
     }
 
-    public function substationSummary()
+    public function substationSummary(): \Illuminate\View\View
     {
         return view('buildings.substation_summary');
     }

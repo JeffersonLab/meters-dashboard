@@ -62,11 +62,10 @@ class FacilitiesClimateData extends ClimateData
     /**
      * Performs data retrieval over http(s)
      *
-     * @return array|null
      *
      * @throws \Exception
      */
-    public function httpGet()
+    public function httpGet(): ?array
     {
         $response = $this->webClient->get($this->url(), [
             'timeout' => 3, // Response timeout

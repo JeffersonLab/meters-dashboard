@@ -13,10 +13,8 @@ class MeterController extends Controller
 {
     /**
      * Display the meter index page
-     *
-     * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         return View::make('meters.index')
             ->with('meters', Meter::all());
@@ -24,11 +22,8 @@ class MeterController extends Controller
 
     /**
      * Display a meter
-     *
-     * @param  Meter  $meter
-     * @return \Illuminate\Contracts\View\View
      */
-    public function show(Meter $meter, Request $request)
+    public function show(Meter $meter, Request $request): \Illuminate\View\View
     {
         JavaScript::put([
             'currentModel' => $meter,
@@ -57,7 +52,6 @@ class MeterController extends Controller
             case 'water-gpm': return $this->waterStatusGpm();
             case 'gas-ccf': return $this->gasStatusCcf();
             case 'gas-ccfpm': return $this->gasStatusCcfpm();
-
         }
     }
 
@@ -92,7 +86,7 @@ class MeterController extends Controller
         return $this->meterStatusView($meters);
     }
 
-    public function powerStatusKwh()
+    public function powerStatusKwh(): \Illuminate\View\View
     {
         return View::make('status.odometer')
             ->with('meters', Meter::where('type', 'power')->orderBy('epics_name')->get())
@@ -102,7 +96,7 @@ class MeterController extends Controller
             ->with('referenceDate', Carbon::today()->day(1)); //first of month;
     }
 
-    public function powerStatusKw()
+    public function powerStatusKw(): \Illuminate\View\View
     {
         return View::make('status.dynameter')
             ->with('meters', Meter::where('type', 'power')
@@ -113,7 +107,7 @@ class MeterController extends Controller
             ->with('field', ':totkW');
     }
 
-    public function powerStatusVoltAverage()
+    public function powerStatusVoltAverage(): \Illuminate\View\View
     {
         $meters = Meter::where('type', 'power')
             //->whereIn('epics_name',['33MVA','40MVA'])
@@ -142,7 +136,7 @@ class MeterController extends Controller
             ->with('field', ':llVolt');
     }
 
-    public function waterStatusGal()
+    public function waterStatusGal(): \Illuminate\View\View
     {
         return View::make('status.odometer')
             ->with('meters', Meter::where('type', 'water')->orderBy('epics_name')->get())
@@ -152,7 +146,7 @@ class MeterController extends Controller
             ->with('referenceDate', Carbon::today()->day(1)); //first of month
     }
 
-    public function waterStatusGpm()
+    public function waterStatusGpm(): \Illuminate\View\View
     {
         return View::make('status.dynameter')
             ->with('meters', Meter::where('type', 'water')->orderBy('epics_name')->get())
@@ -161,7 +155,7 @@ class MeterController extends Controller
             ->with('field', ':galPerMin');
     }
 
-    public function gasStatusCcf()
+    public function gasStatusCcf(): \Illuminate\View\View
     {
         return View::make('status.odometer')
             ->with('meters', Meter::where('type', 'gas')->orderBy('epics_name')->get())
@@ -171,7 +165,7 @@ class MeterController extends Controller
             ->with('referenceDate', Carbon::today()->day(1)); //first of month
     }
 
-    public function gasStatusCcfpm()
+    public function gasStatusCcfpm(): \Illuminate\View\View
     {
         return View::make('status.dynameter')
             ->with('meters', Meter::where('type', 'gas')->orderBy('epics_name')->get())

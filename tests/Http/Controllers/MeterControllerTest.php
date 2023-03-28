@@ -8,14 +8,14 @@ use Tests\TestCase;
 
 class MeterControllerTest extends TestCase
 {
-    public function test_index()
+    public function test_index(): void
     {
         $response = $this->get(route('meters.index'));
         $response->assertViewIs('meters.index');
         $response->assertViewHas('meters');
     }
 
-    public function test_show()
+    public function test_show(): void
     {
         $meter = Meter::factory()->create(['type' => 'power']);
         $response = $this->get(route('meters.show', [$meter->id]));

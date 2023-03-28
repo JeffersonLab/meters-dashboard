@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class BuildingTest extends TestCase
 {
-    public function test_it_returns_pv_fields()
+    public function test_it_returns_pv_fields(): void
     {
         $building = Building::factory()->create(['name' => 'foo']);
         $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'building_id' => $building->id]);
@@ -24,7 +24,7 @@ class BuildingTest extends TestCase
         $this->assertNotContains(':llVolt', $building->pvFields());
     }
 
-    public function test_it_return_channels()
+    public function test_it_return_channels(): void
     {
         $building = Building::factory()->create(['name' => 'foo']);
         $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'building_id' => $building->id]);
@@ -37,7 +37,7 @@ class BuildingTest extends TestCase
         $this->assertContains('foo:totMBTU', $building->channels());
     }
 
-    public function test_meter_types()
+    public function test_meter_types(): void
     {
         $building = Building::factory()->create(['name' => 'foo']);
         $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'building_id' => $building->id]);
@@ -48,7 +48,7 @@ class BuildingTest extends TestCase
         $this->assertFalse($building->hasMeterType('gas'));
     }
 
-    public function test_meters_of_type()
+    public function test_meters_of_type(): void
     {
         $building = Building::factory()->create(['name' => 'foo']);
         $meter1 = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'building_id' => $building->id]);
@@ -60,7 +60,7 @@ class BuildingTest extends TestCase
         $this->assertEquals($meter2->name, $waterMeter->name);
     }
 
-    public function test_it_fetches_supply_and_drain_meters()
+    public function test_it_fetches_supply_and_drain_meters(): void
     {
         $building = Building::factory()->create(['name' => 'CoolingTower']);
         foreach (['CT-SUPPLY-1', 'CT-SUPPLY-2', 'CT-SUPPLY-3', 'CT-DRAIN1', 'CT-FLTERDRAIN-1'] as $name) {
@@ -72,7 +72,7 @@ class BuildingTest extends TestCase
         $this->assertCount(2, $building->waterDrainMeters()->get());
     }
 
-    public function test_it_computes_consumption_sewer_evaporation()
+    public function test_it_computes_consumption_sewer_evaporation(): void
     {
         $building = Building::factory()->create(['name' => 'CoolingTower']);
         $supplyMeter1 = Meter::factory()->create(['type' => 'water', 'epics_name' => 'CT-SUPPLY-1', 'building_id' => $building->id]);
