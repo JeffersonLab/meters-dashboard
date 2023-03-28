@@ -9,10 +9,11 @@ class PresenterGraphController extends Controller
 {
     /**
      * Proxies access to myaweb so that remote clients will have same access to the data as on-site clients.
-     * @param Request $request
+     *
      * @return \Illuminate\Http\Client\Response
      */
-    public function data(Request $request){
+    public function data(Request $request)
+    {
         /*
          * Example valid request that we're proxying.
          * https://myaweb.acc.jlab.org/myStatsSampler/data
@@ -23,6 +24,6 @@ class PresenterGraphController extends Controller
          * &_=1679930632274
          */
         // We take steps to ensure that we only pass expected parameters to the back end.
-        return Http::get('https://myaweb.acc.jlab.org/myStatsSampler/data', $request->only('sUnit','jsonp','n','s','b','l','_'));
+        return Http::get('https://myaweb.acc.jlab.org/myStatsSampler/data', $request->only('sUnit', 'jsonp', 'n', 's', 'b', 'l', '_'));
     }
 }

@@ -16,17 +16,17 @@ class ReportFactory
     {
         switch ($name) {
             case 'power-consumption' : $report = new PowerConsumption();
-            break;
+                break;
             case 'water-consumption' : $report = new WaterConsumption();
-            break;
+                break;
             case 'gas-consumption' : $report = new GasConsumption();
-            break;
+                break;
             case 'cooling-tower-consumption' : $report = new CoolingTowerConsumption();
-            break;
+                break;
             case 'multi-meter' : $report = new MultiMeter();
-            break;
+                break;
             case 'mya-stats' : $report = new MyaStats();
-            break;
+                break;
             default: $report = null;
         }
         if (! $report) {
