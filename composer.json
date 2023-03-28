@@ -24,7 +24,7 @@
         "doctrine/dbal": "^3.5",
         "guzzlehttp/guzzle": "^7.2",
         "jeroennoten/laravel-adminlte": "^3.8",
-        "jlab/laravel-utilities": "^9.0",
+        "jlab/laravel-utilities": "dev-master",
         "jlab/auth": "^8.01",
         "laracasts/utilities": "^3.2",
         "laravel/framework": "^10.4",
