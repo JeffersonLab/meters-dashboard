@@ -6,7 +6,7 @@ use App\Models\Buildings\Building;
 use Carbon\Carbon;
 use Tests\TestCase;
 
-class BuildingControllerTest extends TestCase
+final class BuildingControllerTest extends TestCase
 {
     public function test_index(): void
     {

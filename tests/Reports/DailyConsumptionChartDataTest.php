@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Tests\TestCase;
 
-class DailyConsumptionChartDataTest extends TestCase
+final class DailyConsumptionChartDataTest extends TestCase
 {
     /**
      * @var Meter

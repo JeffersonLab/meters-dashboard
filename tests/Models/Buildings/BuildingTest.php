@@ -7,7 +7,7 @@ use App\Models\Meters\Meter;
 use Carbon\Carbon;
 use Tests\TestCase;
 
-class BuildingTest extends TestCase
+final class BuildingTest extends TestCase
 {
     public function test_it_returns_pv_fields(): void
     {

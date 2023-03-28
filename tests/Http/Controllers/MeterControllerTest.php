@@ -6,7 +6,7 @@ use App\Models\Meters\Meter;
 use Carbon\Carbon;
 use Tests\TestCase;
 
-class MeterControllerTest extends TestCase
+final class MeterControllerTest extends TestCase
 {
     public function test_index(): void
     {

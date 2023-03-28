@@ -6,7 +6,7 @@ use App\Models\Meters\Meter;
 use Carbon\Carbon;
 use Tests\TestCase;
 
-class ReportControllerTest extends TestCase
+final class ReportControllerTest extends TestCase
 {
     protected $meter1;
 
