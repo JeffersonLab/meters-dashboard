@@ -33,13 +33,12 @@ Route::get('meters', [MeterController::class, 'index'])->name('meters.index');
 
 Route::get('monitor/{type}', [MeterController::class, 'monitor'])->name('monitor');
 
-Route::get('presenter-graph',[PresenterGraphController::class, 'get'])->name('presenter_graph');
-Route::get('presenter-graph/data',[PresenterGraphController::class, 'data'])->name('presenter_graph.data');
+Route::get('presenter-graph', [PresenterGraphController::class, 'get'])->name('presenter_graph');
+Route::get('presenter-graph/data', [PresenterGraphController::class, 'data'])->name('presenter_graph.data');
 
 Route::get('reports/{report}', [ReportController::class, 'show'])->name('reports.item');
 
 Route::get('reports/{report}/excel', [ReportController::class, 'excel'])->name('reports.excel');
-
 
 Route::get('alerts', [AlertController::class, 'index'])->name('alerts.index');
 

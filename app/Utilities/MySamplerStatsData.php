@@ -20,7 +20,7 @@ class MySamplerStatsData
      * @param  string  $stepSize number of seconds in each sample
      * @param  null  $numSteps number of samples to retrieve
      */
-    public function __construct($begin, $channels, $stepSize = null, $numSteps = null)
+    public function __construct(string $begin, $channels, string $stepSize = null, $numSteps = null)
     {
         $this->initWebClient(env('MYSAMPLERSTATS_URL'), false);
         $this->begin = new Carbon($begin);
@@ -33,10 +33,8 @@ class MySamplerStatsData
     /**
      * Returns the query parameters expected by mySampler
      * as an array.
-     *
-     * @return array
      */
-    public function query()
+    public function query(): array
     {
         return [
             's' => $this->stepSize,
@@ -62,12 +60,10 @@ class MySamplerStatsData
      *  ],
      *]
      *
-     * @param  array  $data
-     * @return array
      *
      * @throws \Exception
      */
-    public function organize($data)
+    public function organize(array $data): array
     {
         $organized = [];
         foreach ($data->data as $item) {

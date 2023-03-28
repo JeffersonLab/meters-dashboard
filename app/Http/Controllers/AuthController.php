@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,7 +42,7 @@ class AuthController extends \Jlab\Auth\Http\AuthController
         return view('auth.login');
     }
 
-    public function logout()
+    public function logout(): RedirectResponse
     {
         if ($this->doLogout()) {
             session()->flash('success', 'User logged out successfully');

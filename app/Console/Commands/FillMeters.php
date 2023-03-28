@@ -38,10 +38,8 @@ class FillMeters extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle()
+    public function handle(): int
     {
         ini_set('memory_limit', '1G');
         if ($this->option('meter') && $this->option('type')) {

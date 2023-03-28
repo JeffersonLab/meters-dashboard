@@ -41,9 +41,6 @@ class SyncBuildings extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @param  CEDTypeData  $cedTypeData
-     * @param  CEDElemData  $cedElemData
      */
     public function __construct(CEDTypeData $cedTypeData, CEDElemData $cedElemData)
     {
@@ -54,10 +51,8 @@ class SyncBuildings extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         try {
             $this->cedTypeData->type = 'Structure';
@@ -78,7 +73,6 @@ class SyncBuildings extends Command
      * the responsibility for initialy adding a meter belongs to the SyncMeters command.  The current
      * command's purpose is simply to update existing meter attributes.
      *
-     * @param $data
      *
      * @throws \Throwable
      */

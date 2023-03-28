@@ -25,10 +25,8 @@ class FillBuildings extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle()
+    public function handle(): int
     {
         $existing = Building::all();
         foreach ($existing as $building) {
@@ -53,11 +51,10 @@ class FillBuildings extends Command
     /**
      * Add gas meter columns to the building.
      *
-     * @param  Building  $building
      *
      * @throws \App\Exceptions\DataConversionException
      */
-    protected function addGasMeterColumns($building)
+    protected function addGasMeterColumns(Building $building)
     {
         $modifier = new DataTableModifier($building);
         $modifier->addGasMeterColumns();

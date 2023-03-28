@@ -8,13 +8,13 @@ use Tests\TestCase;
 
 class BuildingControllerTest extends TestCase
 {
-    public function test_index()
+    public function test_index(): void
     {
         $response = $this->get(route('buildings.index'));
         $response->assertViewIs('buildings.index');
     }
 
-    public function test_show()
+    public function test_show(): void
     {
         $building = Building::factory()->create();
         $response = $this->get(route('buildings.show', [$building->id]));

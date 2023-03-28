@@ -4,6 +4,7 @@ namespace App\Charts;
 
 use App\Models\DataTables\DataTableInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 /**
  * Class MeterReadings
@@ -22,12 +23,8 @@ class MeterReadings implements ChartInterface
 
     /**
      * MeterReadings constructor.
-     *
-     * @param  DataTableInterface  $model
-     * @param  string  $pv
-     * @param  string  $title
      */
-    public function __construct(DataTableInterface $model, $pv, $title = null)
+    public function __construct(DataTableInterface $model, string $pv, string $title = null)
     {
         $this->reporter = $model->reporter();
         $this->pv = $pv;
@@ -55,10 +52,8 @@ class MeterReadings implements ChartInterface
 
     /**
      * Returns the collection of data points to be plotted.
-     *
-     * @return \Illuminate\Support\Collection
      */
-    public function chartData()
+    public function chartData(): Collection
     {
         $result = $this->reporter->pvReadings($this->pv);
         $data = $this->reporter->canvasTimeSeries($result);
@@ -68,10 +63,8 @@ class MeterReadings implements ChartInterface
 
     /**
      * Returns an array representation of chart settings and data.
-     *
-     * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'title' => [
@@ -93,10 +86,8 @@ class MeterReadings implements ChartInterface
 
     /**
      * Returns an JSON string representation of chart settings and data.
-     *
-     * @return string
      */
-    public function toJson()
+    public function toJson(): string
     {
         return json_encode($this->toArray());
     }

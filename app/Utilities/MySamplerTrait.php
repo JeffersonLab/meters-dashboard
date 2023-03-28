@@ -41,20 +41,15 @@ trait MySamplerTrait
      * array.
      *
      *
-     * @param  array  $data
      * @return array
      */
-    abstract public function organize($data);
+    abstract public function organize(array $data);
 
     /**
      * Initialize a webClient that will interact with web-based
      * Mya utlitiles.
-     *
-     * @param  string  $baseUri
-     * @param  bool  $verifyCerts
-     * @return void
      */
-    public function initWebClient($baseUri, $verifyCerts = true)
+    public function initWebClient(string $baseUri, bool $verifyCerts = true): void
     {
         $this->webClient = new Client([
             'base_uri' => $baseUri,
@@ -65,10 +60,8 @@ trait MySamplerTrait
     /**
      * Use stepSize to compute the number of steps to bridge
      * the time span between the specified begins date and now.
-     *
-     * @return int
      */
-    public function calcNumSteps()
+    public function calcNumSteps(): int
     {
         $seconds = Carbon::now()->diffInSeconds($this->begin);
 
@@ -93,11 +86,10 @@ trait MySamplerTrait
      * Returns a collection of data retrieved from mySampler organized
      * by channel.
      *
-     * @return Collection
      *
      * @throws WebClientException
      */
-    public function getData()
+    public function getData(): Collection
     {
         $data = $this->httpGet($this->query());
 

@@ -12,14 +12,8 @@ use Carbon\Carbon;
 
 trait DateRangeTrait
 {
-    /**
-     * @var
-     */
     protected $begins_at;  // earliest data of range
 
-    /**
-     * @var
-     */
     protected $ends_at;    // latest data of range
 
     /**
@@ -45,11 +39,8 @@ trait DateRangeTrait
 
     /**
      * Chainable method to set the beginning of the reporting date range.
-     *
-     * @param  string  $date
-     * @return static
      */
-    public function beginning($date)
+    public function beginning(string $date): static
     {
         $this->begins_at = Carbon::parse($date);
 
@@ -79,22 +70,15 @@ trait DateRangeTrait
 
     /**
      * Chainable method to set the ending of the reporting date range.
-     *
-     * @param  string  $date
-     * @return static
      */
-    public function ending($date)
+    public function ending(string $date): static
     {
         $this->ends_at = Carbon::parse($date);
 
         return $this;
     }
 
-    /**
-     * @param  string  $format
-     * @return string
-     */
-    public function beginsAt($format = null)
+    public function beginsAt(string $format = null): string
     {
         if ($format === null) {
             if (0 == $this->begins_at->hour && 0 == $this->begins_at->minute) {
@@ -107,11 +91,7 @@ trait DateRangeTrait
         return $this->begins_at->format($format);
     }
 
-    /**
-     * @param  string  $format
-     * @return string
-     */
-    public function endsAt($format = null)
+    public function endsAt(string $format = null): string
     {
         if ($format === null) {
             if (0 == $this->ends_at->hour && 0 == $this->ends_at->minute) {

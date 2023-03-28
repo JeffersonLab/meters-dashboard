@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Reports\Consumption as ConsumptionReport;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -19,8 +20,6 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
 
     /**
      * ConsumptionReportExport constructor.
-     *
-     * @param  ConsumptionReport  $report
      */
     public function __construct(ConsumptionReport $report)
     {
@@ -47,30 +46,24 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
 
     /**
      * Is the given row considered empty?
-     *
-     * @param $row
-     * @return bool
      */
-    protected function isEmptyRow($row)
+    protected function isEmptyRow($row): bool
     {
         return ! (isset($row->first) && isset($row->last));
     }
 
     /**
      * Generates content for the note column.
-     *
-     * @param $row
-     * @return string
      */
-    protected function note($row)
+    protected function note($row): string
     {
         if ($this->isEmptyRow($row)) {
             return 'N/A';
         }
         if (! $row->isComplete) {
             return sprintf('Incomplete Data: %s to %s',
-                    date('Y-m-d H:i', strtotime($row->first->date)),
-                    date('Y-m-d H:i', strtotime($row->last->date)));
+                date('Y-m-d H:i', strtotime($row->first->date)),
+                date('Y-m-d H:i', strtotime($row->last->date)));
         }
 
         return '';
@@ -80,7 +73,6 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
      * Transform row data.
      *
      * @param  mixed  $row
-     * @return array
      */
     public function map($row): array
     {
@@ -96,8 +88,6 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
 
     /**
      * Custom column headings.
-     *
-     * @return array
      */
     public function headings(): array
     {
@@ -113,10 +103,8 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
 
     /**
      * Returns the data collection used to make the spreadsheet.
-     *
-     * @return \Illuminate\Support\Collection
      */
-    public function collection()
+    public function collection(): Collection
     {
         return $this->report->data();
     }
@@ -125,7 +113,6 @@ class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadin
      * Register handlers to do manipulation of the underlying spreadsheet at
      * different phases of the export cycle.
      *
-     * @return array
      *
      * @see https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/
      * @see https://laraveldaily.com/laravel-excel-export-formatting-and-styling-cells/

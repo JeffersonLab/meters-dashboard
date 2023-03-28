@@ -79,11 +79,8 @@ class ServiceAlert implements AlertInterface
 
     /**
      * Converts nagios timestamps to unix integer timestamps.
-     *
-     * @param  int  $nagiosTime
-     * @return int
      */
-    public function unixTime($nagiosTime)
+    public function unixTime(int $nagiosTime): int
     {
         return intval($nagiosTime / 1000);
     }

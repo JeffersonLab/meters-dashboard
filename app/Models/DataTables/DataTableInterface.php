@@ -18,15 +18,10 @@ use Illuminate\Database\Query\Builder;
  */
 interface DataTableInterface
 {
-    /**
-     * @return DataTableReporter
-     */
     public function reporter(): DataTableReporter;
 
     /**
      * The name of the table where meter data points are stored.
-     *
-     * @return string
      */
     public function tableName(): string;
 
@@ -34,8 +29,6 @@ interface DataTableInterface
      * Obtain a Query Builder for the model.
      *
      * Note: The builder must reference a table with a column named 'date'.
-     *
-     * @return \Illuminate\Database\Query\Builder
      */
     public function dataTable(): Builder;
 
@@ -64,16 +57,12 @@ interface DataTableInterface
     /**
      * Returns the array of fields that can be appended to
      * epics_name to form pvs.
-     *
-     * @return array
      */
     public function pvFields(): array;
 
     /**
      * Returns the array of fields to be used when creating database columns
      * for data storage.
-     *
-     * @return array
      */
     public function dbFields(): array;
 

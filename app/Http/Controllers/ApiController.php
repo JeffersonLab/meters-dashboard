@@ -17,7 +17,6 @@ class ApiController extends Controller
     /**
      * Return data for a canvasJs chart
      *
-     * @param  ChartRequest  $request
      * @return \Illuminate\Http\Response;
      */
     public function meterChartData(ChartRequest $request)
@@ -35,7 +34,6 @@ class ApiController extends Controller
     /**
      * Return data for a meter
      *
-     * @param  ChartRequest  $request
      * @return \Illuminate\Http\Response;
      */
     public function meterTableData(HttpRequest $request)
@@ -59,7 +57,6 @@ class ApiController extends Controller
     /**
      * Return data for a canvasJs chart
      *
-     * @param  ChartRequest  $request
      * @return \Illuminate\Http\Response;
      */
     public function buildingChartData(ChartRequest $request)
@@ -77,7 +74,6 @@ class ApiController extends Controller
     /**
      * Return data for a canvasJs chart
      *
-     * @param  HttpRequest  $request
      * @return \Illuminate\Http\Response;
      */
     public function reportChartData(HttpRequest $request)
@@ -96,7 +92,6 @@ class ApiController extends Controller
     /**
      * Returns a json success response.
      *
-     * @param $data
      * @return mixed
      */
     public function response($data)
@@ -121,11 +116,9 @@ class ApiController extends Controller
     /**
      * Returns a json error response.
      *
-     * @param  string  $msg
-     * @param  int  $code
      * @return mixed
      */
-    public function error($msg, $code = 404)
+    public function error(string $msg, int $code = 404)
     {
         $struct['status'] = 'fail';
         $struct['message'] = $msg;

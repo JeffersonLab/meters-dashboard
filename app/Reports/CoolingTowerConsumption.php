@@ -34,10 +34,8 @@ class CoolingTowerConsumption extends Consumption
     /**
      * Update items property with fresh data from the database.
      * For example after applying updated filters.
-     *
-     * @return void
      */
-    protected function updateItems()
+    protected function updateItems(): void
     {
         $this->items = Building::whereIn('name', $this->nameFilter)
             ->with('meters')->get()
@@ -53,11 +51,8 @@ class CoolingTowerConsumption extends Consumption
      *   evaporation:   supply - drain
      *   concentration: supply / drain
      *   isComplete: whether the data time span matches the requested time span
-     *
-     * @param  Meter  $model
-     * @return object
      */
-    protected function makeDataItem($model)
+    protected function makeDataItem(Meter $model): object
     {
         $dataItem = [
             'building' => $model,
