@@ -77,7 +77,7 @@ class DataTableReporter
      * @param  int  $y second reading
      * @param  int  $rollover odometer limit
      */
-    public function odometerDifference(int $x, int $y, int $rollover = 1000000): int
+    public function odometerDifference(int $x, int $y, int $rollover = 1000000): int|null
     {
         // Can't do math on null values!
         if ($x === null || $y === null) {
@@ -251,7 +251,7 @@ class DataTableReporter
      *
      * @return float|int
      */
-    public function number(string $val)
+    public function number(string|null $val)
     {
         if ((int) $val === (float) $val) {
             return (int) $val;
