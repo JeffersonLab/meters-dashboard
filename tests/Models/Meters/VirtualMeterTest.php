@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
-class VirtualMeterTest extends TestCase
+final class VirtualMeterTest extends TestCase
 {
     public function test_meters_relation(): void
     {
