@@ -1,7 +1,7 @@
 # meters-dashboard
 Web-based dashboard for viewing and reporting on Power, Water, and Gas meters
 
-[screen shot](screenshot.png)
+![screen shot](screenshot.png)
 
 ## Quick Start
 
