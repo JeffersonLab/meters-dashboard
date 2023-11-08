@@ -43,7 +43,7 @@ trait MySamplerTrait
      *
      * @return array
      */
-    abstract public function organize(array $data);
+    abstract public function organize($data);
 
     /**
      * Initialize a webClient that will interact with web-based
