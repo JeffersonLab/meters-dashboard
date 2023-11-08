@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
-class DataTableReporterTest extends TestCase
+final class DataTableReporterTest extends TestCase
 {
     protected $sampleData = [
         ['date' => '2017-07-01 00:00', 'totkWh' => '10'],
@@ -37,7 +37,7 @@ class DataTableReporterTest extends TestCase
         }
     }
 
-    public function test_get_accessor()
+    public function test_get_accessor(): void
     {
         $meter = Meter::factory()->create(['type' => 'power']);
         $reporter = new DataTableReporter($meter);
@@ -45,7 +45,7 @@ class DataTableReporterTest extends TestCase
         $this->assertInstanceOf(Carbon::class, $reporter->ends_at);
     }
 
-    public function test_begins_at()
+    public function test_begins_at(): void
     {
         $meter = Meter::factory()->create(['type' => 'power']);
         $reporter = new DataTableReporter($meter);
@@ -53,7 +53,7 @@ class DataTableReporterTest extends TestCase
         $this->assertTrue((is_string($reporter->endsAt())));
     }
 
-    public function test_default_dates()
+    public function test_default_dates(): void
     {
         $meter = Meter::factory()->create(['type' => 'power']);
         $reporter = new DataTableReporter($meter);
@@ -62,7 +62,7 @@ class DataTableReporterTest extends TestCase
         $this->assertEquals(Carbon::tomorrow()->startOfDay()->format('Y-m-d'), $reporter->endsAt());
     }
 
-    public function test_it_returns_data_for_day()
+    public function test_it_returns_data_for_day(): void
     {
         $meter = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'epics_name' => 'en1']);
         $reporter = new DataTableReporter($meter);
@@ -76,7 +76,7 @@ class DataTableReporterTest extends TestCase
         $this->assertCount(0, $data);
     }
 
-    public function test_it_calculates_odometer_difference()
+    public function test_it_calculates_odometer_difference(): void
     {
         $meter = Meter::factory()->create(['type' => 'power', 'name' => 'm1', 'epics_name' => 'en1']);
         $reporter = new DataTableReporter($meter);
@@ -84,7 +84,7 @@ class DataTableReporterTest extends TestCase
         $this->assertEquals(20, $reporter->odometerDifference(85, 5, 100));
     }
 
-    public function test_first_and_last_data()
+    public function test_first_and_last_data(): void
     {
         $meter = Meter::factory()->create(['type' => 'power']);
         $this->insertSampleData($meter);

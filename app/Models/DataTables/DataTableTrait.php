@@ -35,8 +35,6 @@ trait DataTableTrait
     /**
      * The array of fields that can be appended to
      * epics_name to form pvs.
-     *
-     * @return array
      */
     abstract public function pvFields(): array;
 
@@ -45,8 +43,6 @@ trait DataTableTrait
     /**
      * Return the name of the column in the data table that is the foreign key
      * back to the parent table. (ex: building_id, meter_id)
-     *
-     * @return string
      */
     public function dataTableFk(): string
     {
@@ -56,7 +52,6 @@ trait DataTableTrait
     /**
      * Returns a Query Builder for the appropriate data table.
      *
-     * @return Builder
      *
      * @throws \Exception if physical meters are of different types;
      */
@@ -67,8 +62,6 @@ trait DataTableTrait
 
     /**
      * Answer whether the data table has any rows for the current object.
-     *
-     * @return bool
      */
     public function hasData(): bool
     {
@@ -107,10 +100,6 @@ trait DataTableTrait
     /**
      * Returns the appropriate daily consumption query for the meter type.
      * #
-     *
-     * @param  Carbon  $beginDate
-     * @param  Carbon  $endDate
-     * @return Builder
      */
     public function dailyConsumptionQuery($field, Carbon $beginDate, Carbon $endDate): Builder
     {
@@ -252,8 +241,6 @@ trait DataTableTrait
     /**
      * Throw an exception if field is not a valid.
      *
-     * @param $field
-     * @return true
      *
      * @throws MeterDataException
      */

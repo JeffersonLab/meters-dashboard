@@ -219,16 +219,13 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     }
 
     /**
-     * @param  string  $field
-     * @param  float  $accumulatedRollover
-     * @param  Carbon  $fromDate
-     * @param  Carbon  $toDate
      * @return mixed
+     *
      * @TODO recalculate the totMBTU column too (update power_meter_data set totMBTU = totkWh * 0.00341214)
      *
      * @throws \Exception
      */
-    protected function applyRollover($field, $accumulatedRollover, Carbon $fromDate, Carbon $toDate)
+    protected function applyRollover(string $field, float $accumulatedRollover, Carbon $fromDate, Carbon $toDate)
     {
         $updated = $this->dataTable()->select('*')
             ->where('meter_id', $this->id)
@@ -266,11 +263,9 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Answers whether the provided value is within the limits for the
      * specified field.
      *
-     * @param  string  $field
      * @param  mixed  $value numeric value
-     * @return bool
      */
-    public function withinLimits($field, $value)
+    public function withinLimits(string $field, $value): bool
     {
         if (! $this->hasMeterLimits($field)) {
             return true;
@@ -305,7 +300,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * off the known field name.  Returns null if the pv string
      * did not end in a known field.
      *
-     * @param $pv
      * @return bool|null|string
      */
     public static function epicsNameFromPv($pv)
@@ -326,10 +320,8 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
 
     /**
      * Returns all epics field names defined by configuration.
-     *
-     * @return array
      */
-    public static function allPvFields()
+    public static function allPvFields(): array
     {
         $fields = [];
         $types = array_keys(config('meters.pvs'));
@@ -394,11 +386,8 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     /**
      * Returns the most current accumulated rollover for the meter or zero
      * if there is none.
-     *
-     * @param  string  $field
-     * @return int
      */
-    public function accumulatedRollover($field)
+    public function accumulatedRollover(string $field): int
     {
         if ($this->lastRolloverEvent($field)) {
             return $this->lastRolloverEvent($field)->rollover_accumulated;
@@ -423,9 +412,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     }
 
     /**
-     * @param  Carbon  $fromDate
-     * @param  Carbon  $toDate
-     * @param $field
      * @return null
      *
      * @throws MeterDataException
@@ -465,8 +451,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Return the timestamp and value of the first data value available
      * on or after the specified date.
      *
-     * @param $field
-     * @param  Carbon  $atDate
      * @return \Illuminate\Database\Eloquent\Model|Builder|object
      *
      * @throws \Exception
@@ -488,11 +472,10 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Optionally restrict the context to a specific PV field.
      *
      * @param  null  $field
-     * @return Builder
      *
      * @throws \Exception
      */
-    public function firstDataQuery($field = null)
+    public function firstDataQuery($field = null): Builder
     {
         // base query
         $query = $this->baseFirstOrLastQuery(false);
@@ -509,11 +492,10 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Optionally restrict the context to a specific PV field.
      *
      * @param  null  $field
-     * @return Builder
      *
      * @throws \Exception
      */
-    public function lastDataQuery($field = null)
+    public function lastDataQuery($field = null): Builder
     {
         $query = $this->baseFirstOrLastQuery(true);
         if ($field) {
@@ -526,12 +508,10 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     /**
      * Returns a query to select the first or last date
      *
-     * @param $last
-     * @return Builder
      *
      * @throws \Exception
      */
-    protected function baseFirstOrLastQuery($last = false)
+    protected function baseFirstOrLastQuery($last = false): Builder
     {
         $query = $this->dataTable()
             ->select('date')
@@ -550,8 +530,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Return the timestamp and value of the first data value available
      * on or after the specified date.
      *
-     * @param $field
-     * @param  Carbon  $atDate
      *
      * @throws \Exception
      */
@@ -571,7 +549,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Return the timestamp and value of the first data value available
      * between two dates.
      *
-     * @param $field
      * @param  Carbon  $atDate
      *
      * @throws \Exception
@@ -592,7 +569,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Return the timestamp and value of the first data value available
      * between two dates.
      *
-     * @param $field
      * @param  Carbon  $atDate
      *
      * @throws \Exception
@@ -612,9 +588,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     /**
      * Returns statistics for the given interval
      *
-     * @param $field
-     * @param  Carbon  $fromDate
-     * @param  Carbon  $toDate
      * @return mixed object(avg, stddev, min, max) | null
      *
      * @throws \Exception
@@ -637,9 +610,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         return $query->first();
     }
 
-    /**
-     * @return DataTableReporter
-     */
     public function reporter(): DataTableReporter
     {
         if (! $this->reporter) {
@@ -681,13 +651,10 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     /**
      * Update fields for existing meter data rows.
      *
-     * @param  Carbon  $begin
-     * @param  array  $fields
-     * @return int
      *
      * @throws \Exception
      */
-    public function updateDataTable(Carbon $begin, $fields = [])
+    public function updateDataTable(Carbon $begin, array $fields = []): int
     {
         // Default to updating all channels
         if (empty($fields)) {
@@ -721,11 +688,8 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     /**
      * Turns an array of field names into an array of PV channel names
      * by prepending the meter's epics name.
-     *
-     * @param  array  $fields
-     * @return array
      */
-    protected function makeChannels(array $fields)
+    protected function makeChannels(array $fields): array
     {
         $channels = [];
         foreach ($fields as $field) {
@@ -740,10 +704,8 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
 
     /**
      * The list of fully qualified PV channel names for the current meter.
-     *
-     * @return array
      */
-    public function channels()
+    public function channels(): array
     {
         return $this->makeChannels($this->pvFields());
     }
@@ -756,8 +718,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     /**
      * Returns the array of fields that can be appended to
      * epics_name to form pvs.
-     *
-     * @return array
      */
     public function pvFields(): array
     {
@@ -768,8 +728,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
 
     /**
      * The name of the table where meter data points are stored.
-     *
-     * @return string
      */
     public function tableName(): string
     {
@@ -781,9 +739,8 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * suitable for use with a DB::insert().
      *
      * @param $item - element of array returned by MySampler
-     * @return array
      */
-    protected function columnsFromMySampler($item)
+    protected function columnsFromMySampler($item): array
     {
         $columns = ['meter_id' => $this->id];
         foreach ($item as $key => $value) {

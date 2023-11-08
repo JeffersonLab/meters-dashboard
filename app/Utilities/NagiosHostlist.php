@@ -51,10 +51,8 @@ class NagiosHostlist extends NagiosData
     /**
      * Returns the query parameters expected by mySampler
      * as an array.
-     *
-     * @return array
      */
-    public function query()
+    public function query(): array
     {
         //?query=hostlist&formatoptions=whitespace+enumerate+bitmask+duration&hoststatus=up+down+unreachable';
         return [

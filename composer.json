@@ -18,20 +18,20 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "ext-json": "*",
         "ext-pdo": "*",
-        "doctrine/dbal": "^3.3",
+        "doctrine/dbal": "^3.5",
         "guzzlehttp/guzzle": "^7.2",
         "jeroennoten/laravel-adminlte": "^3.8",
-        "jlab/laravel-utilities": "^9.0",
+        "jlab/laravel-utilities": "dev-master",
         "jlab/auth": "^8.01",
         "laracasts/utilities": "^3.2",
-        "laravel/framework": "^9.48",
-        "laravel/sanctum": "^3.0",
-        "laravel/tinker": "^2.7",
-        "laravel/ui": "^3.4",
-        "laravelcollective/html": "^6.3",
+        "laravel/framework": "^10.4",
+        "laravel/sanctum": "^3.2",
+        "laravel/tinker": "^2.8",
+        "laravel/ui": "^4.2",
+        "laravelcollective/html": "^6.4",
         "maatwebsite/excel": "^3.1",
         "robclancy/presenter": "^2.0",
         "tightenco/ziggy": "^1.4",
@@ -39,12 +39,12 @@
     },
     "require-dev": {
         "fakerphp/faker": "1.19.*",
-        "laravel/sail": "^1.15.1",
+        "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^6.3",
-        "phpunit/phpunit": "^9.5.10",
-        "barryvdh/laravel-debugbar": "^3.6",
-        "spatie/laravel-ignition": "^1.4"
+        "nunomaduro/collision": "^7.0",
+        "phpunit/phpunit": "^10.0",
+        "barryvdh/laravel-debugbar": "^3.8",
+        "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -83,6 +83,6 @@
         "preferred-install": "dist",
         "sort-packages": true
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }

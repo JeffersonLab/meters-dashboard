@@ -93,11 +93,8 @@ class MyaStats extends MultiMeter
 
     /**
      * Apply filters from the provided HTTP request.
-     *
-     * @param  Request  $request
-     * @return $this
      */
-    public function applyRequest(Request $request)
+    public function applyRequest(Request $request): static
     {
         parent::applyRequest($request);
 
@@ -130,27 +127,24 @@ class MyaStats extends MultiMeter
 
     /**
      * Uses the provided name and value to set up a report filter.
-     *
-     *
-     * @param  string  $filterName
-     * @param  string  $value
      */
-    public function applyNamedFilter($filterName, $value)
+    public function applyNamedFilter(string $filterName, string $value)
     {
         switch ($filterName) {
-            case 'start': $this->beginning($value); break;
-            case 'end': $this->ending($value); break;
-            case 'pv': $this->pv = $value; break;
+            case 'start': $this->beginning($value);
+                break;
+            case 'end': $this->ending($value);
+                break;
+            case 'pv': $this->pv = $value;
+                break;
             case 'names': $this->makeNameFilter($value);
         }
     }
 
     /**
      * Returns the view that should be used to render the report.
-     *
-     * @return Collection
      */
-    public function view()
+    public function view(): Collection
     {
         return view('reports.mya_stats')
             ->with('report', $this);
@@ -158,30 +152,24 @@ class MyaStats extends MultiMeter
 
     /**
      * The item names used to filter report output.
-     *
-     * @return string
      */
-    public function names()
+    public function names(): string
     {
         return implode(',', $this->nameFilter);
     }
 
     /**
      * The report title.
-     *
-     * @return string
      */
-    public function title()
+    public function title(): string
     {
         return $this->title;
     }
 
     /**
      * The report description.
-     *
-     * @return string
      */
-    public function description()
+    public function description(): string
     {
         return $this->description;
     }
@@ -198,20 +186,16 @@ class MyaStats extends MultiMeter
 
     /**
      * Returns the data collection of the report.
-     *
-     * @return Collection
      */
-    public function data()
+    public function data(): Collection
     {
         return $this->allData();
     }
 
     /**
      * Returns the data for all items.
-     *
-     * @return Collection
      */
-    public function allData()
+    public function allData(): Collection
     {
         $data = new Collection();
         foreach ($this->items as $item) {
@@ -228,8 +212,6 @@ class MyaStats extends MultiMeter
     /**
      * Parses the provided string into an array of names to be used for filtering
      * which items get reported.
-     *
-     * @param $string
      */
     protected function makeNameFilter($string)
     {
@@ -238,10 +220,8 @@ class MyaStats extends MultiMeter
 
     /**
      * Have filters been specified?
-     *
-     * @return bool
      */
-    protected function hasFilters()
+    protected function hasFilters(): bool
     {
         return ! empty($this->nameFilter);
     }
@@ -252,7 +232,6 @@ class MyaStats extends MultiMeter
      * The provided name is tested against the name_alias, epics_name, and name
      * fields of the item in that order.
      *
-     * @param $name
      * @return mixed
      */
     protected function findItemByName($name)
@@ -270,11 +249,9 @@ class MyaStats extends MultiMeter
      * Returns a record structure containing data for a single line
      * of report data table.
      *
-     * @param $model
      * @param  string  $label -- specify non-standard label
-     * @return object
      */
-    protected function makeDataItem($model, $label = '')
+    protected function makeDataItem($model, string $label = ''): object
     {
         // Not much to do right now but we expact to have to add
         // fields to the data item later.
@@ -286,11 +263,9 @@ class MyaStats extends MultiMeter
     /**
      * Returns a record structure containing data for a line of report data table.
      *
-     * @param $model
      * @param  string  $label -- specify non-standard label
-     * @return array
      */
-    protected function makeDataItems($model, $label = '')
+    protected function makeDataItems($model, string $label = ''): array
     {
         if (is_array($model->output)) {
             $items = [];
@@ -311,11 +286,8 @@ class MyaStats extends MultiMeter
      * Returns a mostly empty record with fields identical to those of makeDataItem().
      *
      * With the exception of label, all values are null.
-     *
-     * @param $label
-     * @return object
      */
-    protected function makeDataPlaceholder($label = 'N/A')
+    protected function makeDataPlaceholder($label = 'N/A'): object
     {
         $placeHolder = [
             'start' => null,
@@ -333,12 +305,8 @@ class MyaStats extends MultiMeter
     /**
      * Calculates the quantity between first and last values after checking to ensure that
      * those values are actually set for the .  Returns null when either the first or last values
-     *
-     * @param $first
-     * @param $last
-     * @return float|null
      */
-    public function consumed($first, $last)
+    public function consumed($first, $last): ?float
     {
         if (isset($first->{$this->pv}) && isset($last->{$this->pv})) {
             return round($last->{$this->pv} - $first->{$this->pv}, 1);
@@ -353,9 +321,8 @@ class MyaStats extends MultiMeter
      *
      * @param  object  $first {date}
      * @param  object  $last {date}
-     * @return bool
      */
-    public function isComplete($first, $last)
+    public function isComplete(object $first, object $last): bool
     {
         if (isset($first->date) && isset($last->date)) {
             $beginMatches = (strtotime($first->date) === $this->begins_at->timestamp);
@@ -374,10 +341,8 @@ class MyaStats extends MultiMeter
 
     /**
      * Is Excel (spreadsheet) output available for this report.
-     *
-     * @return bool
      */
-    public function hasExcel()
+    public function hasExcel(): bool
     {
         return true;
     }

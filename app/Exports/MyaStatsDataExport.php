@@ -2,8 +2,8 @@
 
 namespace App\Exports;
 
-use App\Reports\Consumption as ConsumptionReport;
 use App\Reports\MultiMeter;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -19,8 +19,6 @@ class MyaStatsDataExport implements FromCollection, WithMapping, WithHeadings, W
 
     /**
      * ConsumptionReportExport constructor.
-     *
-     * @param  ConsumptionReport  $report
      */
     public function __construct(MultiMeter $report)
     {
@@ -29,11 +27,8 @@ class MyaStatsDataExport implements FromCollection, WithMapping, WithHeadings, W
 
     /**
      * Is the given row considered empty?
-     *
-     * @param $row
-     * @return bool
      */
-    protected function isEmptyRow($row)
+    protected function isEmptyRow($row): bool
     {
         return empty($row);
     }
@@ -42,7 +37,6 @@ class MyaStatsDataExport implements FromCollection, WithMapping, WithHeadings, W
      * Transform row data.
      *
      * @param  mixed  $row
-     * @return array
      */
     public function map($row): array
     {
@@ -57,8 +51,6 @@ class MyaStatsDataExport implements FromCollection, WithMapping, WithHeadings, W
 
     /**
      * Custom column headings.
-     *
-     * @return array
      */
     public function headings(): array
     {
@@ -73,10 +65,8 @@ class MyaStatsDataExport implements FromCollection, WithMapping, WithHeadings, W
 
     /**
      * Returns the data collection used to make the spreadsheet.
-     *
-     * @return \Illuminate\Support\Collection
      */
-    public function collection()
+    public function collection(): Collection
     {
         return $this->report->data();
     }
@@ -85,7 +75,6 @@ class MyaStatsDataExport implements FromCollection, WithMapping, WithHeadings, W
      * Register handlers to do manipulation of the underlying spreadsheet at
      * different phases of the export cycle.
      *
-     * @return array
      *
      * @see https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/
      * @see https://laraveldaily.com/laravel-excel-export-formatting-and-styling-cells/

@@ -8,9 +8,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
-class VirtualMeterTest extends TestCase
+final class VirtualMeterTest extends TestCase
 {
-    public function test_meters_relation()
+    public function test_meters_relation(): void
     {
         $meter1 = Meter::factory()->create(['type' => 'power', 'model_number' => 'ModelX']);
         $meter2 = Meter::factory()->create(['type' => 'power', 'model_number' => 'ModelY']);
@@ -24,7 +24,7 @@ class VirtualMeterTest extends TestCase
         $this->assertEquals('power', $vm->type());
     }
 
-    public function test_it_has_data()
+    public function test_it_has_data(): void
     {
         $meter1 = Meter::factory()->create([
             'type' => 'water',
@@ -43,7 +43,7 @@ class VirtualMeterTest extends TestCase
         $this->assertEquals(Carbon::yesterday()->hour(3)->format('Y-m-d H:i:s'), $vm->lastDataDate()->date);
     }
 
-    public function test_it_can_set_meters_explicitly()
+    public function test_it_can_set_meters_explicitly(): void
     {
         $meter1 = Meter::factory()->create([
             'type' => 'water',

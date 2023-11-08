@@ -4,6 +4,7 @@ namespace App\Charts;
 
 use App\Models\DataTables\DateRangeTrait;
 use App\Models\Meters\VirtualMeter;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
@@ -47,7 +48,6 @@ class MultiMeter implements ChartInterface
     /**
      * MultiMeter constructor.
      *
-     * @param  VirtualMeter  $model
      *
      * @throws \Exception
      */
@@ -61,7 +61,6 @@ class MultiMeter implements ChartInterface
     /**
      * Apply HTTP Request parameters to customize the chart.
      *
-     * @param  Request  $request
      * @return mixed|void
      */
     public function applyRequest(Request $request)
@@ -93,11 +92,10 @@ class MultiMeter implements ChartInterface
     /**
      * Returns the collection of data points to be plotted.
      *
-     * @return array
      *
      * @throws \Exception
      */
-    public function chartData()
+    public function chartData(): array
     {
         $data = [];
         foreach ($this->virtualMeter->meters() as $meter) {
@@ -124,11 +122,10 @@ class MultiMeter implements ChartInterface
     /**
      * Returns an array representation of chart settings and data.
      *
-     * @return array
      *
      * @throws \Exception
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'title' => [
@@ -150,41 +147,34 @@ class MultiMeter implements ChartInterface
     /**
      * Returns an JSON string representation of chart settings and data.
      *
-     * @return string
      *
      * @throws \Exception
      */
-    public function toJson()
+    public function toJson(): string
     {
         return json_encode($this->toArray());
     }
 
     /**
      * Returns the PV field being plotted.
-     *
-     * @return string
      */
-    public function pv()
+    public function pv(): string
     {
         return $this->pv;
     }
 
     /**
      * Returns the date at which the chart begins.
-     *
-     * @return \Carbon\Carbon
      */
-    public function beginsAt()
+    public function beginsAt(): Carbon
     {
         return $this->begins_at;
     }
 
     /**
      * Returns the date at which the chart ends.
-     *
-     * @return \Carbon\Carbon
      */
-    public function endsAt()
+    public function endsAt(): Carbon
     {
         return $this->ends_at;
     }

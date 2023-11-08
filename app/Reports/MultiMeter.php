@@ -40,8 +40,6 @@ class MultiMeter implements ReportInterface
     protected $title;
 
     /**
-     * @param  Request  $request
-     *
      * @throws \Exception
      */
     public function applyRequest(Request $request)
@@ -61,8 +59,6 @@ class MultiMeter implements ReportInterface
      * The report type is based on the type of the underlying physical meter
      * type if possible.   In the absence of type information from a physical
      * meter, the type will be set to the default value.
-     *
-     * @param $meterType
      */
     public function initMeterType($meterType)
     {
@@ -83,10 +79,8 @@ class MultiMeter implements ReportInterface
 
     /**
      * Returns the view that should be used to render the report.
-     *
-     * @return View
      */
-    public function view()
+    public function view(): View
     {
         JavaScript::put([
             'currentApiUrl' => route('reports.chart_data'),
@@ -136,9 +130,12 @@ class MultiMeter implements ReportInterface
     public function meterOptions()
     {
         switch ($this->meterType()) {
-            case 'power': $query = Meter::where('type', 'power'); break;
-            case 'water' : $query = Meter::where('type', 'water'); break;
-            case 'gas' : $query = Meter::where('type', 'gas'); break;
+            case 'power': $query = Meter::where('type', 'power');
+                break;
+            case 'water' : $query = Meter::where('type', 'water');
+                break;
+            case 'gas' : $query = Meter::where('type', 'gas');
+                break;
             default: return [];
         }
 
@@ -155,10 +152,7 @@ class MultiMeter implements ReportInterface
         return $this->chart()->endsAt();
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function data()
+    public function data(): Collection
     {
         if ($this->virtualMeter->hasMeters()) {
             return $this->virtualMeter->dataTable()
