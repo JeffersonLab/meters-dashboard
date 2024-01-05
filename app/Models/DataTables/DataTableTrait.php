@@ -10,9 +10,11 @@ namespace App\Models\DataTables;
 
 use App\Exceptions\DataTableException;
 use App\Exceptions\MeterDataException;
+use App\Utilities\MySampler;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 trait DataTableTrait
 {
@@ -251,5 +253,38 @@ trait DataTableTrait
         }
 
         return true;
+    }
+
+    public function fillDataTable()
+    {
+        $inserted = 0;
+        if (! empty($this->channels())){
+            try {
+                // We ask the mya server for data no more than 1000 items at a time
+                // until we are all caught up.
+                while (strtotime($this->nextDataDate()) < time()) {
+                    $mySampler = new MySampler($this->nextDataDate(), $this->channels());
+                    $items = $mySampler->getData();
+                    if ($items->isEmpty()) {
+                        break;  // must escape the while loop when no more data
+                    }
+                    foreach ($items as $item) {
+                        try {
+                            $this->dataTable()->insert($this->columnsFromMySampler($item));
+                            $inserted++;
+                        } catch (\PDOException $e) {
+                            Log::error($e);
+                            throw $e;
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::error($e->getMessage());
+            }
+        }else{
+            Log::warning("{$this->getPresenter()->menuLabel()} has no channels to fetch.");
+        }
+
+        return $inserted;
     }
 }

@@ -170,35 +170,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
         return 'building_data_'.$this->id;
     }
 
-    public function fillDataTable()
-    {
-        $inserted = 0;
-        try {
-            // We ask the mya server for data no more than 1000 items at a time
-            // until we are all caught up.
-            while (strtotime($this->nextDataDate()) < time()) {
-                $mySampler = new MySampler($this->nextDataDate(), $this->channels());
-                $items = $mySampler->getData();
-                if ($items->isEmpty()) {
-                    break;  // must escape the while loop when no more data
-                }
-                foreach ($items as $item) {
-                    try {
-                        $this->dataTable()->insert($this->columnsFromMySampler($item));
-                        $inserted++;
-                    } catch (\PDOException $e) {
-                        Log::error($e);
-                        throw $e;
-                    }
-                }
-            }
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            Log::error($e->getMessage());
-            //throw ($e);
-        }
-        //var_dump('inserted '.$inserted);
-        return $inserted;
-    }
 
     public function channels()
     {
