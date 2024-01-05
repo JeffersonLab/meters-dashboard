@@ -111,18 +111,23 @@ class MySampler implements DataFetchContract
     protected function organize(array $channelData): array
     {
         $this->organizedData = [];
-        foreach ($channelData['channels'] as $channel => $response) {
-            if (array_key_exists('data', $response)) {
-                foreach ($response['data'] as $data) {
-                    if (!array_key_exists('v', $data) || stristr($data['v'], 'undefined')) {
-                        $this->organizedData[$data['d']][$channel] = null;
-                    } else {
-                        $this->organizedData[$data['d']][$channel] = $data['v'];
+        if (! array_key_exists('channels', $channelData)){
+            Log::error('No channels');
+            Log::info(json_encode($channelData));
+        }else{
+            foreach ($channelData['channels'] as $channel => $response) {
+                if (array_key_exists('data', $response)) {
+                    foreach ($response['data'] as $data) {
+                        if (!array_key_exists('v', $data) || stristr($data['v'], 'undefined')) {
+                            $this->organizedData[$data['d']][$channel] = null;
+                        } else {
+                            $this->organizedData[$data['d']][$channel] = $data['v'];
+                        }
                     }
                 }
-            }
-            if (array_key_exists('error', $response)) {
-                $this->warnings[] = $response['error'];
+                if (array_key_exists('error', $response)) {
+                    $this->warnings[] = $response['error'];
+                }
             }
         }
         return $this->organizedData;
