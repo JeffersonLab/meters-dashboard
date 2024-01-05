@@ -52,7 +52,7 @@ class FillMeters extends Command
             if ($meter->type == 'power' || $meter->type == 'water' || $meter->type == 'gas') {
                 try {
                     $count = $meter->fillDataTable();
-                    $this->info('Filled '.$meter->name."with $count rows");
+                    $this->info('Filled '.$meter->name." with $count rows");
                     $eventCount = $meter->makeNewRolloverEvents();
                     if ($eventCount > 0) {
                         $this->info("Identified $eventCount rollover events");

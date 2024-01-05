@@ -13,6 +13,7 @@ use App\Models\DataTables\DataTableTrait;
 use App\Presenters\GasMeterPresenter;
 use App\Presenters\PowerMeterPresenter;
 use App\Presenters\WaterMeterPresenter;
+use App\Utilities\MySampler;
 use App\Utilities\MySamplerData;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
@@ -619,32 +620,32 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         return $this->reporter;
     }
 
-    /**
-     * Insert new meter data rows.
-     *
-     * @return int|mixed
-     *
-     * @throws \Exception
-     */
+
     public function fillDataTable()
     {
         $inserted = 0;
         try {
-            $mySampler = new MySamplerData($this->nextDataDate(), $this->channels());
-            $items = $mySampler->getData();
-
-            foreach ($items as $item) {
-                try {
-                    $this->dataTable()->insert($this->columnsFromMySampler($item));
-                    $inserted++;
-                } catch (\PDOException $e) {
-                    Log::error($e);
+            // We ask the mya server for data no more than 1000 items at a time
+            // until we are all caught up.
+            while (strtotime($this->nextDataDate()) < time()) {
+                $mySampler = new MySampler($this->nextDataDate(), $this->channels());
+                $items = $mySampler->getData();
+                if ($items->isEmpty()) {
+                    break;  // must escape the while loop when no more data
+                }
+                foreach ($items as $item) {
+                    try {
+                        $this->dataTable()->insert($this->columnsFromMySampler($item));
+                        $inserted++;
+                    } catch (\PDOException $e) {
+                        Log::error($e);
+                        throw $e;
+                    }
                 }
             }
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
-
         return $inserted;
     }
 

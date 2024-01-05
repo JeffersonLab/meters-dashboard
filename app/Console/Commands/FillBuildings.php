@@ -28,11 +28,12 @@ class FillBuildings extends Command
      */
     public function handle(): int
     {
+        ini_set('memory_limit', '1G');
         $existing = Building::all();
         foreach ($existing as $building) {
             try {
                 $count = $building->fillDataTable();
-                $this->info('Filled '.$building->name."with $count rows");
+                $this->info('Filled '.$building->name." with $count rows");
             } catch (QueryException $e) {
                 if (strstr($e->getMessage(), " Unknown column 'ccf'")) {
                     $this->error('Must add gas meter columns to '.$building->id);

@@ -4,6 +4,7 @@ namespace App\Utilities;
 
 use App\Exceptions\WebClientException;
 use App\Exceptions\WebServerException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -98,28 +99,29 @@ class MySampler implements DataFetchContract
      * The calculated value prevents requesting steps in the future.
      * The max value prevents asking for too many datapoints from the server.
      */
-    public function numSteps($numSteps = null) : int
+    public function numSteps($numSteps = null): int
     {
         $desired = $numSteps ?: $this->calcNumSteps();
-        $max = config('meters.max_steps', 5000);
-
-        return ($desired > $max) ? $max : $desired;
+        $max = config('myquery.max_samples', 5000);
+//        var_dump($max, $desired);
+//        var_dump(($desired && $desired > $max) ? $max : $desired);
+        return ($desired && $desired > $max) ? $max : $desired;
     }
 
-    protected function organize(array $channelData) : array
+    protected function organize(array $channelData): array
     {
         $this->organizedData = [];
-        foreach ($channelData['channels'] as $channel => $response){
-            if (array_key_exists('data', $response)){
-                foreach ($response['data'] as $data){
-                    if (stristr($data['v'], 'undefined')) {
+        foreach ($channelData['channels'] as $channel => $response) {
+            if (array_key_exists('data', $response)) {
+                foreach ($response['data'] as $data) {
+                    if (!array_key_exists('v', $data) || stristr($data['v'], 'undefined')) {
                         $this->organizedData[$data['d']][$channel] = null;
-                    }else{
+                    } else {
                         $this->organizedData[$data['d']][$channel] = $data['v'];
                     }
                 }
             }
-            if (array_key_exists('error', $response)){
+            if (array_key_exists('error', $response)) {
                 $this->warnings[] = $response['error'];
             }
         }
@@ -134,7 +136,7 @@ class MySampler implements DataFetchContract
     public function compatibleData()
     {
         $data = [];
-        foreach ($this->organizedData as $date => $values){
+        foreach ($this->organizedData as $date => $values) {
             $data[] = ['date' => $date] + $values;
         }
         return $data;
@@ -142,35 +144,43 @@ class MySampler implements DataFetchContract
 
     public function hasWarnings()
     {
-        return ! empty($this->warnings);
+        return !empty($this->warnings);
     }
 
-    public function getData()
+    /**
+     * @throws WebClientException
+     * @throws WebServerException
+     */
+    public function getData(): Collection
     {
         $response = Http::get($this->url, $this->query);
         // Success response is easy, just return properly reorganized json response.
         if ($response->successful()) {
             $this->organize($response->json());
-            return $this->compatibleData();
+            return collect($this->compatibleData());
         }
         // A 400 client error will ideally be a json response and might even have partial
         // response data along with error messages.  Or the body might be HTML if a proxy clobbered the json response.
         // The proper course of action will therefore depend on the content-type returned.
         if ($response->clientError()) {
-           if (stristr($response->header('content-type'),'application/json')){
-               // The organize function will extract partial results and populate warnings
-               $this->organize($response->json());
-               throw new WebClientException('The server responded with error messages.');
-           }else{
-               Log::error( (string) Http::get($this->url, $this->query)->effectiveUri());
-               Log::error($response->body());
-               throw new WebClientException('The request could not be processed.');
-           }
+            if (stristr($response->header('content-type'), 'application/json')) {
+                // The organize function will extract partial results and populate warnings
+                $this->organize($response->json());
+                foreach ($this->warnings as $warning) {
+                    Log::warning($warning);
+                }
+                throw new WebClientException('The server responded with error messages. See log file.');
+            } else {
+                Log::error((string)Http::get($this->url, $this->query)->effectiveUri());
+                Log::error($response->body());
+                throw new WebClientException('The request could not be processed.');
+            }
         }
-        if ($response->serverError()){
-            Log::error( (string) Http::get($this->url, $this->query)->effectiveUri());
+        if ($response->serverError()) {
+            Log::error((string)Http::get($this->url, $this->query)->effectiveUri());
             Log::error($response->body());
-            throw new WebServerException('The server responded with an error.');
+            throw new WebServerException('The server responded with an error. See log file.');
         }
+        throw new \Exception('An unexpected error occurred getting archiver data. See log file.');
     }
 }

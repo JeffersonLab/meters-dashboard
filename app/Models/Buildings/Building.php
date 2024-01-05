@@ -11,6 +11,7 @@ use App\Models\DataTables\DataTableReporter;
 use App\Models\DataTables\DataTableTrait;
 use App\Models\Meters\Meter;
 use App\Presenters\BuildingPresenter;
+use App\Utilities\MySampler;
 use App\Utilities\MySamplerData;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -176,7 +177,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
             // We ask the mya server for data no more than 1000 items at a time
             // until we are all caught up.
             while (strtotime($this->nextDataDate()) < time()) {
-                $mySampler = new MySamplerData($this->nextDataDate(), $this->channels());
+                $mySampler = new MySampler($this->nextDataDate(), $this->channels());
                 $items = $mySampler->getData();
                 if ($items->isEmpty()) {
                     break;  // must escape the while loop when no more data
