@@ -21,6 +21,7 @@ mix.setResourceRoot('../');
 // Javascript
 mix.js('resources/js/app.js', 'public/js')
     .vue()
+    .version()
     .sourceMaps();
 
 mix.js('resources/js/voltage.js', 'public/js')
@@ -46,7 +47,7 @@ mix.copy('resources/js/jquery.maphilight.min.js','public/js/jquery.maphilight.mi
 mix.copy('resources/html/presenter-graph.html','public/presenter-graph.html');
 
 // SASS and CSS
-mix.sass('resources/sass/app.scss', 'public/css');
+mix.sass('resources/sass/app.scss', 'public/css').sourceMaps().version();
 mix.copy('resources/css/presenter-graph.css','public/css/presenter-graph.css');
 mix.copy('resources/css/ionicons-2.0.1.min.css','public/css/ionicons-2.0.1.min.css');
 mix.copy('resources/css/jquery.dynameter.css','public/css/jquery.dynameter.css');

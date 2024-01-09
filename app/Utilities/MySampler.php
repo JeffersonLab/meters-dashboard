@@ -46,12 +46,12 @@ class MySampler implements DataFetchContract
      *   ]
      * ]
      */
-    public array $organizedData;
+    public array $organizedData = [];
 
     /*
      * Errors encountered during a partially successful fetch will be recorded as warning messages.
      */
-    public array $warnings;
+    public array $warnings = [];
 
     /**
      * MySamplerData constructor.

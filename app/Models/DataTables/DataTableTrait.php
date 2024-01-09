@@ -280,6 +280,7 @@ trait DataTableTrait
                 }
             } catch (\Exception $e) {
                 Log::error($e->getMessage());
+                throw $e;
             }
         }else{
             Log::warning("{$this->getPresenter()->menuLabel()} has no channels to fetch.");
