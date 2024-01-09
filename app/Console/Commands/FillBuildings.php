@@ -6,6 +6,9 @@ use App\Models\Buildings\Building;
 use App\Models\DataTables\DataTableModifier;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
+use App\Exceptions\WebClientException;
+
 
 class FillBuildings extends Command
 {
@@ -32,17 +35,26 @@ class FillBuildings extends Command
         $existing = Building::all();
         foreach ($existing as $building) {
             try {
-                $count = $building->fillDataTable();
-                $this->info('Filled '.$building->name." with $count rows");
+                if ($building->type != 'CoolingTower'){ 
+                    $this->info('Try '.$building->name);               
+                    $count = $building->fillDataTable();
+                    $this->info('Filled '.$building->name." with $count rows");
+                }
             } catch (QueryException $e) {
-                if (strstr($e->getMessage(), " Unknown column 'ccf'")) {
+                if (stristr($e->getMessage(), " Unknown column 'ccf'")) {
                     $this->error('Must add gas meter columns to '.$building->id);
                     // Fix the problem in anticipation of future runs.
                     $this->addGasMeterColumns($building);
                 }
+                if (stristr($e->getMessage(), " Unknown column 'gal'")) {
+                    $this->error('Must add water meter columns to '.$building->id);
+                    // Fix the problem in anticipation of future runs.
+                    $this->addWaterMeterColumns($building);
+                }
+            } catch (WebClientExeption $e) {
+                $this->error($e->getMessage());
             } catch (\Exception $e) {
                 $this->error($e->getMessage());
-                throw $e;
             }
         }
 
@@ -59,5 +71,17 @@ class FillBuildings extends Command
     {
         $modifier = new DataTableModifier($building);
         $modifier->addGasMeterColumns();
+    }
+    
+    /**
+     * Add water meter columns to the building.
+     *
+     *
+     * @throws \App\Exceptions\DataConversionException
+     */
+    protected function addWaterMeterColumns(Building $building)
+    {
+        $modifier = new DataTableModifier($building);
+        $modifier->addWaterMeterColumns();
     }
 }
