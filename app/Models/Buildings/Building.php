@@ -35,11 +35,6 @@ class Building extends BaseModel implements DataTableInterface, PresentableInter
 
     public $fillable = ['name', 'element_id', 'type', 'abbreviation', 'building_num', 'square_footage', 'jlab_name'];
 
-    protected $casts = [
-        'deleted_at' => 'datetime',
-        'begins_at' => 'datetime',
-    ];
-
     /**
      * Building constructor.
      */
@@ -47,6 +42,14 @@ class Building extends BaseModel implements DataTableInterface, PresentableInter
     {
         $this->dataTableFk = 'building_id';
         parent::__construct($attributes);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'deleted_at' => 'datetime',
+            'begins_at' => 'datetime',
+        ];
     }
 
     public function meters()

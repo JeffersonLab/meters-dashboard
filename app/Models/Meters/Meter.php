@@ -46,11 +46,6 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
 
     protected $reporter;
 
-    protected $casts = [
-        'deleted_at' => 'datetime',
-        'begins_at' => 'datetime',
-    ];
-
     /**
      * Meter constructor.
      */
@@ -58,6 +53,14 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
     {
         $this->dataTableFk = 'meter_id';
         parent::__construct($attributes);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'deleted_at' => 'datetime',
+            'begins_at' => 'datetime',
+        ];
     }
 
     public static function typeFromCEDType($cedType)

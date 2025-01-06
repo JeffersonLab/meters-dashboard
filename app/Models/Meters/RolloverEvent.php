@@ -21,9 +21,12 @@ class RolloverEvent extends BaseModel
         'rollover_accumulated',
     ];
 
-    protected $casts = [
-        'rollover_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'rollover_at' => 'datetime',
+        ];
+    }
 
     public function meter()
     {

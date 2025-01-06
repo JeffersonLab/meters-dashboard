@@ -38,11 +38,6 @@ class VirtualMeter extends BaseModel implements DataTableInterface
         'description',
     ];
 
-    protected $casts = [
-        'deleted_at' => 'datetime',
-        'begins_at' => 'datetime',
-    ];
-
     /*
      * @var string
      */
@@ -72,6 +67,14 @@ class VirtualMeter extends BaseModel implements DataTableInterface
         $this->begins_at = Carbon::now()->startOfDay();
         $this->meters = new Collection;
         parent::__construct($attributes);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'deleted_at' => 'datetime',
+            'begins_at' => 'datetime',
+        ];
     }
 
     /**
