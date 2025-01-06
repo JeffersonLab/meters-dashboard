@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Config;
 
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication;
     use DatabaseMigrations;
 
     //    use RefreshDatabase;
