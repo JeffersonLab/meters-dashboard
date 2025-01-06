@@ -8,9 +8,9 @@
 
 namespace App\Presenters;
 
-use App\Charts\DailyKWH;
-use Collective\Html\HtmlFacade as Html;
+use App\Models\Meters\Meter;
 use Robbo\Presenter\Presenter;
+use Spatie\Html\Html;
 
 class BuildingPresenter extends Presenter implements BoxInterface
 {
@@ -46,7 +46,7 @@ class BuildingPresenter extends Presenter implements BoxInterface
             $screen = env('BASE_SCREEN_URL').'/building.edl';
             $url = $screen.'&'.$var;
 
-            return link_to($url, 'EPICS Detail Screen', $attributes);
+            return html()->a($url, 'EPICS Detail Screen')->attributes($attributes);
         }
 
         return null;
@@ -55,7 +55,7 @@ class BuildingPresenter extends Presenter implements BoxInterface
     public function linkToCedElement($attributes = ['target' => '_blank'])
     {
         /** @noinspection PhpUndefinedMethodInspection */
-        return Html::linkToCedElement($this->name, 'CED Element Page', $attributes);
+        return html()->linkToCedElement($this->name, 'CED Element Page', $attributes);
     }
 
     public function icon()
@@ -90,7 +90,7 @@ class BuildingPresenter extends Presenter implements BoxInterface
         return $links;
     }
 
-    public function defaultChart(): DailyKWH
+    public function defaultChart(): string
     {
         return 'dailykwh';
     }
