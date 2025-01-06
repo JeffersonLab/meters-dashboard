@@ -23,26 +23,26 @@
                 </div>
 
                 <div class="box-body">
-                    {!!  Form::open(['method'=>'get']) !!}
+                    {{ html()->form('GET', url()->current())->open() }}
                     <div class="form-group">
                         @include('partials.daterange',['start' => $report->begins_at, 'end' => $report->ends_at])
                         <div class="pv-options">
                             <div class="form-group">
                                 <label for="pv">Option: </label>
-                                {!! Form::select('pv',$report->pvOptions(),null,['class'=>'form-control'])  !!}
+                                {{ html()->select('pv', $report->pvOptions())->class('form-control') }}
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="names">Names: </label>
-                        {!! Form::textarea('names',$report->names(),['rows'=> 3, 'class'=>'form-control'])  !!}
+                        {{ html()->textarea('names', $report->names())->rows(3)->class('form-control') }}
                         <p class="help-block">Use the textarea to restrict the report to the comma-separated list of names.</p>
                     </div>
                     <div class="form-group">
-                        {!! Form::submit('Apply') !!}
+                        {{ html()->submit('Apply') }}
                     </div>
 
-                    {!!  Form::close() !!}
+                    {{ html()->form()->close() }}
                 </div>
 
             </div>
@@ -86,9 +86,9 @@
 
                             <tr>
                                 @if (is_a($datum->item, 'App\Meters\Building'))
-                                    <td>{!!  link_to_route('buildings.show', $datum->label, [$datum->item->id]) !!}</td>
+                                    <td>{{ html()->a(route('buildings.show', [$datum->item->id]), $datum->label) }}</td>
                                 @elseif (is_a($datum->item, 'App\Meters\Meter'))
-                                    <td>{!!  link_to_route('meters.show', $datum->label, [$datum->item->id]) !!}</td>
+                                    <td>{{ html()->a(route('meters.show', [$datum->item->id]), $datum->label) }}</td>
                                 @else
                                     <td>{{$datum->label}}</td>
                                 @endif

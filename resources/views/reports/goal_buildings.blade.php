@@ -35,15 +35,15 @@
                 </div>
 
                 <div class="box-body">
-                    {!!  Form::open(['method'=>'get']) !!}
+                    {{ html()->form('GET', url()->current())->open() }}
                     <div class="form-group">
                         @include('partials.daterange',['start' => $report->begins_at, 'end' => $report->ends_at])
                     </div>
                     <div class="form-group">
-                        {!! Form::submit('Apply') !!}
+                        {{ html()->submit('Apply') }}
                     </div>
 
-                    {!!  Form::close() !!}
+                    {{ html()->form()->close() }}
                 </div>
 
             </div>
@@ -86,7 +86,7 @@
                         @foreach ($report->data() as $datum)
                             <tr>
                                 <td>
-                                    {!! link_to_route('buildings.show', $datum->item->name.' ('.$datum->item->building_num.')', $datum->item->id) !!}
+                                    {{ html()->a(route('buildings.show', $datum->item->id), $datum->item->name . ' (' . $datum->item->building_num . ')') }}
                                 </td>
 
                                 @if (isset($datum->btu))

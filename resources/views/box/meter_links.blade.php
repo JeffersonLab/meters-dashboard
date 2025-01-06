@@ -13,13 +13,13 @@ $title - title for the card
     <div class="card-body">
         <ul class="links meter-links">
             @foreach ($building->powerMeters->sortBy('epics_name') as $meter)
-                <li>{!!  $meter->icon() !!}{!!  link_to_route('meters.show',$meter->epics_name,[$meter->id]) !!}</li>
+                <li>{!!  $meter->icon() !!}{{ html()->a(route('meters.show', [$meter->id]), $meter->epics_name) }}</li>
             @endforeach
             @foreach ($building->waterMeters->sortBy('epics_name') as $meter)
-                <li>{!!  $meter->icon() !!}{!!  link_to_route('meters.show',$meter->epics_name,[$meter->id]) !!}</li>
+                <li>{!!  $meter->icon() !!}{{ html()->a(route('meters.show', [$meter->id]), $meter->epics_name) }}</li>
             @endforeach
             @foreach ($building->gasMeters->sortBy('epics_name') as $meter)
-                <li>{!!  $meter->icon() !!}{!!  link_to_route('meters.show',$meter->epics_name,[$meter->id]) !!}</li>
+                <li>{!!  $meter->icon() !!}{{ html()->a(route('meters.show', [$meter->id]), $meter->epics_name) }}</li>
             @endforeach
         </ul>
     </div>
