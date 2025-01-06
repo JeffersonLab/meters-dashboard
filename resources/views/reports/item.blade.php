@@ -86,9 +86,9 @@
 
                             <tr>
                                 @if (is_a($datum->item, 'App\Meters\Building'))
-                                    <td>{!!  link_to_route('buildings.show', $datum->label, [$datum->item->id]) !!}</td>
+                                    <td>{{ html()->a(route('buildings.show', [$datum->item->id]), $datum->label) }}</td>
                                 @elseif (is_a($datum->item, 'App\Meters\Meter'))
-                                    <td>{!!  link_to_route('meters.show', $datum->label, [$datum->item->id]) !!}</td>
+                                    <td>{{ html()->a(route('meters.show', [$datum->item->id]), $datum->label) }}</td>
                                 @else
                                     <td>{{$datum->label}}</td>
                                 @endif

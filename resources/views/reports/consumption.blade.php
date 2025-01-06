@@ -61,7 +61,7 @@
                 <tbody class="tbody-striped">
                 @foreach ($data as $datum)
                     <tr>
-                        <td>{!!  link_to_route('meters.show', $datum->label, [$datum->meter->id]) !!}</td>
+                        <td>{{ html()->a(route('meters.show', [$datum->meter->id]), $datum->label) }}</td>
 
                         <td>
                         @if (isset($datum->first))

@@ -86,7 +86,7 @@
                         @foreach ($report->data() as $datum)
                             <tr>
                                 <td>
-                                    {!! link_to_route('buildings.show', $datum->item->name.' ('.$datum->item->building_num.')', $datum->item->id) !!}
+                                    {{ html()->a(route('buildings.show', $datum->item->id), $datum->item->name . ' (' . $datum->item->building_num . ')') }}
                                 </td>
 
                                 @if (isset($datum->btu))
