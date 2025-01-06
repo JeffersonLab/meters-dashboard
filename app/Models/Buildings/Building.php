@@ -2,6 +2,7 @@
 
 namespace App\Models\Buildings;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Exceptions\ReportingException;
 use App\Models\BaseModel;
 use App\Models\DataTables\BuildingDataTableReporter;
@@ -52,7 +53,7 @@ class Building extends BaseModel implements DataTableInterface, PresentableInter
         ];
     }
 
-    public function meters()
+    public function meters(): HasMany
     {
         return $this->hasMany(Meter::class);
     }

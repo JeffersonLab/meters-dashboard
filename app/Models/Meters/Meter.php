@@ -2,6 +2,8 @@
 
 namespace App\Models\Meters;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Exceptions\MeterDataException;
 use App\Exceptions\ModelValidationException;
 use App\Models\BaseModel;
@@ -77,7 +79,7 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
         return null;
     }
 
-    public function building()
+    public function building(): BelongsTo
     {
         return $this->belongsTo(Building::class);
     }
@@ -92,12 +94,12 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
         return $query->where('epics_name', '=', self::epicsNameFromPv($pv));
     }
 
-    public function meterLimits()
+    public function meterLimits(): HasMany
     {
         return $this->hasMany(MeterLimit::class);
     }
 
-    public function rolloverEvents()
+    public function rolloverEvents(): HasMany
     {
         return $this->hasMany(RolloverEvent::class)->orderBy('rollover_at');
     }

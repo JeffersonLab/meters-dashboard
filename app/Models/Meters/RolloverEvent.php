@@ -2,6 +2,7 @@
 
 namespace App\Models\Meters;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\BaseModel;
 
 class RolloverEvent extends BaseModel
@@ -28,7 +29,7 @@ class RolloverEvent extends BaseModel
         ];
     }
 
-    public function meter()
+    public function meter(): BelongsTo
     {
         return $this->belongsTo(Meter::class);
     }
