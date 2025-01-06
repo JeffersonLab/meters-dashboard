@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Robbo\Presenter\PresentableInterface;
 
-class Meter extends BaseModel implements PresentableInterface, DataTableInterface
+class Meter extends BaseModel implements DataTableInterface, PresentableInterface
 {
     use DataTableTrait;
 
@@ -181,7 +181,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
                     if ($rows[$i + 2]->$field < $rows[$i]->$field
                         && $rows[$i + 2]->$field > $rows[$i + 1]->$field) {
                         $accumulatedRollover += $this->rolloverIncrement($field);
-                        $event = new RolloverEvent();
+                        $event = new RolloverEvent;
                         $event->meter_id = $this->id;
                         $event->rollover_at = $rows[$i + 1]->date;
                         $event->field = $field;
@@ -263,7 +263,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Answers whether the provided value is within the limits for the
      * specified field.
      *
-     * @param  mixed  $value numeric value
+     * @param  mixed  $value  numeric value
      */
     public function withinLimits(string $field, $value): bool
     {
@@ -483,6 +483,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         if ($field) {
             $query->addSelect($field)->whereNotNull($field);
         }
+
         // Return the prepared query object
         return $query;
     }
@@ -603,9 +604,9 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
                 ->select(DB::raw("AVG($field) as avg,  MIN($field) as min, MAX($field) as max"));
         }
         $query->where('meter_id', $this->id)
-              ->where('date', '>=', $fromDate)
-              ->where('date', '<=', $toDate)
-              ->whereNotNull($field);
+            ->where('date', '>=', $fromDate)
+            ->where('date', '<=', $toDate)
+            ->whereNotNull($field);
 
         return $query->first();
     }
@@ -738,7 +739,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Convert the data returned from MySamplerData into an array
      * suitable for use with a DB::insert().
      *
-     * @param $item - element of array returned by MySampler
+     * @param  $item  - element of array returned by MySampler
      */
     protected function columnsFromMySampler($item): array
     {

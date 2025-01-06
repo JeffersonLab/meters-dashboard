@@ -14,7 +14,7 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use PhpOffice\PhpSpreadsheet\Cell\Hyperlink;
 
-class MultiMeterDataExport implements FromCollection, WithMapping, WithHeadings, WithEvents, ShouldAutoSize, WithStrictNullComparison
+class MultiMeterDataExport implements FromCollection, ShouldAutoSize, WithEvents, WithHeadings, WithMapping, WithStrictNullComparison
 {
     protected $report;
 
@@ -26,20 +26,20 @@ class MultiMeterDataExport implements FromCollection, WithMapping, WithHeadings,
         $this->report = $report;
     }
 
-//    protected function firstDatum($row){
-//        if (isset($row->first)){
-//            return $row->first->{$this->report->pv};
-//        }
-//        return null;
-//    }
-//
-//
-//    protected function lastDatum($row){
-//        if (isset($row->last)){
-//            return $row->last->{$this->report->pv};
-//        }
-//        return null;
-//    }
+    //    protected function firstDatum($row){
+    //        if (isset($row->first)){
+    //            return $row->first->{$this->report->pv};
+    //        }
+    //        return null;
+    //    }
+    //
+    //
+    //    protected function lastDatum($row){
+    //        if (isset($row->last)){
+    //            return $row->last->{$this->report->pv};
+    //        }
+    //        return null;
+    //    }
 
     /**
      * Is the given row considered empty?
@@ -54,17 +54,17 @@ class MultiMeterDataExport implements FromCollection, WithMapping, WithHeadings,
      *
      * @return string
      */
-//    protected function note($row){
-//        if ($this->isEmptyRow($row)){
-//            return 'N/A';
-//        }
-//        if(! $row->isComplete){
-//            return sprintf("Incomplete Data: %s to %s",
-//                    date('Y-m-d H:i', strtotime($row->first->date)),
-//                    date('Y-m-d H:i', strtotime($row->last->date)));
-//        }
-//        return '';
-//    }
+    //    protected function note($row){
+    //        if ($this->isEmptyRow($row)){
+    //            return 'N/A';
+    //        }
+    //        if(! $row->isComplete){
+    //            return sprintf("Incomplete Data: %s to %s",
+    //                    date('Y-m-d H:i', strtotime($row->first->date)),
+    //                    date('Y-m-d H:i', strtotime($row->last->date)));
+    //        }
+    //        return '';
+    //    }
 
     /**
      * Transform row data.
@@ -132,21 +132,21 @@ class MultiMeterDataExport implements FromCollection, WithMapping, WithHeadings,
                     ->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-//                foreach ($event->sheet->getColumnIterator('F') as $row) {
-//                    foreach ($row->getCellIterator() as $cell) {
-//                        if (str_contains($cell->getValue(), '://')) {
-//                            $cell->setHyperlink(new Hyperlink($cell->getValue(), 'Read'));
-//
-//                            // Upd: Link styling added
-//                            $event->sheet->getStyle($cell->getCoordinate())->applyFromArray([
-//                                'font' => [
-//                                    'color' => ['rgb' => '0000FF'],
-//                                    'underline' => 'single'
-//                                ]
-//                            ]);
-//                        }
-//                    }
-//                }
+                //                foreach ($event->sheet->getColumnIterator('F') as $row) {
+                //                    foreach ($row->getCellIterator() as $cell) {
+                //                        if (str_contains($cell->getValue(), '://')) {
+                //                            $cell->setHyperlink(new Hyperlink($cell->getValue(), 'Read'));
+                //
+                //                            // Upd: Link styling added
+                //                            $event->sheet->getStyle($cell->getCoordinate())->applyFromArray([
+                //                                'font' => [
+                //                                    'color' => ['rgb' => '0000FF'],
+                //                                    'underline' => 'single'
+                //                                ]
+                //                            ]);
+                //                        }
+                //                    }
+                //                }
             },
         ];
     }

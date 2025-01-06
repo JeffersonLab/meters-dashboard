@@ -8,6 +8,4 @@
 
 namespace App\Exceptions;
 
-class MeterLimitException extends \Exception
-{
-}
+class MeterLimitException extends \Exception {}

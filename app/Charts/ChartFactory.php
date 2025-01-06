@@ -16,8 +16,8 @@ class ChartFactory
     /**
      * Returns an object that implements ChartInterface.
      *
-     * @param  string  $name - identifies which chart to instantiate.
-     * @param  DataTableInterface  $model - passed to the chart constructor
+     * @param  string  $name  - identifies which chart to instantiate.
+     * @param  DataTableInterface  $model  - passed to the chart constructor
      * @param  Request  $request  - HTTP Request parameters
      *
      * @throws \Exception

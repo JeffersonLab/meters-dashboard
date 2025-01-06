@@ -29,18 +29,18 @@ final class PowerConsumptionReportTest extends TestCase
     public function test_it_sets_day_start_hour(): void
     {
         Config::set('reports.day_start_hour', 8);
-        $r = new PowerConsumption();
+        $r = new PowerConsumption;
         $this->assertEquals(8, $r->begins_at->hour);
 
         Config::set('reports.day_start_hour', 0);
-        $r = new PowerConsumption();
+        $r = new PowerConsumption;
         $this->assertEquals(0, $r->begins_at->hour);
     }
 
     public function test_it_reports_using_correct_default_start_hour(): void
     {
         Config::set('reports.day_start_hour', 8);
-        $report = new PowerConsumption();
+        $report = new PowerConsumption;
         $request = new \Illuminate\Http\Request([
             'begin' => Carbon::today()->subDay(5)->format('Y-m-d'),
             'meters' => $this->meter->epics_name,
@@ -57,7 +57,7 @@ final class PowerConsumptionReportTest extends TestCase
     {
         // Let's test midnight to midnight reporting
         Config::set('reports.day_start_hour', 0);
-        $report = new PowerConsumption();
+        $report = new PowerConsumption;
         $request = new \Illuminate\Http\Request([
             'begin' => Carbon::today()->subDay(5)->hour(3)->format('Y-m-d H:i'),
             'end' => Carbon::today()->subDay(4)->hour(4)->format('Y-m-d H:i'),

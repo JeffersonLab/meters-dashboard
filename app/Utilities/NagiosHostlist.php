@@ -35,7 +35,7 @@ class NagiosHostlist extends NagiosData
 
     public function hosts()
     {
-        $hosts = new Collection();
+        $hosts = new Collection;
         foreach ($this->getData()->data->hostlist as $host) {
             $hosts->push($host);
         }

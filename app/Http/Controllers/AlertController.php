@@ -17,7 +17,7 @@ class AlertController extends Controller
     {
         try {
             $serviceAlertRepository = new ServiceAlertRepository($servicelist);
-            $meterAlertRepository = new MeterAlertRepository();
+            $meterAlertRepository = new MeterAlertRepository;
 
             $alerts = $serviceAlertRepository->alerts();
             $alerts = $alerts->merge($meterAlertRepository->alerts());
@@ -26,7 +26,7 @@ class AlertController extends Controller
             });
 
             return View::make('alerts.table')
-                    ->with('alerts', $alerts);
+                ->with('alerts', $alerts);
         } catch (\Exception $e) {
             return View::make('alerts.error')
                 ->with('message', $e->getMessage());

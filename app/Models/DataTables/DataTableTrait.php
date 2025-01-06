@@ -178,6 +178,7 @@ trait DataTableTrait
                 break;
             default:  $subQuery = DB::table($this->dataBetweenQuery($beginDate, $endDate));
         }
+
         /*
          * The lead() function is a mysql window function to efficiently gather periodic column
          * differences which equate to periodic consumption.

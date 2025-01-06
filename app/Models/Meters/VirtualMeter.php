@@ -70,7 +70,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
     {
         $this->dataTableFk = 'meter_id';
         $this->begins_at = Carbon::now()->startOfDay();
-        $this->meters = new Collection();
+        $this->meters = new Collection;
         parent::__construct($attributes);
     }
 

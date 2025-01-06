@@ -27,9 +27,9 @@ class FillClimate extends Command
     protected function getDataSource()
     {
         if ($this->hasOption('source') && $this->option('source') == 'darksky') {
-            $dataSource = new \App\Utilities\DarkSkyClimateData();
+            $dataSource = new \App\Utilities\DarkSkyClimateData;
         } else {
-            $dataSource = new \App\Utilities\FacilitiesClimateData();
+            $dataSource = new \App\Utilities\FacilitiesClimateData;
         }
 
         if ($this->hasOption('date')) {

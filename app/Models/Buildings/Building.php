@@ -16,7 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Robbo\Presenter\PresentableInterface;
 
-class Building extends BaseModel implements PresentableInterface, DataTableInterface
+class Building extends BaseModel implements DataTableInterface, PresentableInterface
 {
     use DataTableTrait;
 
@@ -195,6 +195,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
             Log::error($e->getMessage());
             //throw ($e);
         }
+
         //var_dump('inserted '.$inserted);
         return $inserted;
     }
@@ -214,7 +215,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
      * Convert the data returned from MySamplerData into an array
      * suitable for use with a DB::insert().
      *
-     * @param $item - element of array returned by MySampler
+     * @param  $item  - element of array returned by MySampler
      */
     protected function columnsFromMySampler($item): array
     {
