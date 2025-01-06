@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
-class MeterTest extends TestCase
+final class MeterTest extends TestCase
 {
     public function test_it_casts_dates(): void
     {

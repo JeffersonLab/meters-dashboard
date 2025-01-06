@@ -6,7 +6,7 @@ use App\Models\Meters\Meter;
 use App\Models\Meters\MeterLimit;
 use Tests\TestCase;
 
-class MeterLimitTest extends TestCase
+final class MeterLimitTest extends TestCase
 {
     public function test_it_rejects_hihi_less_than_lolo(): void
     {
