@@ -2,8 +2,6 @@
 
 namespace App\Models\Meters;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Exceptions\MeterDataException;
 use App\Exceptions\ModelValidationException;
 use App\Models\BaseModel;
@@ -17,6 +15,8 @@ use App\Presenters\PowerMeterPresenter;
 use App\Presenters\WaterMeterPresenter;
 use App\Utilities\MySamplerData;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

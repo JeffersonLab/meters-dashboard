@@ -2,7 +2,6 @@
 
 namespace App\Models\Buildings;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Exceptions\ReportingException;
 use App\Models\BaseModel;
 use App\Models\DataTables\BuildingDataTableReporter;
@@ -14,6 +13,7 @@ use App\Models\Meters\Meter;
 use App\Presenters\BuildingPresenter;
 use App\Utilities\MySamplerData;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Log;
 use Robbo\Presenter\PresentableInterface;
 

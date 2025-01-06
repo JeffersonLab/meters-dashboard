@@ -2,8 +2,8 @@
 
 namespace App\Models\Meters;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RolloverEvent extends BaseModel
 {
