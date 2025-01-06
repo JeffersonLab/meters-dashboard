@@ -5,7 +5,7 @@
     <div class="card-body">
         <ul>
             @foreach($model->infoBoxItems() as $label => $item)
-                <li>{{$label}}: {{ $item }}</li>
+                <li>{{$label}}: {!! $item !!}</li>
             @endforeach
         </ul>
     </div>
