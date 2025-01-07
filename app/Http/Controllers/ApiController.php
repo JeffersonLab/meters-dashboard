@@ -79,7 +79,7 @@ class ApiController extends Controller
     public function reportChartData(HttpRequest $request)
     {
         try {
-            $meter = new VirtualMeter();
+            $meter = new VirtualMeter;
             $meter->setMeters(Meter::whereIn('id', Arr::wrap($request->input('model_id')))->get());
             $chart = ChartFactory::make('multimeter', $meter, $request);
 

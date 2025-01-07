@@ -63,8 +63,8 @@ abstract class Consumption implements ReportInterface
 
     public function __construct()
     {
-        $this->items = new Collection();
-        $this->warnings = new Collection();
+        $this->items = new Collection;
+        $this->warnings = new Collection;
         $this->defaultDates();
         $this->setDayStartHour();
     }
@@ -74,10 +74,10 @@ abstract class Consumption implements ReportInterface
      * For example to report on daily consumption from 8am - 8am as many utilities do rather than
      * midnight - midnight.
      *
-     * @param  int  $hour hour to use -- defaults to day_start_hour of reports config.
+     * @param  int  $hour  hour to use -- defaults to day_start_hour of reports config.
      * @return void
      */
-    protected function setDayStartHour(int $hour = null)
+    protected function setDayStartHour(?int $hour = null)
     {
         $hour = $hour ?: config('reports.day_start_hour');
         $this->begins_at->hour = $hour;
@@ -239,7 +239,7 @@ abstract class Consumption implements ReportInterface
      */
     public function data()
     {
-        $data = new Collection();
+        $data = new Collection;
         foreach ($this->items as $item) {
             try {
                 $data->push($this->makeDataItem($item));
@@ -357,8 +357,8 @@ abstract class Consumption implements ReportInterface
      * Returns true if the dates of first and last data values match
      * the dates of the report beginning and ending.
      *
-     * @param  object  $first {date}
-     * @param  object  $last {date}
+     * @param  object  $first  {date}
+     * @param  object  $last  {date}
      * @return bool
      */
     public function isComplete($first, $last)

@@ -24,7 +24,7 @@ class MeterReadings implements ChartInterface
     /**
      * MeterReadings constructor.
      */
-    public function __construct(DataTableInterface $model, string $pv, string $title = null)
+    public function __construct(DataTableInterface $model, string $pv, ?string $title = null)
     {
         $this->reporter = $model->reporter();
         $this->pv = $pv;

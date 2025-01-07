@@ -28,7 +28,7 @@ class CoolingTowerConsumption extends Consumption
     {
         parent::__construct();
         $this->nameFilter = Building::where('type', 'CoolingTower')
-        ->get()->pluck('name')->all();
+            ->get()->pluck('name')->all();
     }
 
     /**

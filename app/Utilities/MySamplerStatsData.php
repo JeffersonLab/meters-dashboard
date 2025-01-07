@@ -15,12 +15,12 @@ class MySamplerStatsData
      * by figuring out how many samples of stepSize will fill the interval between begin
      * and now().
      *
-     * @param  string  $begin    start date for sampling
-     * @param  mixed  $channels array or space-delimited string of channels to fetch
-     * @param  string  $stepSize number of seconds in each sample
-     * @param  null  $numSteps number of samples to retrieve
+     * @param  string  $begin  start date for sampling
+     * @param  mixed  $channels  array or space-delimited string of channels to fetch
+     * @param  string  $stepSize  number of seconds in each sample
+     * @param  null  $numSteps  number of samples to retrieve
      */
-    public function __construct(string $begin, $channels, string $stepSize = null, $numSteps = null)
+    public function __construct(string $begin, $channels, ?string $stepSize = null, $numSteps = null)
     {
         $this->initWebClient(env('MYSAMPLERSTATS_URL'), false);
         $this->begin = new Carbon($begin);

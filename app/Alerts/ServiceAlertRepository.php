@@ -34,7 +34,7 @@ class ServiceAlertRepository
     public function __construct(NagiosServicelist $nagiosServicelist)
     {
         $this->nagiosServiceList = $nagiosServicelist;
-        $this->alerts = new Collection();
+        $this->alerts = new Collection;
         $this->populateAlerts();
     }
 
@@ -60,11 +60,11 @@ class ServiceAlertRepository
         $meters = Meter::where('epics_name', 'CH_Grnd_Wtr_Dis_Sml')->get()->all();
         foreach ($meters as $meter) {
             $consumedYesterday = $meter->dataTable()
-              ->select(DB::raw('max(gal) - min(gal) as consumed'))
-              ->where('meter_id', $meter->id)
-              ->where('date', '<=', Carbon::today())
-              ->where('date', '>=', Carbon::yesterday())
-              ->get();
+                ->select(DB::raw('max(gal) - min(gal) as consumed'))
+                ->where('meter_id', $meter->id)
+                ->where('date', '<=', Carbon::today())
+                ->where('date', '>=', Carbon::yesterday())
+                ->get();
             dd($consumedYesterday);
         }
     }

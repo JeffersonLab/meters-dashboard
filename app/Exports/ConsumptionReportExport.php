@@ -14,7 +14,7 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use PhpOffice\PhpSpreadsheet\Cell\Hyperlink;
 
-class ConsumptionReportExport implements FromCollection, WithMapping, WithHeadings, WithEvents, ShouldAutoSize, WithStrictNullComparison
+class ConsumptionReportExport implements FromCollection, ShouldAutoSize, WithEvents, WithHeadings, WithMapping, WithStrictNullComparison
 {
     protected $report;
 

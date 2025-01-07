@@ -35,7 +35,7 @@ class NagiosServicelist extends NagiosData
 
     public function services()
     {
-        $services = new Collection();
+        $services = new Collection;
         foreach ($this->getData()->data->servicelist as $host => $service) {
             $services->put($host, $service);
         }

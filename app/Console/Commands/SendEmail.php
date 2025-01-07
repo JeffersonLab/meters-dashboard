@@ -31,6 +31,6 @@ class SendEmail extends Command
     public function handle(): void
     {
         Mail::to(config('meters.alert_email_recipients'))
-                ->send(new DailyAlertStatus(new NagiosServicelist()));
+            ->send(new DailyAlertStatus(new NagiosServicelist));
     }
 }

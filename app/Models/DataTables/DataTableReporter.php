@@ -55,7 +55,7 @@ class DataTableReporter
     public function intervalDifferences($data): Collection
     {
         $previous = null;
-        $dataSeries = new Collection();
+        $dataSeries = new Collection;
         foreach ($data as $datum) {
             if ($previous !== null) {
                 $dataSeries->push((object) [
@@ -73,11 +73,11 @@ class DataTableReporter
      * Accepts two sequential odometer readings $x, $y and returns their difference
      * accounting for the fact that the odometer may have "rolled over" in between.
      *
-     * @param  int  $x first reading
-     * @param  int  $y second reading
-     * @param  int  $rollover odometer limit
+     * @param  int  $x  first reading
+     * @param  int  $y  second reading
+     * @param  int  $rollover  odometer limit
      */
-    public function odometerDifference(int $x, int $y, int $rollover = 1000000): int|null
+    public function odometerDifference(int $x, int $y, int $rollover = 1000000): ?int
     {
         // Can't do math on null values!
         if ($x === null || $y === null) {
@@ -162,7 +162,7 @@ class DataTableReporter
      * The value is computed as the difference between the first and last values of
      * the kWh property on the given day.
      *
-     * @param  Collection  $data {date, value} objects
+     * @param  Collection  $data  {date, value} objects
      * @return Collection of objects {label, value}
      */
     public function dailyDifferences(Collection $data): Collection
@@ -171,7 +171,7 @@ class DataTableReporter
         $end = Carbon::create($this->ends_at->year, $this->ends_at->month, $this->ends_at->day);
 
         $date = clone $begin;
-        $dataSeries = new Collection();
+        $dataSeries = new Collection;
         while ($date->timestamp <= $end->timestamp) {
             $label = $date->format('Y-m-d');
             $value = null;
@@ -251,7 +251,7 @@ class DataTableReporter
      *
      * @return float|int
      */
-    public function number(string|null $val)
+    public function number(?string $val)
     {
         if ((int) $val === (float) $val) {
             return (int) $val;

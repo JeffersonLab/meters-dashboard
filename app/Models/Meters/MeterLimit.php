@@ -183,7 +183,7 @@ class MeterLimit extends BaseModel
 
     public function isMinorAlarm($value)
     {
-        return  ($this->isTooLowMinor($value) || $this->isTooHighMinor($value))
+        return ($this->isTooLowMinor($value) || $this->isTooHighMinor($value))
                  && ! $this->isMajorAlarm($value);
     }
 

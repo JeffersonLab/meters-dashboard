@@ -72,8 +72,8 @@ class MultiMeter implements ChartInterface
     /**
      * Set the date range for data points to be plotted.
      *
-     * @param  mixed  $start string or Carbon datetime object (default: start of month)
-     * @param  mixed  $end string or Carbon datetime object  (default: now)
+     * @param  mixed  $start  string or Carbon datetime object (default: start of month)
+     * @param  mixed  $end  string or Carbon datetime object  (default: now)
      */
     public function setDateRange($start, $end)
     {

@@ -34,7 +34,7 @@ interface AlertInterface
     /**
      * The alert status
      *
-     * @return string  critical, warning, etc.
+     * @return string critical, warning, etc.
      */
     public function status();
 

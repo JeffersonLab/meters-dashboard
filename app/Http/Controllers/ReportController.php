@@ -31,7 +31,7 @@ class ReportController extends Controller
     /**
      * Display a report
      *
-     * @param  string  $name - the name of the report to return
+     * @param  string  $name  - the name of the report to return
      * @return Application|Factory|\Illuminate\Contracts\View\View|Collection|\Illuminate\View\View
      */
     public function show(string $name, Request $request)
@@ -97,7 +97,7 @@ class ReportController extends Controller
     /**
      * Output a report as an Excel spreadsheet
      *
-     * @param  string  $name - the name of the report to return
+     * @param  string  $name  - the name of the report to return
      *
      * @throws \Exception
      */
