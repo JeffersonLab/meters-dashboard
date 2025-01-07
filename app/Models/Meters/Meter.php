@@ -13,6 +13,7 @@ use App\Models\DataTables\DataTableTrait;
 use App\Presenters\GasMeterPresenter;
 use App\Presenters\PowerMeterPresenter;
 use App\Presenters\WaterMeterPresenter;
+use App\Utilities\MySampler;
 use App\Utilities\MySamplerData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -641,34 +642,6 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
         return $this->reporter;
     }
 
-    /**
-     * Insert new meter data rows.
-     *
-     * @return int|mixed
-     *
-     * @throws \Exception
-     */
-    public function fillDataTable()
-    {
-        $inserted = 0;
-        try {
-            $mySampler = new MySamplerData($this->nextDataDate(), $this->channels());
-            $items = $mySampler->getData();
-
-            foreach ($items as $item) {
-                try {
-                    $this->dataTable()->insert($this->columnsFromMySampler($item));
-                    $inserted++;
-                } catch (\PDOException $e) {
-                    Log::error($e);
-                }
-            }
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            Log::error($e->getMessage());
-        }
-
-        return $inserted;
-    }
 
     /**
      * Update fields for existing meter data rows.

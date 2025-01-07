@@ -64,7 +64,7 @@ class MySamplerData implements DataFetchContract
      *  ],
      *]
      */
-    public function organize(array $data): array
+    public function organize($data): array
     {
         $organized = [];
         foreach ($data->data as $item) {

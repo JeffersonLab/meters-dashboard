@@ -25,7 +25,11 @@
 
             <b-form-row>
                 <b-col>
-                    <b-form-group label="Buildings">
+                    <b-form-group>
+                        <template v-slot:label>
+                            <label>Buildings</label>
+
+                        </template>
                         <v-select multiple
                                   v-model="selectedBuildings"
                                   :options="buildingOptions"
@@ -34,6 +38,9 @@
                             Note: options are limited to buildings with appropriate meter type.
                             Selecting or deselecting a building adds or removes all building meters from the
                             Meter control below.
+                            <b-button @click="onAllBuildings" pill variant="info" size="sm">
+                                Select All
+                            </b-button>
                         </template>
                     </b-form-group>
                 </b-col>
@@ -54,6 +61,7 @@
                 <b-button type="submit" variant="primary">Submit</b-button>
                 <b-button type="reset" variant="secondary">Reset</b-button>
                 <b-button @click="onClear" type="button" variant="danger">Clear</b-button>
+<!--                <b-button @click="onAllBuildings" type="button" variant="info">All Buildings</b-button>-->
             </b-form-row>
         </b-form>
         </b-card>
@@ -230,6 +238,14 @@ export default {
                 }
             })
         },
+        selectAllBuildings(){
+            this.selectedBuildings = []
+            this.selectedMeters = []
+            this.buildingOptions.forEach(item => {
+                this.selectedBuildings.push(item)
+                this.selectMetersOf(item.name)
+            })
+        },
         // Remove meters of buildingName to the list of selected Meters
         removeMetersOf(buildingName) {
             this.selectedMeters = this.selectedMeters.filter(item => item.building !== buildingName)
@@ -247,6 +263,12 @@ export default {
             // Reset our form values
             this.validated = false
             this.initFromRequest()
+        },
+        onAllBuildings(event){
+            event.preventDefault()
+            // clear our form values
+            this.validated = false
+            this.selectAllBuildings()
         },
         onClear(event){
             event.preventDefault()

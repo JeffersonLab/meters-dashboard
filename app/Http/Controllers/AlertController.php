@@ -13,7 +13,7 @@ class AlertController extends Controller
     /**
      * Display the buildings index page
      */
-    public function index(NagiosHostlist $hostlist, NagiosServicelist $servicelist): Response
+    public function index(NagiosHostlist $hostlist, NagiosServicelist $servicelist)
     {
         try {
             $serviceAlertRepository = new ServiceAlertRepository($servicelist);
