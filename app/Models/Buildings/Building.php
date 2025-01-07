@@ -21,7 +21,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
 {
     use DataTableTrait;
     use SoftDeletes;
-    
+
     protected $reporter;
 
     protected $nonBuildingFields = [':llVolt'];
