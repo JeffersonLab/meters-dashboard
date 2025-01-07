@@ -3,6 +3,7 @@
 namespace App\Models\Meters;
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RolloverEvent extends BaseModel
 {
@@ -21,11 +22,14 @@ class RolloverEvent extends BaseModel
         'rollover_accumulated',
     ];
 
-    protected $casts = [
-        'rollover_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'rollover_at' => 'datetime',
+        ];
+    }
 
-    public function meter()
+    public function meter(): BelongsTo
     {
         return $this->belongsTo(Meter::class);
     }

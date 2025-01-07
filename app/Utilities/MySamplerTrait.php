@@ -99,7 +99,7 @@ trait MySamplerTrait
     /**
      * Executes the query over HTTP
      *
-     * @param  array  $query query parameters to use.
+     * @param  array  $query  query parameters to use.
      * @return mixed|null
      *
      * @throws WebClientException

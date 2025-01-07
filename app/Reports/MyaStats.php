@@ -77,7 +77,7 @@ class MyaStats extends MultiMeter
      */
     protected function initItems()
     {
-        $this->items = new Collection();
+        $this->items = new Collection;
     }
 
     public function __get($var)
@@ -197,7 +197,7 @@ class MyaStats extends MultiMeter
      */
     public function allData(): Collection
     {
-        $data = new Collection();
+        $data = new Collection;
         foreach ($this->items as $item) {
             foreach ($this->makeDataItems($item) as $datum) {
                 $data->push($datum);
@@ -249,7 +249,7 @@ class MyaStats extends MultiMeter
      * Returns a record structure containing data for a single line
      * of report data table.
      *
-     * @param  string  $label -- specify non-standard label
+     * @param  string  $label  -- specify non-standard label
      */
     protected function makeDataItem($model, string $label = ''): object
     {
@@ -263,14 +263,14 @@ class MyaStats extends MultiMeter
     /**
      * Returns a record structure containing data for a line of report data table.
      *
-     * @param  string  $label -- specify non-standard label
+     * @param  string  $label  -- specify non-standard label
      */
     protected function makeDataItems($model, string $label = ''): array
     {
         if (is_array($model->output)) {
             $items = [];
             foreach ($model->output as $output) {
-                $item = new StdClass();
+                $item = new StdClass;
                 $item->start = $model->start;
                 $item->output = $output;
                 $items[] = $this->makeDataItem($item);
@@ -319,8 +319,8 @@ class MyaStats extends MultiMeter
      * Returns true if the dates of first and last match
      * the dates of the report beginning and ending.
      *
-     * @param  object  $first {date}
-     * @param  object  $last {date}
+     * @param  object  $first  {date}
+     * @param  object  $last  {date}
      */
     public function isComplete(object $first, object $last): bool
     {

@@ -12,8 +12,8 @@ final class ExampleTest extends TestCase
     public function test_example(): void
     {
         $this->assertTrue(true);
-//        $response = $this->get('/');
-//
-//        $response->assertStatus(200);
+        //        $response = $this->get('/');
+        //
+        //        $response->assertStatus(200);
     }
 }

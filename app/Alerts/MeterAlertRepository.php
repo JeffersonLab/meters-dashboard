@@ -30,7 +30,7 @@ class MeterAlertRepository
      */
     public function __construct()
     {
-        $this->alerts = new Collection();
+        $this->alerts = new Collection;
         $this->populateAlerts();
     }
 

@@ -13,11 +13,12 @@ use App\Models\Meters\Meter;
 use App\Presenters\BuildingPresenter;
 use App\Utilities\MySamplerData;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use Robbo\Presenter\PresentableInterface;
 
-class Building extends BaseModel implements PresentableInterface, DataTableInterface
+class Building extends BaseModel implements DataTableInterface, PresentableInterface
 {
     use DataTableTrait;
     use SoftDeletes;
@@ -37,11 +38,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
 
     public $fillable = ['name', 'element_id', 'type', 'abbreviation', 'building_num', 'square_footage', 'jlab_name'];
 
-    protected $casts = [
-        'deleted_at' => 'datetime',
-        'begins_at' => 'datetime',
-    ];
-
     /**
      * Building constructor.
      */
@@ -51,7 +47,15 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
         parent::__construct($attributes);
     }
 
-    public function meters()
+    protected function casts(): array
+    {
+        return [
+            'deleted_at' => 'datetime',
+            'begins_at' => 'datetime',
+        ];
+    }
+
+    public function meters(): HasMany
     {
         return $this->hasMany(Meter::class);
     }
@@ -197,6 +201,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
             Log::error($e->getMessage());
             //throw ($e);
         }
+
         //var_dump('inserted '.$inserted);
         return $inserted;
     }
@@ -216,7 +221,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
      * Convert the data returned from MySamplerData into an array
      * suitable for use with a DB::insert().
      *
-     * @param $item - element of array returned by MySampler
+     * @param  $item  - element of array returned by MySampler
      */
     protected function columnsFromMySampler($item): array
     {

@@ -38,7 +38,7 @@ class FacilitiesClimateData extends ClimateData
 
     public function extractData($fetched)
     {
-        $data = new \StdClass();
+        $data = new \StdClass;
         $data->temperatureHigh = max($fetched);
         $data->temperatureLow = min($fetched);
 

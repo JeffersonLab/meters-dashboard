@@ -44,7 +44,7 @@ class MultiMeter implements ReportInterface
      */
     public function applyRequest(Request $request)
     {
-        $this->virtualMeter = new VirtualMeter();
+        $this->virtualMeter = new VirtualMeter;
         if ($request->has('model_id')) {
             $physicalMeters = Meter::whereIn('id', $request->input('model_id'))->get();
             $this->virtualMeter->setMeters($physicalMeters);
@@ -162,7 +162,7 @@ class MultiMeter implements ReportInterface
                 ->where('date', '<=', $this->endsAt())
                 ->orderBy('date')->get();
         } else {
-            return new Collection();
+            return new Collection;
         }
     }
 

@@ -12,10 +12,9 @@ use Illuminate\Support\Facades\Config;
 
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication;
     use DatabaseMigrations;
 
-//    use RefreshDatabase;
+    //    use RefreshDatabase;
 
     // The values for meters.pvs config
     protected $pvs = [
