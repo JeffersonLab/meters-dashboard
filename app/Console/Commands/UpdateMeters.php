@@ -69,14 +69,14 @@ class UpdateMeters extends Command
                     $count = $meter->updateDataTable($this->beginAt(), $this->pvs());
                     $this->info("Updated $count rows for ".$meter->name);
 
-//                    $eventCount = $meter->makeNewRolloverEvents();
-//                    if ($eventCount > 0) {
-//                        $this->info("Identified $eventCount rollover events");
-//                    }
-//                    $dataUpdates = $meter->applyRolloverEvents();
-//                    if ($dataUpdates > 0) {
-//                        $this->info("Updated $dataUpdates rows with rollover_accumulation");
-//                    }
+                    //                    $eventCount = $meter->makeNewRolloverEvents();
+                    //                    if ($eventCount > 0) {
+                    //                        $this->info("Identified $eventCount rollover events");
+                    //                    }
+                    //                    $dataUpdates = $meter->applyRolloverEvents();
+                    //                    if ($dataUpdates > 0) {
+                    //                        $this->info("Updated $dataUpdates rows with rollover_accumulation");
+                    //                    }
                 } catch (\Exception $e) {
                     $this->error($e->getMessage());
                 }

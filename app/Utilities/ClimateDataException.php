@@ -8,6 +8,4 @@
 
 namespace App\Utilities;
 
-class ClimateDataException extends \Exception
-{
-}
+class ClimateDataException extends \Exception {}

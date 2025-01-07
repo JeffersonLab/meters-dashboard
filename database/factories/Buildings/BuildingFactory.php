@@ -20,7 +20,7 @@ class BuildingFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word(),
+            'name' => $this->faker->unique()->word(),
             'abbreviation' => $this->faker->word(),
             'jlab_name' => $this->faker->sentence(3),
             'building_num' => $this->faker->numberBetween(1, 100),

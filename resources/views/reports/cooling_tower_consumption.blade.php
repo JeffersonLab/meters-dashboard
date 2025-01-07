@@ -38,7 +38,7 @@
                 <tbody class="tbody-striped">
                 @foreach ($report->data() as $datum)
                     <tr>
-                        <td>{!!  link_to_route('buildings.show', $datum->label, [$datum->building->id]) !!}</td>
+                        <td>{{ html()->a(route('buildings.show', [$datum->building->id]), $datum->label) }}</td>
 
                         <td>
                             {{number_format($datum->consumption,0) }}
@@ -53,12 +53,7 @@
                             {{number_format($datum->concentration,2) }}
                         </td>
                         <td>
-                            {!! link_to_route('reports.item', $datum->label . ' Meters', [
-                                'report' => 'water-consumption',
-                                'begin'=> $report->beginsAt(),
-                                'end' => $report->endsAt(),
-                                'meters' => implode(',', $datum->building->meters->pluck('epics_name')->all())
-                                ],['target' => '_blank']) !!}
+                            {{ html()->a(route('reports.item', ['report' => 'water-consumption', 'begin' => $report->beginsAt(), 'end' => $report->endsAt(), 'meters' => implode(',', $datum->building->meters->pluck('epics_name')->all())]), $datum->label . ' Meters')->attribute('target', '_blank') }}
                         </td>
                     </tr>
                 @endforeach

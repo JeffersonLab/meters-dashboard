@@ -50,15 +50,15 @@
                 </div>
 
                 <div class="box-body">
-                    {!!  Form::open(['method'=>'get']) !!}
+                    {{ html()->form('GET', url()->current())->open() }}
                     <div class="form-group">
                         @include('partials.daterange',['start' => $report->beginsAt(), 'end' => $report->endsAt()])
                     </div>
                     <div class="form-group">
-                        {!! Form::submit('Apply') !!}
+                        {{ html()->submit('Apply') }}
                     </div>
 
-                    {!!  Form::close() !!}
+                    {{ html()->form()->close() }}
                 </div>
 
             </div>

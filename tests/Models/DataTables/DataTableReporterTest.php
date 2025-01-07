@@ -31,7 +31,7 @@ final class DataTableReporterTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->sampleCollection = new Collection();
+        $this->sampleCollection = new Collection;
         foreach ($this->sampleData as $datum) {
             $this->sampleCollection->push((object) $datum);
         }

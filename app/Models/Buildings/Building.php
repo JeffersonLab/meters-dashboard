@@ -11,15 +11,17 @@ use App\Models\DataTables\DataTableReporter;
 use App\Models\DataTables\DataTableTrait;
 use App\Models\Meters\Meter;
 use App\Presenters\BuildingPresenter;
-use App\Utilities\MySampler;
 use App\Utilities\MySamplerData;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use Robbo\Presenter\PresentableInterface;
 
-class Building extends BaseModel implements PresentableInterface, DataTableInterface
+class Building extends BaseModel implements DataTableInterface, PresentableInterface
 {
     use DataTableTrait;
+    use SoftDeletes;
 
     protected $reporter;
 
@@ -36,11 +38,6 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
 
     public $fillable = ['name', 'element_id', 'type', 'abbreviation', 'building_num', 'square_footage', 'jlab_name'];
 
-    protected $casts = [
-        'deleted_at' => 'datetime',
-        'begins_at' => 'datetime',
-    ];
-
     /**
      * Building constructor.
      */
@@ -50,7 +47,15 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
         parent::__construct($attributes);
     }
 
-    public function meters()
+    protected function casts(): array
+    {
+        return [
+            'deleted_at' => 'datetime',
+            'begins_at' => 'datetime',
+        ];
+    }
+
+    public function meters(): HasMany
     {
         return $this->hasMany(Meter::class);
     }
@@ -170,6 +175,36 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
         return 'building_data_'.$this->id;
     }
 
+    public function fillDataTable()
+    {
+        $inserted = 0;
+        try {
+            // We ask the mya server for data no more than 1000 items at a time
+            // until we are all caught up.
+            while (strtotime($this->nextDataDate()) < time()) {
+                $mySampler = new MySamplerData($this->nextDataDate(), $this->channels());
+                $items = $mySampler->getData();
+                if ($items->isEmpty()) {
+                    break;  // must escape the while loop when no more data
+                }
+                foreach ($items as $item) {
+                    try {
+                        $this->dataTable()->insert($this->columnsFromMySampler($item));
+                        $inserted++;
+                    } catch (\PDOException $e) {
+                        Log::error($e);
+                        throw $e;
+                    }
+                }
+            }
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            Log::error($e->getMessage());
+            //throw ($e);
+        }
+
+        //var_dump('inserted '.$inserted);
+        return $inserted;
+    }
 
     public function channels()
     {
@@ -186,7 +221,7 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
      * Convert the data returned from MySamplerData into an array
      * suitable for use with a DB::insert().
      *
-     * @param $item - element of array returned by MySampler
+     * @param  $item  - element of array returned by MySampler
      */
     protected function columnsFromMySampler($item): array
     {
@@ -275,8 +310,18 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
 
     public function delete()
     {
-        (new DataTableCreator($this))->dropTable();
-
+        if ($this->isForceDeleting()){
+            $this->dropDataTable();
+        }
         return parent::delete();
+    }
+
+    public function forceDelete(){
+        $this->dropDataTable();
+        return parent::forceDelete();
+    }
+
+    protected function dropDataTable() {
+        (new DataTableCreator($this))->dropTable();
     }
 }

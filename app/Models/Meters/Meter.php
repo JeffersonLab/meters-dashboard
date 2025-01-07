@@ -16,14 +16,18 @@ use App\Presenters\WaterMeterPresenter;
 use App\Utilities\MySampler;
 use App\Utilities\MySamplerData;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Robbo\Presenter\PresentableInterface;
 
-class Meter extends BaseModel implements PresentableInterface, DataTableInterface
+class Meter extends BaseModel implements DataTableInterface, PresentableInterface
 {
     use DataTableTrait;
+    use SoftDeletes;   //also see https://www.honeybadger.io/blog/a-guide-to-soft-deletes-in-laravel/
 
     protected $table = 'meters';
 
@@ -47,11 +51,6 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
 
     protected $reporter;
 
-    protected $casts = [
-        'deleted_at' => 'datetime',
-        'begins_at' => 'datetime',
-    ];
-
     /**
      * Meter constructor.
      */
@@ -59,6 +58,14 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     {
         $this->dataTableFk = 'meter_id';
         parent::__construct($attributes);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'deleted_at' => 'datetime',
+            'begins_at' => 'datetime',
+        ];
     }
 
     public static function typeFromCEDType($cedType)
@@ -75,7 +82,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         return null;
     }
 
-    public function building()
+    public function building(): BelongsTo
     {
         return $this->belongsTo(Building::class);
     }
@@ -90,12 +97,12 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         return $query->where('epics_name', '=', self::epicsNameFromPv($pv));
     }
 
-    public function meterLimits()
+    public function meterLimits(): HasMany
     {
         return $this->hasMany(MeterLimit::class);
     }
 
-    public function rolloverEvents()
+    public function rolloverEvents(): HasMany
     {
         return $this->hasMany(RolloverEvent::class)->orderBy('rollover_at');
     }
@@ -182,7 +189,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
                     if ($rows[$i + 2]->$field < $rows[$i]->$field
                         && $rows[$i + 2]->$field > $rows[$i + 1]->$field) {
                         $accumulatedRollover += $this->rolloverIncrement($field);
-                        $event = new RolloverEvent();
+                        $event = new RolloverEvent;
                         $event->meter_id = $this->id;
                         $event->rollover_at = $rows[$i + 1]->date;
                         $event->field = $field;
@@ -212,17 +219,29 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         return $saved;
     }
 
+
     public function delete()
     {
-        (new DataTableCreator($this))->dropTable();
-
+        if ($this->isForceDeleting()){
+           $this->dropDataTable();
+        }
         return parent::delete();
+    }
+
+    public function forceDelete(){
+        $this->dropDataTable();
+        return parent::forceDelete();
+    }
+
+    protected function dropDataTable() {
+        (new DataTableCreator($this))->dropTable();
     }
 
     /**
      * @return mixed
      *
-     * @TODO recalculate the totMBTU column too (update power_meter_data set totMBTU = totkWh * 0.00341214)
+     * @TODO recalculate the totMBTU column too (update power_meter_data set
+     *     totMBTU = totkWh * 0.00341214)
      *
      * @throws \Exception
      */
@@ -241,8 +260,10 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
     }
 
     /**
-     * Updates the data table so that perpetually incrementing fields do in fact
-     * increment perpetually by removing the effect of rollover events that have happened.
+     * Updates the data table so that perpetually incrementing fields do in
+     * fact
+     * increment perpetually by removing the effect of rollover events that
+     * have happened.
      */
     public function applyRolloverEvents()
     {
@@ -264,7 +285,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Answers whether the provided value is within the limits for the
      * specified field.
      *
-     * @param  mixed  $value numeric value
+     * @param  mixed  $value  numeric value
      */
     public function withinLimits(string $field, $value): bool
     {
@@ -484,6 +505,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
         if ($field) {
             $query->addSelect($field)->whereNotNull($field);
         }
+
         // Return the prepared query object
         return $query;
     }
@@ -604,9 +626,9 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
                 ->select(DB::raw("AVG($field) as avg,  MIN($field) as min, MAX($field) as max"));
         }
         $query->where('meter_id', $this->id)
-              ->where('date', '>=', $fromDate)
-              ->where('date', '<=', $toDate)
-              ->whereNotNull($field);
+            ->where('date', '>=', $fromDate)
+            ->where('date', '<=', $toDate)
+            ->whereNotNull($field);
 
         return $query->first();
     }
@@ -711,7 +733,7 @@ class Meter extends BaseModel implements PresentableInterface, DataTableInterfac
      * Convert the data returned from MySamplerData into an array
      * suitable for use with a DB::insert().
      *
-     * @param $item - element of array returned by MySampler
+     * @param  $item  - element of array returned by MySampler
      */
     protected function columnsFromMySampler($item): array
     {
