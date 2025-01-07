@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Middleware\TrustProxies as Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class TrustProxies extends Middleware
 {
@@ -22,7 +23,7 @@ class TrustProxies extends Middleware
 
 
     public function isTrustedProxy($ip){
-        return in_array($ip, Arr::wrap(config('app.proxy_ip'));
+        return in_array($ip, Arr::wrap(config('app.proxy_ip')));
     }
 
 

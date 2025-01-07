@@ -22,32 +22,17 @@
     {{-- Custom stylesheets (pre AdminLTE) --}}
     @yield('adminlte_css_pre')
 
-    {{-- Base Stylesheets (depends on Laravel asset bundling tool) --}}
-    @if(config('adminlte.enabled_laravel_mix', false))
-        <link rel="stylesheet" href="{{ mix(config('adminlte.laravel_mix_css_path', 'css/app.css')) }}">
+    {{-- Base Stylesheets --}}
+    @if(!config('adminlte.enabled_laravel_mix'))
+        <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
+
+        @if(config('adminlte.google_fonts.allowed', true))
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+        @endif
     @else
-        @switch(config('adminlte.laravel_asset_bundling', false))
-            @case('mix')
-                <link rel="stylesheet" href="{{ mix(config('adminlte.laravel_css_path', 'css/app.css')) }}">
-            @break
-
-            @case('vite')
-                @vite([config('adminlte.laravel_css_path', 'resources/css/app.css'), config('adminlte.laravel_js_path', 'resources/js/app.js')])
-            @break
-
-            @case('vite_js_only')
-                @vite(config('adminlte.laravel_js_path', 'resources/js/app.js'))
-            @break
-
-            @default
-                <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
-                <link rel="stylesheet" href="{{ asset('vendor/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
-                <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
-
-                @if(config('adminlte.google_fonts.allowed', true))
-                    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-                @endif
-        @endswitch
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @endif
 
     {{-- Extra Configured Plugins Stylesheets --}}
@@ -95,25 +80,14 @@
     {{-- Body Content --}}
     @yield('body')
 
-    {{-- Base Scripts (depends on Laravel asset bundling tool) --}}
-    @if(config('adminlte.enabled_laravel_mix', false))
-        <script src="{{ mix(config('adminlte.laravel_mix_js_path', 'js/app.js')) }}"></script>
+    {{-- Base Scripts --}}
+    @if(!config('adminlte.enabled_laravel_mix'))
+        <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+        <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('vendor/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+        <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
     @else
-        @switch(config('adminlte.laravel_asset_bundling', false))
-            @case('mix')
-                <script src="{{ mix(config('adminlte.laravel_js_path', 'js/app.js')) }}"></script>
-            @break
-
-            @case('vite')
-            @case('vite_js_only')
-            @break
-
-            @default
-                <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-                <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-                <script src="{{ asset('vendor/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
-                <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
-        @endswitch
+        <script src="{{ mix('js/app.js') }}"></script>
     @endif
 
     {{-- Extra Configured Plugins Scripts --}}

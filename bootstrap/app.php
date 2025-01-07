@@ -15,9 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->redirectGuestsTo(fn () => route('login'));
+        $middleware->redirectGuestsTo(fn () => route(config('auth.routes.login','login')));
         $middleware->redirectUsersTo(AppServiceProvider::HOME);
-        //$middleware->append(\App\Http\Middleware\RequireExternalAuth::class);
+        $middleware->append([\Illuminate\Session\Middleware\StartSession::class,\App\Http\Middleware\RequireExternalAuth::class]);
+
         $middleware->throttleApi();
 
         $middleware->replace(\Illuminate\Http\Middleware\TrustProxies::class, \App\Http\Middleware\TrustProxies::class);

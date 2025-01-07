@@ -40,12 +40,11 @@ class MenuServiceProvider extends ServiceProvider
             if (! Auth::user()) {
                 $event->menu->add(
                     ['text' => 'Not Authenticated',
-                        'url' => '/login',
                         'icon' => 'fas fa-fw fa-user',
                         'icon_color' => 'blue',
                         'submenu' => [
                             ['text' => 'Login',
-                                'url' => '/login',
+                                'url' => '/sso-login',
                                 'icon' => 'fas fa-fw fa-power-off',
                                 'icon_color' => 'white', ],
                         ],
