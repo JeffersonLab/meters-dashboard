@@ -13,13 +13,15 @@ use App\Models\Meters\Meter;
 use App\Presenters\BuildingPresenter;
 use App\Utilities\MySamplerData;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use Robbo\Presenter\PresentableInterface;
 
 class Building extends BaseModel implements PresentableInterface, DataTableInterface
 {
     use DataTableTrait;
-
+    use SoftDeletes;
+    
     protected $reporter;
 
     protected $nonBuildingFields = [':llVolt'];
@@ -303,8 +305,18 @@ class Building extends BaseModel implements PresentableInterface, DataTableInter
 
     public function delete()
     {
-        (new DataTableCreator($this))->dropTable();
-
+        if ($this->isForceDeleting()){
+            $this->dropDataTable();
+        }
         return parent::delete();
+    }
+
+    public function forceDelete(){
+        $this->dropDataTable();
+        return parent::forceDelete();
+    }
+
+    protected function dropDataTable() {
+        (new DataTableCreator($this))->dropTable();
     }
 }
