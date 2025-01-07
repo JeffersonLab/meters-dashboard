@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
+    'proxy_url' => env('PROXY_URL', ''),
+
+    'proxy_ip' => env('PROXY_IP', ''),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
