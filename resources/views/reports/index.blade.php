@@ -16,42 +16,42 @@
 
                     <h4>Consumption</h4>
                     <ul>
-                        <li>{!! Html::meterIcon('power') !!} {!! link_to_route('reports.item','Power Consumption', ['power-consumption']) !!}</li>
-                        <li>{!! Html::meterIcon('water') !!} {!! link_to_route('reports.item','Water Consumption', ['water-consumption']) !!}</li>
-                        <li>{!! Html::meterIcon('gas') !!} {!! link_to_route('reports.item','Gas Consumption', ['gas-consumption']) !!}</li>
+                        <li>{!! Html::meterIcon('power') !!} {{ html()->a(route('reports.item', ['power-consumption']), 'Power Consumption') }}</li>
+                        <li>{!! Html::meterIcon('water') !!} {{ html()->a(route('reports.item', ['water-consumption']), 'Water Consumption') }}</li>
+                        <li>{!! Html::meterIcon('gas') !!} {{ html()->a(route('reports.item', ['gas-consumption']), 'Gas Consumption') }}</li>
                         <li>{!! Html::meterIcon('cooling-tower') !!}
-                            {!! link_to_route('reports.item','Cooling Tower Consumption', ['cooling-tower-consumption']) !!}
+                            {{ html()->a(route('reports.item', ['cooling-tower-consumption']), 'Cooling Tower Consumption') }}
                         </li>
                     </ul>
 
 {{--                    <h4>{!! Html::meterIcon('power') !!} Power</h4>--}}
 {{--                    <ul>--}}
-{{--                        <li>{!! link_to_route('reports.item','Goal Buildings', ['goal-buildings']) !!}</li>--}}
-{{--                        <li>{!! link_to_route('reports.item','Consumption per Building', ['building-power-consumption']) !!}</li>--}}
-{{--                        <li>{!! link_to_route('reports.item','Consumption per Meter', ['meter-power-consumption']) !!}</li>--}}
-{{--                        <li>{!! link_to_route('reports.item','Chart with Data', ['multi-meter', 'meterType'=>'power']) !!}</li>--}}
-{{--                        <li>{!! link_to_route('reports.item','Statistics', ['mya-stats', 'meterType'=>'power']) !!}</li>--}}
+{{--                        <li>{{ html()->a(route('reports.item', ['goal-buildings']), 'Goal Buildings') }}</li>--}}
+{{--                        <li>{{ html()->a(route('reports.item', ['building-power-consumption']), 'Consumption per Building') }}</li>--}}
+{{--                        <li>{{ html()->a(route('reports.item', ['meter-power-consumption']), 'Consumption per Meter') }}</li>--}}
+{{--                        <li>{{ html()->a(route('reports.item', ['multi-meter', 'meterType' => 'power']), 'Chart with Data') }}</li>--}}
+{{--                        <li>{{ html()->a(route('reports.item', ['mya-stats', 'meterType' => 'power']), 'Statistics') }}</li>--}}
 {{--                    </ul>--}}
 
 {{--                    <h4>{!! Html::meterIcon('water') !!} Water</h4>--}}
 {{--                    <ul>--}}
-{{--                        <li>{!! link_to_route('reports.item','Consumption per Building', ['building-water-consumption']) !!}</li>--}}
-{{--                        <li>{!! link_to_route('reports.item','Consumption per Meter', ['meter-water-consumption']) !!}</li>--}}
-{{--                        <li>{!! link_to_route('reports.item','Chart with Data', ['multi-meter', 'meterType'=>'water']) !!}</li>--}}
-{{--                        <li>{!! link_to_route('reports.item','Statistics', ['mya-stats', 'meterType'=>'water']) !!}</li>--}}
+{{--                        <li>{{ html()->a(route('reports.item', ['building-water-consumption']), 'Consumption per Building') }}</li>--}}
+{{--                        <li>{{ html()->a(route('reports.item', ['meter-water-consumption']), 'Consumption per Meter') }}</li>--}}
+{{--                        <li>{{ html()->a(route('reports.item', ['multi-meter', 'meterType' => 'water']), 'Chart with Data') }}</li>--}}
+{{--                        <li>{{ html()->a(route('reports.item', ['mya-stats', 'meterType' => 'water']), 'Statistics') }}</li>--}}
 {{--                    </ul>--}}
 
 {{--                    <h4>{!! Html::meterIcon('gas') !!} Gas</h4>--}}
 {{--                    <ul>--}}
-{{--                        <li>{!! link_to_route('reports.item','Consumption per Building', ['building-gas-consumption']) !!}</li>--}}
-{{--                        <li>{!! link_to_route('reports.item','Consumption per Meter', ['meter-gas-consumption']) !!}</li>--}}
-{{--                        <li>{!! link_to_route('reports.item','Chart with Data', ['multi-meter', 'meterType'=>'gas']) !!}</li>--}}
-{{--                        <li>{!! link_to_route('reports.item','Statistics', ['mya-stats', 'meterType'=>'gas']) !!}</li>--}}
+{{--                        <li>{{ html()->a(route('reports.item', ['building-gas-consumption']), 'Consumption per Building') }}</li>--}}
+{{--                        <li>{{ html()->a(route('reports.item', ['meter-gas-consumption']), 'Consumption per Meter') }}</li>--}}
+{{--                        <li>{{ html()->a(route('reports.item', ['multi-meter', 'meterType' => 'gas']), 'Chart with Data') }}</li>--}}
+{{--                        <li>{{ html()->a(route('reports.item', ['mya-stats', 'meterType' => 'gas']), 'Statistics') }}</li>--}}
 {{--                    </ul>--}}
 
 {{--                    <h4><i class="fa fa-fw fa-sun text-yellow"></i>Climate</h4>--}}
 {{--                    <ul>--}}
-{{--                        <li>{!! link_to_route('reports.item','Degree Day Data', ['climate-data']) !!}</li>--}}
+{{--                        <li>{{ html()->a(route('reports.item', ['climate-data']), 'Degree Day Data') }}</li>--}}
 {{--                    </ul>--}}
 
                 </div>

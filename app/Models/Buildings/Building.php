@@ -14,12 +14,14 @@ use App\Presenters\BuildingPresenter;
 use App\Utilities\MySamplerData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use Robbo\Presenter\PresentableInterface;
 
 class Building extends BaseModel implements DataTableInterface, PresentableInterface
 {
     use DataTableTrait;
+    use SoftDeletes;
 
     protected $reporter;
 
@@ -308,8 +310,18 @@ class Building extends BaseModel implements DataTableInterface, PresentableInter
 
     public function delete()
     {
-        (new DataTableCreator($this))->dropTable();
-
+        if ($this->isForceDeleting()){
+            $this->dropDataTable();
+        }
         return parent::delete();
+    }
+
+    public function forceDelete(){
+        $this->dropDataTable();
+        return parent::forceDelete();
+    }
+
+    protected function dropDataTable() {
+        (new DataTableCreator($this))->dropTable();
     }
 }

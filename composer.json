@@ -21,21 +21,20 @@
         "php": "^8.2",
         "ext-json": "*",
         "ext-pdo": "*",
-        "doctrine/dbal": "^3.5",
         "guzzlehttp/guzzle": "^7.8",
         "jeroennoten/laravel-adminlte": "^3.8",
         "jlab/laravel-utilities": "dev-master",
-        "jlab/auth": "^8.01",
+        "jlab/auth": "^10.1",
         "laracasts/utilities": "^3.2",
         "laravel/framework": "^11.37",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.4",
-        "laravelcollective/html": "^6.4",
         "maatwebsite/excel": "^3.1",
         "robclancy/presenter": "^3.0",
         "tightenco/ziggy": "^2.0",
         "league/flysystem-aws-s3-v3": "^3.0"
+        "spatie/laravel-html": "^3.11"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

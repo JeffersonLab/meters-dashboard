@@ -17,6 +17,7 @@ use App\Utilities\MySamplerData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -25,6 +26,7 @@ use Robbo\Presenter\PresentableInterface;
 class Meter extends BaseModel implements DataTableInterface, PresentableInterface
 {
     use DataTableTrait;
+    use SoftDeletes;   //also see https://www.honeybadger.io/blog/a-guide-to-soft-deletes-in-laravel/
 
     protected $table = 'meters';
 
@@ -216,17 +218,29 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
         return $saved;
     }
 
+
     public function delete()
     {
-        (new DataTableCreator($this))->dropTable();
-
+        if ($this->isForceDeleting()){
+           $this->dropDataTable();
+        }
         return parent::delete();
+    }
+
+    public function forceDelete(){
+        $this->dropDataTable();
+        return parent::forceDelete();
+    }
+
+    protected function dropDataTable() {
+        (new DataTableCreator($this))->dropTable();
     }
 
     /**
      * @return mixed
      *
-     * @TODO recalculate the totMBTU column too (update power_meter_data set totMBTU = totkWh * 0.00341214)
+     * @TODO recalculate the totMBTU column too (update power_meter_data set
+     *     totMBTU = totkWh * 0.00341214)
      *
      * @throws \Exception
      */
@@ -245,8 +259,10 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
     }
 
     /**
-     * Updates the data table so that perpetually incrementing fields do in fact
-     * increment perpetually by removing the effect of rollover events that have happened.
+     * Updates the data table so that perpetually incrementing fields do in
+     * fact
+     * increment perpetually by removing the effect of rollover events that
+     * have happened.
      */
     public function applyRolloverEvents()
     {

@@ -42,7 +42,7 @@ class AuthController extends \Jlab\Auth\Http\AuthController
         return view('auth.login');
     }
 
-    public function logout(): RedirectResponse
+    public function logout(Request $request): RedirectResponse
     {
         if ($this->doLogout()) {
             session()->flash('success', 'User logged out successfully');

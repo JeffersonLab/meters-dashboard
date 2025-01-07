@@ -24,32 +24,28 @@
                 </div>
 
                 <div class="box-body">
-                    {!!  Form::open(['method'=>'get']) !!}
-                    {!! Form::hidden('meterType',$report->meterType()) !!}
+                    {{ html()->form('GET', url()->current())->open() }}
+                    {{ html()->hidden('meterType', $report->meterType()) }}
 
                     <div class="form-group">
                         @include('partials.daterange',['start' => $report->beginsAt('Y-m-d H:i'), 'end' => $report->endsAt('Y-m-d H:i')])
                         <div class="pv-options">
                             <div class="form-group">
                                 <label for="pv">Option: </label>
-                                {!! Form::select('pv',$report->pvOptions(),$request->get('pv'),['class'=>'form-control'])  !!}
+                                {{ html()->select('pv', $report->pvOptions(), $request->get('pv'))->class('form-control') }}
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="model_id[]">Meter Selection: </label>
-                        {!! Form::select('model_id[]',$report->meterOptions(),
-                            $report->meter()->meterIds(),
-                            ['id' => 'models-select',
-                             'multiple'=>'multiple',
-                             'class'=>'form-control select2']) !!}
+                        {{ html()->multiselect('model_id[]', $report->meterOptions(), $report->meter()->meterIds())->id('models-select')->class('form-control select2') }}
                     </div>
 
                     <div class="form-group">
-                        {!! Form::submit('Apply') !!}
+                        {{ html()->submit('Apply') }}
                     </div>
 
-                    {!!  Form::close() !!}
+                    {{ html()->form()->close() }}
                 </div>
 
             </div>
