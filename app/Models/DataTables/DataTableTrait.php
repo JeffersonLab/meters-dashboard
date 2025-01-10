@@ -289,4 +289,18 @@ trait DataTableTrait
 
         return $inserted;
     }
+
+
+    /**
+     * Delete data after a date.
+     *
+     * @throws \Exception
+     */
+    public function deleteAfter(Carbon $date): int {
+        return $this->dataTable()
+            ->where('date', '>', $date)
+            ->delete();
+    }
+
+
 }

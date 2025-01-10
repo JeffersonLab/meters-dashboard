@@ -285,4 +285,21 @@ final class MeterTest extends TestCase
         $this->assertEquals(Carbon::today()->subDays(5), $data->date);
         $this->assertEquals(500, $data->gal);
     }
+
+    public function test_it_deletes_data_after_date(): void
+    {
+        $meter = Meter::factory()->create(['type' => 'water', 'begins_at' => Carbon::yesterday()->subDay(5)]);
+
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(9), 'gal' => 100]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(8), 'gal' => 200]);
+        $meter->dataTable()->insert(['meter_id' => $meter->id, 'date' => Carbon::today()->subDays(1), 'gal' => 900]);
+
+        // We have three data rows
+        $this->assertEquals(3, $meter->dataTable()->count());
+
+        // Now delete the most recent data leaving us with only two values
+        $date = Carbon::today()->subDays(8);
+        $meter->deleteAfter($date);
+        $this->assertEquals(2, $meter->dataTable()->count());
+    }
 }
