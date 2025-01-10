@@ -89,7 +89,7 @@ class MySampler implements DataFetchContract
      */
     public function calcNumSteps(): int
     {
-        $seconds = Carbon::now()->diffInSeconds($this->begin);
+        $seconds = Carbon::now()->diffInSeconds($this->begin, true); // true means absolute diff
         return (int)floor($seconds / $this->stepSize);
     }
 
@@ -103,8 +103,6 @@ class MySampler implements DataFetchContract
     {
         $desired = $numSteps ?: $this->calcNumSteps();
         $max = config('myquery.max_samples', 5000);
-//        var_dump($max, $desired);
-//        var_dump(($desired && $desired > $max) ? $max : $desired);
         return ($desired && $desired > $max) ? $max : $desired;
     }
 
@@ -174,7 +172,7 @@ class MySampler implements DataFetchContract
                 foreach ($this->warnings as $warning) {
                     Log::warning($warning);
                 }
-                throw new WebClientException('The server responded with error messages. See log file.');
+                throw new WebClientException('The server responded to client with error messages. See log file.');
             } else {
                 Log::error((string)Http::get($this->url, $this->query)->effectiveUri());
                 Log::error($response->body());

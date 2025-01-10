@@ -63,7 +63,7 @@ trait MySamplerTrait
      */
     public function calcNumSteps(): int
     {
-        $seconds = Carbon::now()->diffInSeconds($this->begin);
+        $seconds = Carbon::now()->diffInSeconds($this->begin, true); // true means absolute diff
 
         return (int) floor($seconds / $this->stepSize);
     }
