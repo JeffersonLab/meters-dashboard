@@ -456,7 +456,7 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
             throw new MeterDataException($message, $this);
         }
 
-        if ($firstVal == 0 && $fromDate->greaterThan($this->begins_at)) {
+        if ($firstVal == 0 && $this->begins_at && $fromDate->greaterThan($this->begins_at)) {
             $message = sprintf('Encountered unexpected 0 in the %s column at %s', $field, $fromDate);
             throw new MeterDataException($message, $this);
         }
