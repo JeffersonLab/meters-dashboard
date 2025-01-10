@@ -78,10 +78,10 @@ trait DateRangeTrait
         return $this;
     }
 
-    public function beginsAt(string $format = null): string
+    public function beginsAt(?string $format = null): string
     {
         if ($format === null) {
-            if (0 == $this->begins_at->hour && 0 == $this->begins_at->minute) {
+            if ($this->begins_at->hour == 0 && $this->begins_at->minute == 0) {
                 return $this->begins_at->format('Y-m-d');
             } else {
                 return $this->begins_at->format('Y-m-d H:i');
@@ -91,10 +91,10 @@ trait DateRangeTrait
         return $this->begins_at->format($format);
     }
 
-    public function endsAt(string $format = null): string
+    public function endsAt(?string $format = null): string
     {
         if ($format === null) {
-            if (0 == $this->ends_at->hour && 0 == $this->ends_at->minute) {
+            if ($this->ends_at->hour == 0 && $this->ends_at->minute == 0) {
                 return $this->ends_at->format('Y-m-d');
             } else {
                 return $this->ends_at->format('Y-m-d H:i');

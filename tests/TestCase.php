@@ -5,16 +5,16 @@ namespace Tests;
 use App\Models\Buildings\Building;
 use App\Models\Meters\Meter;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Config;
 
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication;
     use DatabaseMigrations;
 
-//    use RefreshDatabase;
+    //    use RefreshDatabase;
 
     // The values for meters.pvs config
     protected $pvs = [
@@ -62,6 +62,13 @@ abstract class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        // Must delete meters first because they reference building via building_id FK.
+        foreach (Meter::withTrashed()->get()->all() as $meter) {
+            $meter->forceDelete();
+        }
+        foreach (Building::withTrashed()->get()->all() as $building) {
+            $building->forceDelete();
+        }
         //specify the valid epics field names for a power meter
         Config::set('meters.pvs', $this->pvs);
     }
@@ -73,11 +80,11 @@ abstract class TestCase extends BaseTestCase
     protected function tearDown(): void
     {
         // Must delete meters first because they reference building via building_id FK.
-        foreach (Meter::all() as $meter) {
-            $meter->delete();
+        foreach (Meter::withTrashed()->get()->all() as $meter) {
+            $meter->forceDelete();
         }
-        foreach (Building::all() as $building) {
-            $building->delete();
+        foreach (Building::withTrashed()->get()->all() as $building) {
+            $building->forceDelete();
         }
         parent::tearDown();
     }

@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::match(['GET', 'POST'], '/login', [AuthController::class, 'login'])->name('login');
+Route::get('sso-login', [AuthController::class, 'SsoLogin'])->name('sso.login');
+Route::get('sso-callback', [AuthController::class, 'SsoCallback'])->name('sso.callback');
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -54,4 +56,3 @@ Route::get('buildings/{building}', [BuildingController::class, 'show'])->name('b
 
 Route::get('cooling-towers/{building}', [CoolingTowerController::class, 'show'])->name('cooling_towers.show');
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');

@@ -31,9 +31,9 @@ class DailyConsumption implements ChartInterface
     /**
      * DailyConsumption constructor.
      *
-     * @param  string  $title (optional)
+     * @param  string  $title  (optional)
      */
-    public function __construct(DataTableInterface $model, string $pv, string $title = null)
+    public function __construct(DataTableInterface $model, string $pv, ?string $title = null)
     {
         $this->model = $model;
         $this->reporter = $model->reporter();

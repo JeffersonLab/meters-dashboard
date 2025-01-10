@@ -40,12 +40,11 @@ class MenuServiceProvider extends ServiceProvider
             if (! Auth::user()) {
                 $event->menu->add(
                     ['text' => 'Not Authenticated',
-                        'url' => '/login',
                         'icon' => 'fas fa-fw fa-user',
                         'icon_color' => 'blue',
                         'submenu' => [
                             ['text' => 'Login',
-                                'url' => '/login',
+                                'url' => '/sso-login',
                                 'icon' => 'fas fa-fw fa-power-off',
                                 'icon_color' => 'white', ],
                         ],
@@ -227,7 +226,7 @@ class MenuServiceProvider extends ServiceProvider
     /**
      * Return array representation of a substation menu item.
      *
-     * @param  Building  $substation - substations are a type of building
+     * @param  Building  $substation  - substations are a type of building
      */
     public function substationMenuItem(Building $substation): array
     {
@@ -253,7 +252,7 @@ class MenuServiceProvider extends ServiceProvider
     /**
      * Return array representation of a substation menu item.
      *
-     * @param  Building  $tower - substations are a type of building
+     * @param  Building  $tower  - substations are a type of building
      */
     public function coolingTowerMenuItem(Building $tower): array
     {
@@ -274,9 +273,9 @@ class MenuServiceProvider extends ServiceProvider
         }
         try {
             $count = 0;
-            $serviceAlertRepo = new ServiceAlertRepository(new NagiosServicelist());
+            $serviceAlertRepo = new ServiceAlertRepository(new NagiosServicelist);
             $count += $serviceAlertRepo->alerts()->count();
-            $meterAlertRepo = new MeterAlertRepository();
+            $meterAlertRepo = new MeterAlertRepository;
             $count += $meterAlertRepo->alerts()->count();
             $label = ($count ? $count : '');
             Cache::put('menu-alert-label', $label, $this->ttl);

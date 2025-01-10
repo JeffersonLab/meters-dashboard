@@ -21,8 +21,8 @@ class MeterFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word(),
-            'epics_name' => $this->faker->word(),
+            'name' => $this->faker->unique()->word(),
+            'epics_name' => $this->faker->unique()->word(),
             'name_alias' => $this->faker->sentence(3),
             'type' => $this->faker->randomElement(['power', 'water', 'gas']),
             'building_id' => Building::factory(),

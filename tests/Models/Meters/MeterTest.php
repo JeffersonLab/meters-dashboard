@@ -4,15 +4,18 @@ namespace Tests\Models\Meters;
 
 use App\Models\Buildings\Building;
 use App\Models\DataTables\DataTableReporter;
+use App\Models\DataTables\DataTableTrait;
 use App\Models\Meters\Meter;
 use App\Models\Meters\MeterLimit;
 use App\Models\Meters\RolloverEvent;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
 final class MeterTest extends TestCase
 {
+
     public function test_it_casts_dates(): void
     {
         $model = Meter::factory()->create([

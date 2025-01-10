@@ -41,7 +41,7 @@ final class ReportControllerTest extends TestCase
 
     public function test_show(): void
     {
-//        dd(config('reports.day_start_hour'));
+        //        dd(config('reports.day_start_hour'));
         $start = Carbon::today()->subDays(5)->format('Y-m-d');
         $end = Carbon::today()->format('Y-m-d');
 
@@ -67,10 +67,10 @@ final class ReportControllerTest extends TestCase
         $this->assertEquals(500, $datum->consumed);
 
         //TODO reimplement excel export
-//        $excelUrl = $this->getResponseData($response, 'excelUrl');
-//        $response = $this->get($excelUrl);
-//        $response->assertStatus(200);
-//        $response->assertHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        //        $excelUrl = $this->getResponseData($response, 'excelUrl');
+        //        $response = $this->get($excelUrl);
+        //        $response->assertStatus(200);
+        //        $response->assertHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     }
 
     protected function fillMeterWithData($meter, $increment = 100, $initial = 0)

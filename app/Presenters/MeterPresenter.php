@@ -9,7 +9,6 @@
 namespace App\Presenters;
 
 use Carbon\Carbon;
-use Collective\Html\HtmlFacade as Html;
 use Robbo\Presenter\Presenter;
 
 abstract class MeterPresenter extends Presenter implements BoxInterface
@@ -23,7 +22,7 @@ abstract class MeterPresenter extends Presenter implements BoxInterface
                 $url .= '&'.implode('&', $this->epicsMacroVariables());
             }
 
-            return link_to($url, 'EPICS Detail Screen', $attributes);
+            return html()->a($url, 'EPICS Detail Screen')->attributes($attributes);
         }
 
         return null;
@@ -41,12 +40,12 @@ abstract class MeterPresenter extends Presenter implements BoxInterface
 
     public function linkToCedElement($attributes = ['target' => '_blank'])
     {
-        return Html::linkToCedElement($this->name, 'CED Element Page', $attributes);
+        return html()->linkToCedElement($this->name, 'CED Element Page', $attributes);
     }
 
     public function icon()
     {
-        return Html::meterIcon($this->type);
+        return html()->meterIcon($this->type);
     }
 
     public function nameWithAlias()

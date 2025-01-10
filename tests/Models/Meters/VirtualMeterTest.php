@@ -53,7 +53,7 @@ final class VirtualMeterTest extends TestCase
         $meter1->dataTable()->insert(['meter_id' => $meter1->id, 'date' => Carbon::yesterday()->hour(2), 'gal' => 0]);
         $meter1->dataTable()->insert(['meter_id' => $meter1->id, 'date' => Carbon::yesterday()->hour(3), 'gal' => 250]);
         $meter2 = Meter::factory()->create(['type' => 'water', 'model_number' => 'ModelY']);
-        $vm = new VirtualMeter();
+        $vm = new VirtualMeter;
 
         $vm->setMeters(new Collection([$meter1, $meter2]));
         $this->assertTrue($vm->hasData());

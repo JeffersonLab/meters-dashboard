@@ -4,17 +4,10 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Middleware\TrustProxies as Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class TrustProxies extends Middleware
 {
-    /**
-     * The trusted proxies for this application.
-     *
-     * @var array<int, string>|string|null
-     */
-    protected $proxies = [
-        '129.57.254.70',    //accweb
-    ];
 
     /**
      * The headers that should be used to detect proxies.
@@ -27,4 +20,11 @@ class TrustProxies extends Middleware
         Request::HEADER_X_FORWARDED_PORT |
         Request::HEADER_X_FORWARDED_PROTO |
         Request::HEADER_X_FORWARDED_AWS_ELB;
+
+
+    public function isTrustedProxy($ip){
+        return in_array($ip, Arr::wrap(config('app.proxy_ip')));
+    }
+
+
 }
