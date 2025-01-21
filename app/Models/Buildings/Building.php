@@ -11,7 +11,7 @@ use App\Models\DataTables\DataTableReporter;
 use App\Models\DataTables\DataTableTrait;
 use App\Models\Meters\Meter;
 use App\Presenters\BuildingPresenter;
-use App\Utilities\MySamplerData;
+use App\Utilities\MySampler;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -178,33 +178,66 @@ class Building extends BaseModel implements DataTableInterface, PresentableInter
     public function fillDataTable()
     {
         $inserted = 0;
-        try {
-            // We ask the mya server for data no more than 1000 items at a time
-            // until we are all caught up.
-            while (strtotime($this->nextDataDate()) < time()) {
-                $mySampler = new MySamplerData($this->nextDataDate(), $this->channels());
-                $items = $mySampler->getData();
-                if ($items->isEmpty()) {
-                    break;  // must escape the while loop when no more data
-                }
-                foreach ($items as $item) {
-                    try {
-                        $this->dataTable()->insert($this->columnsFromMySampler($item));
-                        $inserted++;
-                    } catch (\PDOException $e) {
-                        Log::error($e);
-                        throw $e;
+        if (! empty($this->channels())){
+            try {
+                // We ask the mya server for data no more than 1000 items at a time
+                // until we are all caught up.
+                while (strtotime($this->nextDataDate()) < time()) {
+                    $mySampler = new MySampler($this->nextDataDate(), $this->channels());
+                    $items = $mySampler->getData();
+                    if ($items->isEmpty()) {
+                        break;  // must escape the while loop when no more data
+                    }
+                    foreach ($items as $item) {
+                        try {
+                            $this->dataTable()->insert($this->columnsFromMySampler($item));
+                            $inserted++;
+                        } catch (\PDOException $e) {
+                            Log::error($e);
+                            throw $e;
+                        }
                     }
                 }
+            } catch (\Exception $e) {
+                Log::error($e->getMessage());
+                throw $e;
             }
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            Log::error($e->getMessage());
-            //throw ($e);
+        }else{
+            Log::warning("{$this->getPresenter()->menuLabel()} has no channels to fetch.");
         }
 
-        //var_dump('inserted '.$inserted);
         return $inserted;
     }
+//    public function fillDataTable()
+//    {
+//        $inserted = 0;
+//        try {
+//            // We ask the mya server for data no more than 1000 items at a time
+//            // until we are all caught up.
+//            while (strtotime($this->nextDataDate()) < time()) {
+//                $mySampler = new MySamplerData($this->nextDataDate(), $this->channels());
+//                $items = $mySampler->getData();
+//                if ($items->isEmpty()) {
+//                    break;  // must escape the while loop when no more data
+//                }
+//                foreach ($items as $item) {
+//                    try {
+//                        $this->dataTable()->insert($this->columnsFromMySampler($item));
+//                        $inserted++;
+//                    } catch (\PDOException $e) {
+//                        Log::error($e);
+//                        throw $e;
+//                    }
+//                }
+//            }
+//        } catch (\GuzzleHttp\Exception\ClientException $e) {
+//            Log::error($e->getMessage());
+//            //throw ($e);
+//        }
+//
+//        //var_dump('inserted '.$inserted);
+//        return $inserted;
+//    }
 
     public function channels()
     {
