@@ -62,8 +62,9 @@ final class MeterLimitTest extends TestCase
         $this->assertTrue($limit->isWithinLimits(50));
 
         $this->assertTrue($limit->isTooHigh(105));  //exceeds minor
-        $this->assertTrue($limit->isTooHigh(100));  //exceeds minor
-        $this->assertTrue($limit->isTooLow(0));  //exceeds minor
+        $this->assertTrue($limit->isTooHigh(101));  //exceeds minor
+        $this->assertFalse($limit->isTooLow(0));  //exceeds minor
+        $this->assertTrue($limit->isTooLow(-1));  //exceeds minor
     }
 
     public function test_it_works_with_minor_and_major(): void
@@ -91,6 +92,8 @@ final class MeterLimitTest extends TestCase
 
         //Exceeds none
         $this->assertTrue($limit->isWithinMajorLimits(50));
+        $this->assertFalse($limit->isTooHighMinor(50));
+        $this->assertFalse($limit->isTooLowMinor(50));
         $this->assertTrue($limit->isWithinMinorLimits(50));
         $this->assertTrue($limit->isWithinLimits(50));
 
