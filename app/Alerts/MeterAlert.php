@@ -21,7 +21,7 @@ class MeterAlert implements AlertInterface
 {
     protected $meter;
 
-    protected $status;
+    public $status;  // warning, critical, unknown
 
     public $description;
 

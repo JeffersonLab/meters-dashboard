@@ -8,6 +8,7 @@
 
 namespace App\Models\Meters;
 
+use App\Exceptions\MeterLimitException;
 use App\Models\BaseModel;
 use Illuminate\Support\Facades\Validator;
 
@@ -140,7 +141,7 @@ class MeterLimit extends BaseModel
     public function isTooHighMajor($value)
     {
         if ($this->hasUpperLimitMajor()) {
-            if ($value >= $this->hihi) {
+            if ($value > $this->hihi) {
                 return true;
             }
         }
@@ -151,7 +152,7 @@ class MeterLimit extends BaseModel
     public function isTooHighMinor($value)
     {
         if ($this->hasUpperLimitMinor()) {
-            if ($value >= $this->high) {
+            if ($value > $this->high) {
                 return true;
             }
         }
@@ -162,7 +163,7 @@ class MeterLimit extends BaseModel
     public function isTooLowMajor($value)
     {
         if ($this->hasLowerLimitMajor()) {
-            if ($value <= $this->lolo) {
+            if ($value < $this->lolo) {
                 return true;
             }
         }
@@ -173,7 +174,7 @@ class MeterLimit extends BaseModel
     public function isTooLowMinor($value)
     {
         if ($this->hasLowerLimitMinor()) {
-            if ($value <= $this->low) {
+            if ($value < $this->low) {
                 return true;
             }
         }
