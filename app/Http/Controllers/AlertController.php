@@ -7,6 +7,7 @@ use App\Alerts\ServiceAlertRepository;
 use App\Utilities\NagiosHostlist;
 use App\Utilities\NagiosServicelist;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Collection;
 
 class AlertController extends Controller
 {
@@ -19,14 +20,18 @@ class AlertController extends Controller
             $serviceAlertRepository = new ServiceAlertRepository($servicelist);
             $meterAlertRepository = new MeterAlertRepository;
 
-            $alerts = $serviceAlertRepository->alerts();
-            $alerts = $alerts->merge($meterAlertRepository->alerts());
-            $alerts = $alerts->sortBy(function ($alert, $key) {
-                return $alert->meter()->epics_name;
-            });
+            $serviceAlerts = $serviceAlertRepository->alerts()
+                ->sortBy(function ($alert, $key) {
+                    return $alert->meter()->epics_name;
+            });;
+            $consumptionAlerts = $meterAlertRepository->alerts()
+                ->sortBy(function ($alert, $key) {
+                    return $alert->meter()->epics_name;
+            });;
 
             return View::make('alerts.table')
-                ->with('alerts', $alerts);
+                ->with('serviceAlerts', $serviceAlerts)
+                ->with('consumptionAlerts', $consumptionAlerts);
         } catch (\Exception $e) {
             return View::make('alerts.error')
                 ->with('message', $e->getMessage());
