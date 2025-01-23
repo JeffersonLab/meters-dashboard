@@ -4,17 +4,17 @@
         <h4 class="mb-0">
             <i class="fa fa-bell text-orange"></i>
             Consumption Alert Thresholds
-        @if(Auth::user())
+        @can('update', $limit)
             @if($limit)
                 <i class="fa fa-edit text-gray" style="float:right;"
                    wire:click.prevent="toggleEdit" title="Edit threshold values" data-toggle="tooltip"></i>
             @endif
-        @endif
+        @endcan
         </h4>
 
     </div>
     <div class="card-body">
-        @if ($limit || $enableEdit)
+        @if ($limit || $isEditable)
             <table class="table">
                 <tr>
                     <th>Units</th>
@@ -32,7 +32,7 @@
                         <td>{{$limit->hihi === NULL ? 'NA' : $limit->hihi}}</td>
                     </tr>
                 @endif
-                @if($enableEdit)
+                @if($isEditable)
                     <tr>
                         <form wire:submit="save">
                             <td>
@@ -63,9 +63,11 @@
                 @endif
             </table>
         @else
+            @can('create', \App\Models\Meters\MeterLimit::class)
             <button type="submit" class="btn btn-primary"
                     wire:click="createLimit({{$meterId}})">Set Thresholds
             </button>
+            @endcan
         @endif
 
     </div>

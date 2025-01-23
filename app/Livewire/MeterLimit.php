@@ -40,6 +40,7 @@ class MeterLimit extends Component
     }
 
     public function toggleEdit() {
+        $this->authorize('update', $this->limit);
         $this->enableEdit = !$this->enableEdit;
     }
 
@@ -53,12 +54,15 @@ class MeterLimit extends Component
     }
 
     public function createLimit($meterId) {
+        $this->authorize('create', MeterLimitModel::class);
         $meter = Meter::find($meterId);
         $this->limit = $meter->meterLimits()->create([
             'meter_id' => $meterId,
             'field' => $this->fieldName(),
             'interval' => 60 * 60 *24,       // just per-day right now
             'source' => 'web',
+            'lolo' => 0,                     // Negative consumption makes no sense
+            'low' => 0,                      // Negative consumption makes no sense
         ]);
         $this->prepareFormFields();
         if ($this->limit && $this->limit->id) {
@@ -67,12 +71,15 @@ class MeterLimit extends Component
     }
 
     public function save() {
+
         // If all numeric values are null, we delete the MeterLimit entirely
         if ($this->shouldDelete()) {
+            $this->authorize('delete', $this->limit);
             $this->limit->delete();
             $this->limit = null;
             $this->enableEdit = false;
         }else{
+            $this->authorize('update', $this->limit);
             $this->limit->fill([
                 'lolo' => is_numeric($this->lolo) ? $this->lolo: null,
                 'low' => is_numeric($this->low) ? $this->low: null,
