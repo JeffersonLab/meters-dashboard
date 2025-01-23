@@ -67,18 +67,37 @@ class MeterLimit extends Component
     }
 
     public function save() {
-        $this->limit->fill([
-          'lolo' => is_numeric($this->lolo) ? $this->lolo: null,
-          'low' => is_numeric($this->low) ? $this->low: null,
-          'high' => is_numeric($this->high) ? $this->high: null,
-          'hihi' => is_numeric($this->hihi) ? $this->hihi: null,
-        ]);
-        if (! $this->limit->save()){
-            dd($this->limit->errors());
+        // If all numeric values are null, we delete the MeterLimit entirely
+        if ($this->shouldDelete()) {
+            $this->limit->delete();
+            $this->limit = null;
+            $this->enableEdit = false;
+        }else{
+            $this->limit->fill([
+                'lolo' => is_numeric($this->lolo) ? $this->lolo: null,
+                'low' => is_numeric($this->low) ? $this->low: null,
+                'high' => is_numeric($this->high) ? $this->high: null,
+                'hihi' => is_numeric($this->hihi) ? $this->hihi: null,
+            ]);
+            // The validation below will throw ValidationExceptions that livewire
+            // will catch and automatically make available to the blade view
+            // in an $errors variable.
+            $valid = $this->limit->getValidator()->validate();
+
+            if (! $this->limit->save()){
+                $this->addError('form', 'Failed to update limits');
+            }else{
+                $this->enableEdit = false;
+            }
         }
-        $this->enableEdit = false;
     }
 
+
+    protected function shouldDelete(){
+        // If all four values are non-numeric (NULL, "", "NA",'-', etc.) then there are no valid
+        // alert limits and we interpret this as a request to remove the record if it exists in the database.
+        return ! (is_numeric($this->lolo) || is_numeric($this->low) || is_numeric($this->high) || is_numeric($this->hihi));
+    }
 
     public function isEditable(): bool {
         return $this->enableEdit;
