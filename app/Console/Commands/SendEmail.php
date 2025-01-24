@@ -35,10 +35,17 @@ class SendEmail extends Command
         $consumptionAlerts = $meterAlertRepository->alerts()
             ->sortBy(function ($alert, $key) {
                 return $alert->meter()->epics_name;
-            });
-//        $mail = new App\Mail\ConsumptionAlert($consumptionAlerts);
-        $sent = Mail::to('theo@jlab.org')->send(new ConsumptionAlert($consumptionAlerts));
-//        Mail::to(config('meters.alert_email_recipients'))
-//            ->send(new DailyAlertStatus(new NagiosServicelist));
+        });
+        if ($this->shouldSend($consumptionAlerts)) {
+            $sent = Mail::to(config('meters.alert_email_recipients'))->send(new ConsumptionAlert($consumptionAlerts));
+        }
     }
+
+    /**
+     * Do we have recipients and non-empty content?
+     */
+    protected function shouldSend($alerts){
+        return $alerts->isNotEmpty() && ! empty(config('meters.alert_email_recipients'));
+    }
+
 }
