@@ -21,12 +21,12 @@ class MeterLimit extends BaseModel
     //@see https://stackoverflow.com/questions/32036882/laravel-validate-an-integer-field-that-needs-to-be-greater-than-another
     public static $rules = [
         'meter_id' => 'required',
-        'field' => 'required | in:gal,galPerMin,totkW,totkWh',
+        'field' => 'required | in:gal,totkWh',
         'interval' => 'integer',
-        'low' => 'numeric',
-        'high' => 'numeric',
-        'lolo' => 'numeric',
-        'hihi' => 'numeric',
+        'low' => 'nullable|numeric',
+        'high' => 'nullable|numeric',
+        'lolo' => 'nullable|numeric',
+        'hihi' => 'nullable|numeric',
         'source' => 'required | in:epics,web',
     ];
 
@@ -213,15 +213,36 @@ class MeterLimit extends BaseModel
     {
         $validator = Validator::make($this->attributes, static::$rules);
 
-        //validation ensures sane limit pairs if/when set
+       /*
+        * The conditional validations below take effect when related values
+        * are not null.
+        */
+
+        // Every value must be above lolo if it's set
+        $validator->sometimes('low', 'gte:lolo', function ($input) {
+            return $input->lolo !== null;
+        });
+        $validator->sometimes('high', 'gte:lolo', function ($input) {
+            return $input->lolo !== null;
+        });
         $validator->sometimes('hihi', 'gte:lolo', function ($input) {
             return $input->lolo !== null;
         });
 
-        //validation ensures sane limit pairs if/when set
+        // Both high values must be above low if it's set
         $validator->sometimes('high', 'gte:low', function ($input) {
             return $input->low !== null;
         });
+        $validator->sometimes('hihi', 'gte:low', function ($input) {
+            return $input->low !== null;
+        });
+
+        //validation ensures sane limit pairs if/when set
+        $validator->sometimes('hihi', 'gte:high', function ($input) {
+            return $input->high !== null;
+        });
+
+
 
         return $validator;
     }

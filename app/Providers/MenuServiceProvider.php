@@ -69,7 +69,7 @@ class MenuServiceProvider extends ServiceProvider
             $event->menu->add(
                 ['text' => 'Alerts',
                     'url' => '/alerts',
-                    'icon' => 'warning',
+                    'icon' => 'fa fa-bell',
                     'icon_color' => 'orange',
                     'label' => $this->getAlertLabel(),
                 ]);

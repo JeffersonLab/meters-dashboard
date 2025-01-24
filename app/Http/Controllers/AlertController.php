@@ -27,7 +27,7 @@ class AlertController extends Controller
             $consumptionAlerts = $meterAlertRepository->alerts()
                 ->sortBy(function ($alert, $key) {
                     return $alert->meter()->epics_name;
-            });;
+            });
 
             return View::make('alerts.table')
                 ->with('serviceAlerts', $serviceAlerts)

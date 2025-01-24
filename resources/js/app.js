@@ -29,4 +29,7 @@ require('overlayscrollbars');
 require('bootstrap');
 require('../../vendor/almasaeed2010/adminlte/dist/js/adminlte');
 
-// require('datatables.net-bs4');
+// Enable tooltips globally
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
