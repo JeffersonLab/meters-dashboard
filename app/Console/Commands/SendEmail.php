@@ -2,7 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Utilities\NagiosServicelist;
+use App\Alerts\MeterAlertRepository;
+use App\Mail\ConsumptionAlert;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
@@ -30,7 +31,14 @@ class SendEmail extends Command
      */
     public function handle(): void
     {
-        Mail::to(config('meters.alert_email_recipients'))
-            ->send(new DailyAlertStatus(new NagiosServicelist));
+        $meterAlertRepository = new MeterAlertRepository();
+        $consumptionAlerts = $meterAlertRepository->alerts()
+            ->sortBy(function ($alert, $key) {
+                return $alert->meter()->epics_name;
+            });
+//        $mail = new App\Mail\ConsumptionAlert($consumptionAlerts);
+        $sent = Mail::to('theo@jlab.org')->send(new ConsumptionAlert($consumptionAlerts));
+//        Mail::to(config('meters.alert_email_recipients'))
+//            ->send(new DailyAlertStatus(new NagiosServicelist));
     }
 }
