@@ -68,6 +68,18 @@ services:
             test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
             retries: 3
             timeout: 5s
+    mailhog:
+        image: mailhog/mailhog
+        container_name: meters-mail
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        logging:
+            driver: 'none'
+        networks:
+            - sail
+        ports:
+            - "8003:1025"
+            - "8100:8025"
 networks:
     sail:
         driver: bridge
