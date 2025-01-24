@@ -1,7 +1,7 @@
 <?php
 return [
 
-    'admin_usernames' => explode(',', env('ADMIN_USERNAMES', Jlab\Auth\User::class)),
+    'admin_usernames' => explode(',', env('ADMIN_USERNAMES', [])),
     'routes' => [
         'login' => env('LOGIN_ROUTE_NAME', 'sso.login'),
     ],

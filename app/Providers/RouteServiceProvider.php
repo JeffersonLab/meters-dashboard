@@ -9,6 +9,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -30,14 +31,35 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->defineRouteBindings();
 
-        $this->routes(function () {
-            Route::prefix('api')
-                ->middleware('api')
-                ->group(base_path('routes/api.php'));
-
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
+        // @see https://livewire.laravel.com/docs/installation#customizing-the-asset-url
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post($this->basePath().'livewire/update', $handle);
         });
+        Livewire::setScriptRoute(function ($handle) {
+            return Route::get($this->basePath().'livewire/livewire.js', $handle);
+        });
+
+    }
+
+    /**
+     * Return the path prefix for generating different urls to livewire in production vs. development.
+     *
+     * Accounts for the fact that the application runs at /apps/meters in production
+     * rather than / during development.
+     *
+     * @return string
+     */
+    protected function basePath(): string {
+       $parts =  parse_url(config('app.url'));
+       if (isset($parts['path'])){
+            $path = $parts['path'];
+       }else{
+           $path = '/';
+       }
+       if (! str_ends_with($path, '/')) {
+           $path .= '/';
+       }
+       return $path;
     }
 
     /**
