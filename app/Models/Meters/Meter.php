@@ -107,7 +107,7 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
         return $this->hasMany(RolloverEvent::class)->orderBy('rollover_at');
     }
 
-    public function fieldLimits($field)
+    public function fieldLimits($field): MeterLimit
     {
         // we use first b/c we rely on database uniqueness to
         // ensure only one of each field value per meter.
@@ -297,25 +297,46 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
         return $limits->isWithinLimits($value);
     }
 
-    public function isTooHigh($field, $value)
+    public function isTooHighMajor($field, $value)
     {
         $limits = $this->fieldLimits($field);
         if ($limits) {
-            return $limits->isTooHigh($value);
+            return $limits->isTooHighMajor($value);
         }
 
         return false;
     }
 
-    public function isTooLow($field, $value)
+    public function isTooHighMinor($field, $value)
     {
         $limits = $this->fieldLimits($field);
         if ($limits) {
-            return $limits->isTooLow($value);
+            return $limits->isTooHighMinor($value);
         }
 
         return false;
     }
+
+    public function isTooLowMajor($field, $value)
+    {
+        $limits = $this->fieldLimits($field);
+        if ($limits) {
+            return $limits->isTooLowMajor($value);
+        }
+
+        return false;
+    }
+
+    public function isTooLowMinor($field, $value)
+    {
+        $limits = $this->fieldLimits($field);
+        if ($limits) {
+            return $limits->isTooLowMinor($value);
+        }
+
+        return false;
+    }
+
 
     /**
      * Returns the EpicsName portion of a pv string by stripping
@@ -438,7 +459,7 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
      *
      * @throws MeterDataException
      */
-    public function consumedBetween($field, Carbon $fromDate, Carbon $toDate)
+    public function consumedBetween($field, Carbon $fromDate, Carbon $toDate): int|float
     {
         $query = $this->dataTable()
             ->select(['date', $field])
