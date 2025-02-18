@@ -35,6 +35,12 @@
             @if ($meter->hasRolloverEvents())
                 @include('box.rollover', ['model' => $meter])
             @endif
+
+            @if ($meter->hasMeterLimits()
+              || (Auth::user() && Auth::user()->can('create',\App\Models\Meters\MeterLimit::class)))
+            <livewire:meter-limit :meterId="$meter->id" :type="$meter->type" :limit="$meter->meterLimits()->first()"/>
+            @endif
+
         </div>
     </div>
 

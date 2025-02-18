@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('meter_limits', function (Blueprint $table) {
+            $table->increments('id')->startingValue();
             $table->unsignedInteger('meter_id');
             $table->string('field', 32);
             $table->integer('interval');

@@ -12,6 +12,7 @@ use App\Exceptions\MeterDataException;
 use App\Models\Meters\Meter;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Number;
 
 /**
  * Class MeterAlertRepository
@@ -58,13 +59,39 @@ class MeterAlertRepository
                 if (! $meter->withinLimits('gal', $consumedYesterday)) {
                     $alert = new MeterAlert($meter, 'warning');
                     $alert->description = 'Threshold';
-                    if ($meter->isTooHigh('gal', $consumedYesterday)) {
+
+                    // First we check and assign warnings for the minor thresholds
+                    if ($meter->isTooHighMinor('gal', $consumedYesterday)) {
                         $alert->message = sprintf('%s gal consumed on %s exceeded threshold of %s gal/day',
-                            $consumedYesterday, Carbon::yesterday()->format('Y-m-d'), $meter->fieldLimits('gal')->hi);
-                    } else {
-                        $alert->message = sprintf('%s gal consumed on %s was below threshold of %s gal/day',
-                            $consumedYesterday, Carbon::yesterday()->format('Y-m-d'), $meter->fieldLimits('gal')->lo);
+                            Number::format($consumedYesterday),
+                            Carbon::yesterday()->format('l, F jS'),
+                            Number::format($meter->fieldLimits('gal')->high));
+                        $alert->status = 'warning';
                     }
+                    if ($meter->isTooLowMinor('gal', $consumedYesterday)) {
+                        $alert->message = sprintf('%s gal consumed on %s was below threshold of %s gal/day',
+                            Number::format($consumedYesterday),
+                            Carbon::yesterday()->format('l, F jS'),
+                            Number::format($meter->fieldLimits('gal')->low));
+                        $alert->status = 'warning';
+                    }
+                    // Then we check and assign warnings for the major thresholds, possibly overwriting minor thresholds above
+                    // First we check and assign warnings for the minor thresholds
+                    if ($meter->isTooHighMajor('gal', $consumedYesterday)) {
+                        $alert->message = sprintf('%s gal consumed on %s exceeded threshold of %s gal/day',
+                            Number::format($consumedYesterday),
+                            Carbon::yesterday()->format('l, F jS'),
+                            Number::format($meter->fieldLimits('gal')->hihi));
+                        $alert->status = 'critical';
+                    }
+                    if ($meter->isTooLowMajor('gal', $consumedYesterday)) {
+                        $alert->message = sprintf('%s gal consumed on %s was below threshold of %s gal/day',
+                            Number::format($consumedYesterday),
+                            Carbon::yesterday()->format('l, F jS'),
+                            Number::format($meter->fieldLimits('gal')->lolo));
+                        $alert->status = 'critical';
+                    }
+
                     $this->pushAlert($alert);
                 }
             } catch (MeterDataException $e) {
