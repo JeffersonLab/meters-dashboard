@@ -29,7 +29,7 @@ services:
         networks:
             - sail
     web:
-        image: 'jeffersonlab/cedlib:1.2'
+        image: 'jeffersonlab/cedlib:1.3'
         ports:
             - '80:80'
             - '443:443'
