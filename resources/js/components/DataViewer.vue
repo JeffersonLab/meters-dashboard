@@ -118,7 +118,7 @@ export default {
           ]
           this.columns.forEach(item => {
               if (item !== 'id' && item !== 'date'){
-                  fields.push({key: item})
+                  fields.push({key: item, sortable:true})
               }
           })
           return fields
