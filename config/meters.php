@@ -14,10 +14,7 @@ return [
     // meters data tables (power_meter_data, water_meter_data, etc.)
     'data_interval' => 300,
 
-    'alert_email_recipients' => [
-        'theo@jlab.org',
-        'gcroke@jlab.org',
-    ],
+    'alert_email_recipients' => explode(',', env('ALERT_EMAIL_RECIPIENTS',[])),
 
     // Documents the fields that can be appended to a meter's epics_name
     // to produce a valid PV.  They are grouped by meter type.
@@ -31,10 +28,6 @@ return [
                 'description' => 'Total real energy',
                 'units' => 'kWh',
             ],
-            // ':totMBTU' => [
-            //     'description' => 'Total real energy',
-            //     'units'      =>  'MBTU'
-            // ],
             ':llVolt' => [
                 'description' => 'Average Voltage',
                 'units' => 'V',
