@@ -36,9 +36,12 @@ class SendEmail extends Command
             ->sortBy(function ($alert, $key) {
                 return $alert->meter()->epics_name;
             });
-//        $mail = new App\Mail\ConsumptionAlert($consumptionAlerts);
-        $sent = Mail::to('theo@jlab.org')->send(new ConsumptionAlert($consumptionAlerts));
-//        Mail::to(config('meters.alert_email_recipients'))
-//            ->send(new DailyAlertStatus(new NagiosServicelist));
+        if ($consumptionAlerts->isNotEmpty()){
+            $sent = Mail::to(config('meters.alert_email_recipients'))
+                ->send(new ConsumptionAlert($consumptionAlerts));
+            $this->line('email sent');    
+        }else{
+            $this->line('no alerts to send out via email');
+        }            
     }
 }
