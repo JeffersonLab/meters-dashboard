@@ -27,38 +27,38 @@ class ImportMeterLimits extends Command
      */
     public function handle()
     {
-        $l = new MeterLimitImporter();
+        $l = new MeterLimitImporter;
         $l->import($this->argument('file'));
         foreach ($l->data as $row) {
-          try{
-              if (!empty($row)) {
-                  $meter = Meter::where('epics_name', $row['meter'])->first();
-                  if ($meter) {
-                      $meter->meterLimits()->delete();
-                      $meterLimit = $meter->meterLimits()->create([
-                          'field' => $row['field'],
-                          'interval' => $row['interval'],
-                          'low' => $row['low'],
-                          'lolo' => $row['lolo'],
-                          'high' => $row['high'],
-                          'hihi' => $row['hihi'],
-                          'source' => $row['source'],
-                      ]);
-                      if ($meterLimit->save()) {
-                          $this->line('Meter limit' . $row['meter'] . ' imported successfully');
-                      }
-                      if ($meterLimit->hasErrors()) {
-                          throw new \Exception($meterLimit->errors()->first());
-                      }
-                  }
-                  else {
-                      throw new \Exception("Can't find meter " . $row['meter'] . " in DB");
-                  }
-              }
-          } catch (\Exception $e) {
-              $this->error($e->getMessage());
-              return 1;
-          }
+            try {
+                if (! empty($row)) {
+                    $meter = Meter::where('epics_name', $row['meter'])->first();
+                    if ($meter) {
+                        $meter->meterLimits()->delete();
+                        $meterLimit = $meter->meterLimits()->create([
+                            'field' => $row['field'],
+                            'interval' => $row['interval'],
+                            'low' => $row['low'],
+                            'lolo' => $row['lolo'],
+                            'high' => $row['high'],
+                            'hihi' => $row['hihi'],
+                            'source' => $row['source'],
+                        ]);
+                        if ($meterLimit->save()) {
+                            $this->line('Meter limit'.$row['meter'].' imported successfully');
+                        }
+                        if ($meterLimit->hasErrors()) {
+                            throw new \Exception($meterLimit->errors()->first());
+                        }
+                    } else {
+                        throw new \Exception("Can't find meter ".$row['meter'].' in DB');
+                    }
+                }
+            } catch (\Exception $e) {
+                $this->error($e->getMessage());
+
+                return 1;
+            }
         }
     }
 }

@@ -6,9 +6,6 @@ use App\Models\Buildings\Building;
 use App\Models\DataTables\DataTableModifier;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
-use App\Exceptions\WebClientException;
-
 
 class FillBuildings extends Command
 {
@@ -35,8 +32,8 @@ class FillBuildings extends Command
         $existing = Building::all();
         foreach ($existing as $building) {
             try {
-                if ($building->type != 'CoolingTower'){ 
-                    $this->info('Try '.$building->name);               
+                if ($building->type != 'CoolingTower') {
+                    $this->info('Try '.$building->name);
                     $count = $building->fillDataTable();
                     $this->info('Filled '.$building->name." with $count rows");
                 }
@@ -72,7 +69,7 @@ class FillBuildings extends Command
         $modifier = new DataTableModifier($building);
         $modifier->addGasMeterColumns();
     }
-    
+
     /**
      * Add water meter columns to the building.
      *

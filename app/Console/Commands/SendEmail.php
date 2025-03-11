@@ -31,17 +31,17 @@ class SendEmail extends Command
      */
     public function handle(): void
     {
-        $meterAlertRepository = new MeterAlertRepository();
+        $meterAlertRepository = new MeterAlertRepository;
         $consumptionAlerts = $meterAlertRepository->alerts()
             ->sortBy(function ($alert, $key) {
                 return $alert->meter()->epics_name;
             });
-        if ($consumptionAlerts->isNotEmpty()){
+        if ($consumptionAlerts->isNotEmpty()) {
             $sent = Mail::to(config('meters.alert_email_recipients'))
                 ->send(new ConsumptionAlert($consumptionAlerts));
-            $this->line('email sent');    
-        }else{
+            $this->line('email sent');
+        } else {
             $this->line('no alerts to send out via email');
-        }            
+        }
     }
 }

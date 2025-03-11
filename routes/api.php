@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //    return $request->user();
-//});
+// });
 
 Route::get('/meters/chart-data', [ApiController::class, 'meterChartData'])->name('meters.chart_data');
 

@@ -2,7 +2,4 @@
 
 namespace App\Exceptions;
 
-class WebServerException extends \Exception
-{
-
-}
+class WebServerException extends \Exception {}

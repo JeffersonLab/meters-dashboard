@@ -46,20 +46,20 @@ class RouteServiceProvider extends ServiceProvider
      *
      * Accounts for the fact that the application runs at /apps/meters in production
      * rather than / during development.
-     *
-     * @return string
      */
-    protected function basePath(): string {
-       $parts =  parse_url(config('app.url'));
-       if (isset($parts['path'])){
+    protected function basePath(): string
+    {
+        $parts = parse_url(config('app.url'));
+        if (isset($parts['path'])) {
             $path = $parts['path'];
-       }else{
-           $path = '/';
-       }
-       if (! str_ends_with($path, '/')) {
-           $path .= '/';
-       }
-       return $path;
+        } else {
+            $path = '/';
+        }
+        if (! str_ends_with($path, '/')) {
+            $path .= '/';
+        }
+
+        return $path;
     }
 
     /**

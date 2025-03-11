@@ -4,18 +4,15 @@ namespace Tests\Models\Meters;
 
 use App\Models\Buildings\Building;
 use App\Models\DataTables\DataTableReporter;
-use App\Models\DataTables\DataTableTrait;
 use App\Models\Meters\Meter;
 use App\Models\Meters\MeterLimit;
 use App\Models\Meters\RolloverEvent;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
 final class MeterTest extends TestCase
 {
-
     public function test_it_casts_dates(): void
     {
         $model = Meter::factory()->create([
@@ -136,8 +133,8 @@ final class MeterTest extends TestCase
 
     public function test_it_is_precluded_from_duplicate_epics_name(): void
     {
-        //TODO implement afer database migration update
-        $this->assertTrue(true);  //placeholder
+        // TODO implement afer database migration update
+        $this->assertTrue(true);  // placeholder
     }
 
     public function test_it_retrieves_limits(): void

@@ -27,7 +27,7 @@ use Robbo\Presenter\PresentableInterface;
 class Meter extends BaseModel implements DataTableInterface, PresentableInterface
 {
     use DataTableTrait;
-    use SoftDeletes;   //also see https://www.honeybadger.io/blog/a-guide-to-soft-deletes-in-laravel/
+    use SoftDeletes;   // also see https://www.honeybadger.io/blog/a-guide-to-soft-deletes-in-laravel/
 
     protected $table = 'meters';
 
@@ -149,13 +149,13 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
                 $startDate = $this->begins_at;
                 $accumulatedRollover = 0;
             }
-            //var_dump($startDate);
+            // var_dump($startDate);
             // Get the data that follows the date
             $query = $this->dataTable()->select('*')
                 ->where('meter_id', $this->id)
                 ->whereNotNull($field)
                 ->where('date', '>', $startDate)->orderBy('date');
-            //var_dump($query->toSql());
+            // var_dump($query->toSql());
             $data = $query->get();
 
             /*
@@ -185,7 +185,7 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
 
                 // Apply the logical tests
                 if ($rows[$i + 1]->$field < $rows[$i]->$field) {
-                    //var_dump($rows);
+                    // var_dump($rows);
                     if ($rows[$i + 2]->$field < $rows[$i]->$field
                         && $rows[$i + 2]->$field > $rows[$i + 1]->$field) {
                         $accumulatedRollover += $this->rolloverIncrement($field);
@@ -194,7 +194,7 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
                         $event->rollover_at = $rows[$i + 1]->date;
                         $event->field = $field;
                         $event->rollover_accumulated = $accumulatedRollover;
-                        //var_dump($event);
+                        // var_dump($event);
                         $event->saveOrFail();
                         $eventsMade++;
                     }
@@ -219,21 +219,24 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
         return $saved;
     }
 
-
     public function delete()
     {
-        if ($this->isForceDeleting()){
-           $this->dropDataTable();
+        if ($this->isForceDeleting()) {
+            $this->dropDataTable();
         }
+
         return parent::delete();
     }
 
-    public function forceDelete(){
+    public function forceDelete()
+    {
         $this->dropDataTable();
+
         return parent::forceDelete();
     }
 
-    protected function dropDataTable() {
+    protected function dropDataTable()
+    {
         (new DataTableCreator($this))->dropTable();
     }
 
@@ -336,7 +339,6 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
 
         return false;
     }
-
 
     /**
      * Returns the EpicsName portion of a pv string by stripping
@@ -662,7 +664,6 @@ class Meter extends BaseModel implements DataTableInterface, PresentableInterfac
 
         return $this->reporter;
     }
-
 
     /**
      * Update fields for existing meter data rows.

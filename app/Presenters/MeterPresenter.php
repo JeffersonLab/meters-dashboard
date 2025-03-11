@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: theo
@@ -16,7 +17,7 @@ abstract class MeterPresenter extends Presenter implements BoxInterface
     public function linkToEpicsDetailScreen($attributes = ['target' => '_blank'])
     {
         if (isset($this->model_number)) {
-            //$var = urlencode(epics_macro_variable('meter')) . '=' . $this->epics_name;  // macro var passed to screen
+            // $var = urlencode(epics_macro_variable('meter')) . '=' . $this->epics_name;  // macro var passed to screen
             $url = env('BASE_SCREEN_URL').'/'.strtolower($this->model_number).'.edl';
             if (! empty($this->epicsMacroVariables())) {
                 $url .= '&'.implode('&', $this->epicsMacroVariables());
@@ -98,7 +99,7 @@ abstract class MeterPresenter extends Presenter implements BoxInterface
             'Description' => $this->name_alias,
             'Location' => link_to_route('buildings.show', $this->housed_by, [$this->building_id]),
             'Date Added' => $this->begins_at->format('Y-m-d'),
-            //'First Data' => $this->reporter()->firstData()->get()->date,
+            // 'First Data' => $this->reporter()->firstData()->get()->date,
         ];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 return [
 
     'admin_usernames' => explode(',', env('ADMIN_USERNAMES', [])),

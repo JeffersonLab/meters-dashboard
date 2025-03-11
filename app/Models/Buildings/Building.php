@@ -178,7 +178,7 @@ class Building extends BaseModel implements DataTableInterface, PresentableInter
     public function fillDataTable()
     {
         $inserted = 0;
-        if (! empty($this->channels())){
+        if (! empty($this->channels())) {
             try {
                 // We ask the mya server for data no more than 1000 items at a time
                 // until we are all caught up.
@@ -202,42 +202,42 @@ class Building extends BaseModel implements DataTableInterface, PresentableInter
                 Log::error($e->getMessage());
                 throw $e;
             }
-        }else{
+        } else {
             Log::warning("{$this->getPresenter()->menuLabel()} has no channels to fetch.");
         }
 
         return $inserted;
     }
-//    public function fillDataTable()
-//    {
-//        $inserted = 0;
-//        try {
-//            // We ask the mya server for data no more than 1000 items at a time
-//            // until we are all caught up.
-//            while (strtotime($this->nextDataDate()) < time()) {
-//                $mySampler = new MySamplerData($this->nextDataDate(), $this->channels());
-//                $items = $mySampler->getData();
-//                if ($items->isEmpty()) {
-//                    break;  // must escape the while loop when no more data
-//                }
-//                foreach ($items as $item) {
-//                    try {
-//                        $this->dataTable()->insert($this->columnsFromMySampler($item));
-//                        $inserted++;
-//                    } catch (\PDOException $e) {
-//                        Log::error($e);
-//                        throw $e;
-//                    }
-//                }
-//            }
-//        } catch (\GuzzleHttp\Exception\ClientException $e) {
-//            Log::error($e->getMessage());
-//            //throw ($e);
-//        }
-//
-//        //var_dump('inserted '.$inserted);
-//        return $inserted;
-//    }
+    //    public function fillDataTable()
+    //    {
+    //        $inserted = 0;
+    //        try {
+    //            // We ask the mya server for data no more than 1000 items at a time
+    //            // until we are all caught up.
+    //            while (strtotime($this->nextDataDate()) < time()) {
+    //                $mySampler = new MySamplerData($this->nextDataDate(), $this->channels());
+    //                $items = $mySampler->getData();
+    //                if ($items->isEmpty()) {
+    //                    break;  // must escape the while loop when no more data
+    //                }
+    //                foreach ($items as $item) {
+    //                    try {
+    //                        $this->dataTable()->insert($this->columnsFromMySampler($item));
+    //                        $inserted++;
+    //                    } catch (\PDOException $e) {
+    //                        Log::error($e);
+    //                        throw $e;
+    //                    }
+    //                }
+    //            }
+    //        } catch (\GuzzleHttp\Exception\ClientException $e) {
+    //            Log::error($e->getMessage());
+    //            //throw ($e);
+    //        }
+    //
+    //        //var_dump('inserted '.$inserted);
+    //        return $inserted;
+    //    }
 
     public function channels()
     {
@@ -298,10 +298,10 @@ class Building extends BaseModel implements DataTableInterface, PresentableInter
      */
     public function dbFields(): array
     {
-        //They are total for the building and could be from a single
-        //meter or by summing multiple.  Gary takes care of this
-        //at the IOC level and simply provides a single building PV
-        //for each.
+        // They are total for the building and could be from a single
+        // meter or by summing multiple.  Gary takes care of this
+        // at the IOC level and simply provides a single building PV
+        // for each.
         $fields = [];
         foreach (array_keys(config('meters.pvs')) as $type) {
             $fields = array_merge($fields, array_keys(config('meters.pvs.'.$type)));
@@ -319,10 +319,10 @@ class Building extends BaseModel implements DataTableInterface, PresentableInter
      */
     public function pvFields(): array
     {
-        //They are total for the building and could be from a single
-        //meter or by summing multiple.  Gary takes care of this
-        //at the IOC level and simply provides a single building PV
-        //for each.
+        // They are total for the building and could be from a single
+        // meter or by summing multiple.  Gary takes care of this
+        // at the IOC level and simply provides a single building PV
+        // for each.
         $fields = [];
         foreach ($this->meterTypes() as $type) {
             $fields = array_merge($fields, array_keys(config('meters.pvs.'.$type)));
@@ -343,18 +343,22 @@ class Building extends BaseModel implements DataTableInterface, PresentableInter
 
     public function delete()
     {
-        if ($this->isForceDeleting()){
+        if ($this->isForceDeleting()) {
             $this->dropDataTable();
         }
+
         return parent::delete();
     }
 
-    public function forceDelete(){
+    public function forceDelete()
+    {
         $this->dropDataTable();
+
         return parent::forceDelete();
     }
 
-    protected function dropDataTable() {
+    protected function dropDataTable()
+    {
         (new DataTableCreator($this))->dropTable();
     }
 }

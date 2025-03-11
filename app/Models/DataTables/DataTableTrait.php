@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: theo
@@ -25,7 +26,7 @@ trait DataTableTrait
      */
     protected $dataTableFk;
 
-    //----- Abstract methods which trait inheritors must implement ------------------------------------------------//
+    // ----- Abstract methods which trait inheritors must implement ------------------------------------------------//
 
     /**
      * The primary key value of the model instance.
@@ -40,7 +41,7 @@ trait DataTableTrait
      */
     abstract public function pvFields(): array;
 
-    //------ Trait implemented methods ----------------------------------------------------------------------------//
+    // ------ Trait implemented methods ----------------------------------------------------------------------------//
 
     /**
      * Return the name of the column in the data table that is the foreign key
@@ -259,7 +260,7 @@ trait DataTableTrait
     public function fillDataTable()
     {
         $inserted = 0;
-        if (! empty($this->channels())){
+        if (! empty($this->channels())) {
             try {
                 // We ask the mya server for data no more than 1000 items at a time
                 // until we are all caught up.
@@ -283,24 +284,22 @@ trait DataTableTrait
                 Log::error($e->getMessage());
                 throw $e;
             }
-        }else{
+        } else {
             Log::warning("{$this->getPresenter()->menuLabel()} has no channels to fetch.");
         }
 
         return $inserted;
     }
 
-
     /**
      * Delete data after a date.
      *
      * @throws \Exception
      */
-    public function deleteAfter(Carbon $date): int {
+    public function deleteAfter(Carbon $date): int
+    {
         return $this->dataTable()
             ->where('date', '>', $date)
             ->delete();
     }
-
-
 }

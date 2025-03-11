@@ -5,7 +5,6 @@ namespace Tests;
 use App\Models\Buildings\Building;
 use App\Models\Meters\Meter;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Config;
@@ -69,7 +68,7 @@ abstract class TestCase extends BaseTestCase
         foreach (Building::withTrashed()->get()->all() as $building) {
             $building->forceDelete();
         }
-        //specify the valid epics field names for a power meter
+        // specify the valid epics field names for a power meter
         Config::set('meters.pvs', $this->pvs);
     }
 

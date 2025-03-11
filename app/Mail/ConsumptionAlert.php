@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
@@ -33,7 +32,7 @@ class ConsumptionAlert extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('alarms@jlab.org','MCC Alarms Account'),
+            from: new Address('alarms@jlab.org', 'MCC Alarms Account'),
             subject: 'Consumption Alert',
         );
     }

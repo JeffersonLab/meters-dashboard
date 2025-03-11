@@ -92,7 +92,7 @@ class DataTableModifier
         // TODO strip out unnecessary columns?
         $this->schema->table($tableName, function ($table) use ($type) {
             foreach (array_keys(config('meters.pvs.'.$type)) as $field) {
-                $columnName = substr($field, 1);  //to strip initial ":"
+                $columnName = substr($field, 1);  // to strip initial ":"
                 $table->double($columnName)->nullable();
             }
         });

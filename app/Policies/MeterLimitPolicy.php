@@ -8,18 +8,20 @@ use Jlab\Auth\User;
 
 class MeterLimitPolicy
 {
-    protected function isAdminUser(User $user) : bool{
-        return in_array($user->username, config('auth.admin_usernames',[]));
+    protected function isAdminUser(User $user): bool
+    {
+        return in_array($user->username, config('auth.admin_usernames', []));
     }
 
     /**
      * Pre-authorization check allows admin users to perform all actions.
      */
-    public function before(User $user, string $ability): bool|null
+    public function before(User $user, string $ability): ?bool
     {
         if ($this->isAdminUser($user)) {
             return true;
         }
+
         return null;
     }
 

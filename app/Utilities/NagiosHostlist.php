@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: theo
@@ -54,12 +55,12 @@ class NagiosHostlist extends NagiosData
      */
     public function query(): array
     {
-        //?query=hostlist&formatoptions=whitespace+enumerate+bitmask+duration&hoststatus=up+down+unreachable';
+        // ?query=hostlist&formatoptions=whitespace+enumerate+bitmask+duration&hoststatus=up+down+unreachable';
         return [
             'query' => 'hostlist',
             'details' => 'true',
             'formatoptions' => 'whitespace enumerate bitmask duration',
-            //'hoststatus' => 'up down unreachable',
+            // 'hoststatus' => 'up down unreachable',
         ];
     }
 }

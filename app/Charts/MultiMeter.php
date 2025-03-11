@@ -99,8 +99,8 @@ class MultiMeter implements ChartInterface
     {
         $data = [];
         foreach ($this->virtualMeter->meters() as $meter) {
-            //Each meter's datatable reporter needs to be told
-            //of the current date range settings.
+            // Each meter's datatable reporter needs to be told
+            // of the current date range settings.
             $meter->reporter()->beginning($this->beginsAt());
             $meter->reporter()->ending($this->endsAt());
 

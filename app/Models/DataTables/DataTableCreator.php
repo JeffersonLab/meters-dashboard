@@ -57,7 +57,7 @@ class DataTableCreator
             // obtained from the meter pv list.  As of now we
             // have only floating point PVs in use.
             foreach ($this->model->dbFields() as $field) {
-                $columnName = substr($field, 1);  //to strip initial ":"
+                $columnName = substr($field, 1);  // to strip initial ":"
                 $table->double($columnName)->nullable();
             }
             // The index construction differs for buildings vs meters

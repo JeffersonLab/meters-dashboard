@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: theo
@@ -53,7 +54,7 @@ class WeatherUndergroundData implements DataFetchContract
     public function dailySummary()
     {
         if (array_key_exists('dailysummary', get_object_vars($this->history()))) {
-            return $this->history()->dailysummary[0];   //API returns an array
+            return $this->history()->dailysummary[0];   // API returns an array
         }
     }
 

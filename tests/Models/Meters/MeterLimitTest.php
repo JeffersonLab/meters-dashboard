@@ -61,10 +61,10 @@ final class MeterLimitTest extends TestCase
         $this->assertTrue($limit->isWithinMinorLimits(50));
         $this->assertTrue($limit->isWithinLimits(50));
 
-        $this->assertTrue($limit->isTooHigh(105));  //exceeds minor
-        $this->assertTrue($limit->isTooHigh(101));  //exceeds minor
-        $this->assertFalse($limit->isTooLow(0));  //exceeds minor
-        $this->assertTrue($limit->isTooLow(-1));  //exceeds minor
+        $this->assertTrue($limit->isTooHigh(105));  // exceeds minor
+        $this->assertTrue($limit->isTooHigh(101));  // exceeds minor
+        $this->assertFalse($limit->isTooLow(0));  // exceeds minor
+        $this->assertTrue($limit->isTooLow(-1));  // exceeds minor
     }
 
     public function test_it_works_with_minor_and_major(): void
@@ -90,23 +90,23 @@ final class MeterLimitTest extends TestCase
         $this->assertTrue($limit->hasLowerLimitMajor());
         $this->assertTrue($limit->hasLowerLimit());
 
-        //Exceeds none
+        // Exceeds none
         $this->assertTrue($limit->isWithinMajorLimits(50));
         $this->assertFalse($limit->isTooHighMinor(50));
         $this->assertFalse($limit->isTooLowMinor(50));
         $this->assertTrue($limit->isWithinMinorLimits(50));
         $this->assertTrue($limit->isWithinLimits(50));
 
-        //Exceeds minor, not major
+        // Exceeds minor, not major
         $this->assertTrue($limit->isWithinMajorLimits(85));
         $this->assertFalse($limit->isWithinMinorLimits(85));
         $this->assertTrue($limit->isWithinMajorLimits(15));
         $this->assertFalse($limit->isWithinMinorLimits(15));
 
-        $this->assertTrue($limit->isTooHigh(85));  //exceeds minor
-        $this->assertTrue($limit->isTooLow(15));  //exceeds minor
+        $this->assertTrue($limit->isTooHigh(85));  // exceeds minor
+        $this->assertTrue($limit->isTooLow(15));  // exceeds minor
 
-        $this->assertFalse($limit->isTooHighMajor(85));  //exceeds minor
-        $this->assertFalse($limit->isTooLowMajor(15));  //exceeds minor
+        $this->assertFalse($limit->isTooHighMajor(85));  // exceeds minor
+        $this->assertFalse($limit->isTooLowMajor(15));  // exceeds minor
     }
 }

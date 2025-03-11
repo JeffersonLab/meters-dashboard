@@ -73,7 +73,7 @@ class MultiMeterDataExport implements FromCollection, ShouldAutoSize, WithEvents
      */
     public function map($row): array
     {
-        //dd($row);
+        // dd($row);
         return [
             $row->date,
             $row->epics_name,

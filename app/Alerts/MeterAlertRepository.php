@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: theo
@@ -41,8 +42,8 @@ class MeterAlertRepository
     public function populateAlerts()
     {
         $this->populateWaterFlowAlerts();
-        //@TODO cleanup data before enabling
-        //$this->populateDataHasZerosAlerts();
+        // @TODO cleanup data before enabling
+        // $this->populateDataHasZerosAlerts();
     }
 
     /**

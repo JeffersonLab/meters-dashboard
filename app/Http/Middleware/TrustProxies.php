@@ -8,7 +8,6 @@ use Illuminate\Support\Arr;
 
 class TrustProxies extends Middleware
 {
-
     /**
      * The headers that should be used to detect proxies.
      *
@@ -21,10 +20,8 @@ class TrustProxies extends Middleware
         Request::HEADER_X_FORWARDED_PROTO |
         Request::HEADER_X_FORWARDED_AWS_ELB;
 
-
-    public function isTrustedProxy($ip){
+    public function isTrustedProxy($ip)
+    {
         return in_array($ip, Arr::wrap(config('app.proxy_ip')));
     }
-
-
 }

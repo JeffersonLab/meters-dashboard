@@ -32,7 +32,7 @@ return [
     | 'history' for anything older.
     |
     */
-    'deployment' => env('MYA_DEPLOYMENT','ops'),
+    'deployment' => env('MYA_DEPLOYMENT', 'ops'),
 
     /*
      |--------------------------------------------------------------------------
