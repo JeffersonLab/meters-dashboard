@@ -25,7 +25,7 @@ class ImportMeterLimits extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         $l = new MeterLimitImporter;
         $l->import($this->argument('file'));
