@@ -26,6 +26,7 @@
     </style>
 
     <h2>Nagios Alerts</h2>
+    @if ($serviceAlerts->isNotEmpty())
     <table class="meter-data table table-striped">
         <thead>
         <tr>
@@ -57,9 +58,12 @@
         </tbody>
 
     </table>
-
+    @else
+        <h3 style="padding-left: 5em;">There are Nagios Alerts at Present.</h3>
+    @endif
 
     <h2>Consumption Warnings</h2>
+    @if ($consumptionAlerts->isNotEmpty())
     <table class="meter-data table table-striped">
         <thead>
         <tr>
@@ -89,6 +93,8 @@
         </tbody>
 
     </table>
-
+    @else
+        <p">There are Consumption Warnings at Present.</p>
+    @endif
 
 @stop
