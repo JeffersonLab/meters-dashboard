@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AuthController extends \Jlab\Auth\Http\AuthController
+class AuthController extends \Jlab\Auth\Http\AuthController implements HasMiddleware
 {
-    public function __construct()
+    public static function middleware(): array
     {
-        // Authentication requirement to access methods of this controller.
-        $this->middleware([]);
+        return [
+            [],
+        ];
     }
 
     /**
