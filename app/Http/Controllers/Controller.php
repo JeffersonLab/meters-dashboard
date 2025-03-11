@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 
 abstract class Controller
 {
-
     protected function meterData(Collection $meters)
     {
         return $meters->map(function ($item) {
