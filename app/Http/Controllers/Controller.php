@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Collection;
 
 abstract class Controller extends BaseController
 {
-    use AuthorizesRequests;
 
     protected function meterData(Collection $meters)
     {
