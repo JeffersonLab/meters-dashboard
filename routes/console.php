@@ -11,5 +11,3 @@ Schedule::command('meters:sync')
 
 Schedule::command('meters:fill')->hourly();
 Schedule::command('buildings:fill')->hourly();
-
-

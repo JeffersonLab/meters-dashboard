@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: theo
@@ -69,7 +70,7 @@ class NagiosServiceCount extends NagiosData
      */
     public function query(): array
     {
-        //?query=hostlist&formatoptions=whitespace+enumerate+bitmask+duration&hoststatus=up+down+unreachable';
+        // ?query=hostlist&formatoptions=whitespace+enumerate+bitmask+duration&hoststatus=up+down+unreachable';
         return [
             'query' => 'servicecount',
             'formatoptions' => 'whitespace enumerate bitmask duration',

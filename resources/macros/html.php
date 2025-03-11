@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Register macro and content extensions of the laravelcollective HtmlBuilder.
  */
@@ -9,7 +8,6 @@ Html::macro('linkToCedElement', function ($name, $title, $params = []) {
 
     return Html::a($url, $title)->attributes($params);
 });
-
 
 /**
  * Generate HTML for icon with correct color and symbol for the

@@ -93,14 +93,14 @@ class MeterController extends Controller
             ->with('meterType', 'power')
             ->with('label', 'kWh')
             ->with('field', 'totkWh')
-            ->with('referenceDate', Carbon::today()->day(1)); //first of month;
+            ->with('referenceDate', Carbon::today()->day(1)); // first of month;
     }
 
     public function powerStatusKw(): \Illuminate\View\View
     {
         return View::make('status.dynameter')
             ->with('meters', Meter::where('type', 'power')
-                //->whereIn('epics_name',['33MVA','40MVA'])   // useful limit during debugging
+                // ->whereIn('epics_name',['33MVA','40MVA'])   // useful limit during debugging
                 ->orderBy('epics_name')->get())
             ->with('meterType', 'power')
             ->with('label', 'kW')
@@ -110,7 +110,7 @@ class MeterController extends Controller
     public function powerStatusVoltAverage(): \Illuminate\View\View
     {
         $meters = Meter::where('type', 'power')
-            //->whereIn('epics_name',['33MVA','40MVA'])
+            // ->whereIn('epics_name',['33MVA','40MVA'])
             ->orderBy('epics_name')->get();
         $data = [];
         foreach ($meters as $meter) {
@@ -143,7 +143,7 @@ class MeterController extends Controller
             ->with('meterType', 'water')
             ->with('label', 'Gallons')
             ->with('field', 'gal')
-            ->with('referenceDate', Carbon::today()->day(1)); //first of month
+            ->with('referenceDate', Carbon::today()->day(1)); // first of month
     }
 
     public function waterStatusGpm(): \Illuminate\View\View
@@ -162,7 +162,7 @@ class MeterController extends Controller
             ->with('meterType', 'gas')
             ->with('label', 'CCF')
             ->with('field', 'ccf')
-            ->with('referenceDate', Carbon::today()->day(1)); //first of month
+            ->with('referenceDate', Carbon::today()->day(1)); // first of month
     }
 
     public function gasStatusCcfpm(): \Illuminate\View\View

@@ -4,7 +4,6 @@ use App\Http\Controllers\AlertController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\CoolingTowerController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MeterController;
 use App\Http\Controllers\PresenterGraphController;
 use App\Http\Controllers\ReportController;
@@ -55,4 +54,3 @@ Route::get('buildings/substation-summary', [BuildingController::class, 'substati
 Route::get('buildings/{building}', [BuildingController::class, 'show'])->name('buildings.show');
 
 Route::get('cooling-towers/{building}', [CoolingTowerController::class, 'show'])->name('cooling_towers.show');
-

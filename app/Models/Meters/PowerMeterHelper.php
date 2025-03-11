@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: theo
@@ -21,11 +22,11 @@ class PowerMeterHelper extends MeterHelper
 
     protected function substationAlarmLimits()
     {
-        //TODO fetch from "33MVA:llVolt.HIHI", etc.
+        // TODO fetch from "33MVA:llVolt.HIHI", etc.
         return (object) [
-            'low' => 0,         //EPICS convention for not set
+            'low' => 0,         // EPICS convention for not set
             'lolo' => 12200,
-            'high' => 0,        //EPICS convention for not set
+            'high' => 0,        // EPICS convention for not set
             'hihi' => 12850,
         ];
     }

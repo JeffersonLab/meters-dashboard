@@ -58,7 +58,7 @@ final class ReportControllerTest extends TestCase
         $fetched = $this->getResponseData($response, 'report');
         $this->assertCount(2, $fetched->data());  // There are two test meters
         $datum = $fetched->data()->first();
-        //dd($datum);
+        // dd($datum);
 
         $this->assertEquals($this->meter1->name, $datum->meter->name);
 
@@ -66,7 +66,7 @@ final class ReportControllerTest extends TestCase
         $this->assertEquals(500, $datum->last->totkWh);
         $this->assertEquals(500, $datum->consumed);
 
-        //TODO reimplement excel export
+        // TODO reimplement excel export
         //        $excelUrl = $this->getResponseData($response, 'excelUrl');
         //        $response = $this->get($excelUrl);
         //        $response->assertStatus(200);

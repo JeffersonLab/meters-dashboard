@@ -10,6 +10,7 @@
 /public/mix-manifest.json
 /public/select2-dist/
 /storage/*.key
+/storage/pail
 /vendor
 .env
 .env.backup
@@ -20,6 +21,7 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 /.idea
+/.nova
 /.vscode
 .DS_Store
 storage/debugbar

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: theo
@@ -223,7 +224,7 @@ class VirtualMeter extends BaseModel implements DataTableInterface
 
     public function fillDataTable()
     {
-        //Noop - VirtualMeters don't insert data.
+        // Noop - VirtualMeters don't insert data.
     }
 
     /**

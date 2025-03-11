@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: theo
@@ -17,8 +18,8 @@ use Illuminate\Support\Facades\Validator;
  */
 class MeterLimit extends BaseModel
 {
-    //@todo custom validator that hi > lo
-    //@see https://stackoverflow.com/questions/32036882/laravel-validate-an-integer-field-that-needs-to-be-greater-than-another
+    // @todo custom validator that hi > lo
+    // @see https://stackoverflow.com/questions/32036882/laravel-validate-an-integer-field-that-needs-to-be-greater-than-another
     public static $rules = [
         'meter_id' => 'required',
         'field' => 'required | in:gal,totkWh',
@@ -32,13 +33,13 @@ class MeterLimit extends BaseModel
 
     public $fillable = [
         'meter_id',
-        'field',                //PV to which it applies
-        'interval',             //seconds
-        'low',                  //minor too low
-        'high',                 //minor too high
-        'lolo',                 //major too low
-        'hihi',                 //major too high
-        'source',                //where limit defined
+        'field',                // PV to which it applies
+        'interval',             // seconds
+        'low',                  // minor too low
+        'high',                 // minor too high
+        'lolo',                 // major too low
+        'hihi',                 // major too high
+        'source',                // where limit defined
     ];
 
     public function isWithinMinorLimits($value)
@@ -213,10 +214,10 @@ class MeterLimit extends BaseModel
     {
         $validator = Validator::make($this->attributes, static::$rules);
 
-       /*
-        * The conditional validations below take effect when related values
-        * are not null.
-        */
+        /*
+         * The conditional validations below take effect when related values
+         * are not null.
+         */
 
         // Every value must be above lolo if it's set
         $validator->sometimes('low', 'gte:lolo', function ($input) {
@@ -237,12 +238,10 @@ class MeterLimit extends BaseModel
             return $input->low !== null;
         });
 
-        //validation ensures sane limit pairs if/when set
+        // validation ensures sane limit pairs if/when set
         $validator->sometimes('hihi', 'gte:high', function ($input) {
             return $input->high !== null;
         });
-
-
 
         return $validator;
     }

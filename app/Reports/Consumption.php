@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: theo
@@ -401,7 +402,7 @@ abstract class Consumption implements ReportInterface
 
     public function getExcelExport()
     {
-        //TODO verify the excel export still works.
+        // TODO verify the excel export still works.
         return new ConsumptionReportExport($this);
     }
 }

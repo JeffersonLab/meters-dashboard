@@ -4,14 +4,13 @@ namespace App\Utilities;
 
 use App\Exceptions\WebClientException;
 use App\Exceptions\WebServerException;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class MySampler implements DataFetchContract
 {
-
     /*
      * The URL for mysampler data
      */
@@ -62,7 +61,7 @@ class MySampler implements DataFetchContract
      *
      * Note that stepSize should be specified here in seconds.
      */
-    public function __construct(string $begin, mixed $channels, int $stepSize = null, int $numSteps = null)
+    public function __construct(string $begin, mixed $channels, ?int $stepSize = null, ?int $numSteps = null)
     {
         $this->url = config('myquery.mysampler');
         $this->begin = new Carbon($begin);
@@ -71,14 +70,13 @@ class MySampler implements DataFetchContract
             'c' => (is_array($channels) ? implode(',', $channels) : $channels),
             's' => $this->stepSizeinMilliSeconds(),
             'n' => $this->numSteps($numSteps),
-            'b' => $this->begin->format('Y-m-d') . 'T' . $this->begin->format('H:i'),  // ISO8601 format
+            'b' => $this->begin->format('Y-m-d').'T'.$this->begin->format('H:i'),  // ISO8601 format
             'm' => config('myquery.deployment'),
             'x' => config('myquery.strategy'),
         ];
     }
 
-
-    function stepSizeinMilliSeconds()
+    public function stepSizeinMilliSeconds()
     {
         return $this->stepSize * 1000;
     }
@@ -90,7 +88,8 @@ class MySampler implements DataFetchContract
     public function calcNumSteps(): int
     {
         $seconds = Carbon::now()->diffInSeconds($this->begin, true); // true means absolute diff
-        return (int)floor($seconds / $this->stepSize);
+
+        return (int) floor($seconds / $this->stepSize);
     }
 
     /**
@@ -103,20 +102,21 @@ class MySampler implements DataFetchContract
     {
         $desired = $numSteps ?: $this->calcNumSteps();
         $max = config('myquery.max_samples', 5000);
+
         return ($desired && $desired > $max) ? $max : $desired;
     }
 
     protected function organize(array $channelData): array
     {
         $this->organizedData = [];
-        if (! array_key_exists('channels', $channelData)){
+        if (! array_key_exists('channels', $channelData)) {
             Log::error('No channels');
             Log::info(json_encode($channelData));
-        }else{
+        } else {
             foreach ($channelData['channels'] as $channel => $response) {
                 if (array_key_exists('data', $response)) {
                     foreach ($response['data'] as $data) {
-                        if (!array_key_exists('v', $data) || stristr($data['v'], 'undefined')) {
+                        if (! array_key_exists('v', $data) || stristr($data['v'], 'undefined')) {
                             $this->organizedData[$data['d']][$channel] = null;
                         } else {
                             $this->organizedData[$data['d']][$channel] = $data['v'];
@@ -128,13 +128,12 @@ class MySampler implements DataFetchContract
                 }
             }
         }
+
         return $this->organizedData;
     }
 
     /**
-     *
      * Return with
-     *
      */
     public function compatibleData()
     {
@@ -142,12 +141,13 @@ class MySampler implements DataFetchContract
         foreach ($this->organizedData as $date => $values) {
             $data[] = ['date' => $date] + $values;
         }
+
         return $data;
     }
 
     public function hasWarnings()
     {
-        return !empty($this->warnings);
+        return ! empty($this->warnings);
     }
 
     /**
@@ -160,6 +160,7 @@ class MySampler implements DataFetchContract
         // Success response is easy, just return properly reorganized json response.
         if ($response->successful()) {
             $this->organize($response->json());
+
             return collect($this->compatibleData());
         }
         // A 400 client error will ideally be a json response and might even have partial
@@ -174,13 +175,13 @@ class MySampler implements DataFetchContract
                 }
                 throw new WebClientException('The server responded to client with error messages. See log file.');
             } else {
-                Log::error((string)Http::get($this->url, $this->query)->effectiveUri());
+                Log::error((string) Http::get($this->url, $this->query)->effectiveUri());
                 Log::error($response->body());
                 throw new WebClientException('The request could not be processed.');
             }
         }
         if ($response->serverError()) {
-            Log::error((string)Http::get($this->url, $this->query)->effectiveUri());
+            Log::error((string) Http::get($this->url, $this->query)->effectiveUri());
             Log::error($response->body());
             throw new WebServerException('The server responded with an error. See log file.');
         }

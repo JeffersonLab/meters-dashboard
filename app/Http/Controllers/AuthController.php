@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Support\Facades\Auth;
 
-class AuthController extends \Jlab\Auth\Http\AuthController
+class AuthController extends \Jlab\Auth\Http\AuthController implements HasMiddleware
 {
-    public function __construct()
+    public static function middleware(): array
     {
-        // Authentication requirement to access methods of this controller.
-        $this->middleware([]);
+        return [
+            [],
+        ];
     }
 
     /**
@@ -37,12 +38,8 @@ class AuthController extends \Jlab\Auth\Http\AuthController
                 ->withErrors($validator);
         }
 
-        //If it wasn't a POST request, just return the form
-        //We have to preserve the return parameter in the form.
+        // If it wasn't a POST request, just return the form
+        // We have to preserve the return parameter in the form.
         return view('auth.login');
     }
-
-
-
-
 }

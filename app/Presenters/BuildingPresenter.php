@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: theo
@@ -10,7 +11,6 @@ namespace App\Presenters;
 
 use App\Models\Meters\Meter;
 use Robbo\Presenter\Presenter;
-use Spatie\Html\Html;
 
 class BuildingPresenter extends Presenter implements BoxInterface
 {
@@ -82,7 +82,7 @@ class BuildingPresenter extends Presenter implements BoxInterface
         if ($type) {
             $meterCollection = $meterCollection->where('type', '=', $type);
         }
-        //dd($meterCollection);
+        // dd($meterCollection);
         $links = $meterCollection->map(function (Meter $meter) {
             return link_to_route('meters.show', $meter->getPresenter()->nameWithAlias(), [$meter->id])->__toString();
         });

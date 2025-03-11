@@ -18,7 +18,7 @@ final class BuildingControllerTest extends TestCase
     {
         $building = Building::factory()->create();
         $response = $this->get(route('buildings.show', [$building->id]));
-        //dd($response->getContent());
+        // dd($response->getContent());
         $response->assertViewIs('buildings.item');
         $response->assertViewHas('building');
 
