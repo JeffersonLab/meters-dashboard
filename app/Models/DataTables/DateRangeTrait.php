@@ -91,6 +91,26 @@ trait DateRangeTrait
         return $this->begins_at->format($format);
     }
 
+    protected function dateStringIncludesTime(string $date)
+    {
+        return preg_match('/^(\d\d\d\d-\d\d-\d\d)\s(\d\d:\d\d).*$/', $date);
+    }
+
+    /**
+     * Updates begins_at and ends_at properties to use a specific hour of the day for reporting.
+     * For example to report on daily consumption from 8am - 8am as many utilities do rather than
+     * midnight - midnight.
+     *
+     * @param  int  $hour  hour to use -- defaults to day_start_hour of reports config.
+     * @return void
+     */
+    protected function setDayStartHour(?int $hour = null)
+    {
+        $hour = $hour ?: config('reports.day_start_hour');
+        $this->begins_at->hour = $hour;
+        $this->ends_at->hour = $hour;
+    }
+
     public function endsAt(?string $format = null): string
     {
         if ($format === null) {

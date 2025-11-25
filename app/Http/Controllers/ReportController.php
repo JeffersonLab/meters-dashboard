@@ -39,16 +39,13 @@ class ReportController extends Controller
         $report = ReportFactory::make($name, $request);
         $view = $report->view();
 
-        if ($report->hasExcel()) {
-            $view->with('excelUrl', $this->excelUrl($name, $request));
-        }
-
         // Force the request timestamps we tell the client to match what the report uses.
         // NOTE: Always include time! If time is present then javascript will parse as local time
         // whereas it will parse date only in UTC.
         $request->merge(['begin' => $report->begins_at->format('Y-m-d H:i')]);
         $request->merge(['end' => $report->ends_at->format('Y-m-d H:i')]);
 
+//        dd($this->getMeterData($report));
         // Export data for javascript client-side
         JavaScript::put([
             'request' => $request->all(),
@@ -56,6 +53,11 @@ class ReportController extends Controller
             'metersData' => $this->getMeterData($report),
             'buildingsData' => $this->buildingData(Building::all()->sortBy('name', SORT_NATURAL)),
         ]);
+
+
+        if ($report->hasExcel() && $request->has('meters')) {
+            return $report->getExcelExport();
+        }
 
         // Return view with data for blade template.
         return $view->with('request', $request)->with('report', $report);
@@ -77,7 +79,7 @@ class ReportController extends Controller
         if (is_a($report, GasConsumption::class)) {
             return $this->meterData(Meter::where('type', 'gas')->get());
         }
-        $this->meterData(Meter::all());
+        return $this->meterData(Meter::all());
     }
 
     protected function buildingData(Collection $buildings): Collection

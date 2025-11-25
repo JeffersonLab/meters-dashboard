@@ -25,20 +25,10 @@ use Maatwebsite\Excel\Facades\Excel;
 abstract class Consumption implements ReportInterface
 {
     use DateRangeTrait;
+    use ReportFiltersTrait;
 
     protected $title = 'Consumption';
 
-    /**
-     * Names to which the report output should be filtered/limited
-     *
-     * @var array
-     */
-    protected $nameFilter = [];
-
-    /**
-     * @var Collection
-     */
-    protected $items;
 
     /**
      * The process variable being report upon (ex: totkWh, gal, etc.)
@@ -69,72 +59,7 @@ abstract class Consumption implements ReportInterface
         $this->setDayStartHour();
     }
 
-    /**
-     * Updates begins_at and ends_at properties to use a specific hour of the day for reporting.
-     * For example to report on daily consumption from 8am - 8am as many utilities do rather than
-     * midnight - midnight.
-     *
-     * @param  int  $hour  hour to use -- defaults to day_start_hour of reports config.
-     * @return void
-     */
-    protected function setDayStartHour(?int $hour = null)
-    {
-        $hour = $hour ?: config('reports.day_start_hour');
-        $this->begins_at->hour = $hour;
-        $this->ends_at->hour = $hour;
-    }
 
-    public function __get($var)
-    {
-        switch ($var) {
-            case 'begins_at':
-                return $this->begins_at;
-            case 'ends_at':
-                return $this->ends_at;
-            case 'pv':
-                return $this->pv;
-        }
-        throw new \Exception('property not available');
-    }
-
-    /**
-     * Apply filters from the provided HTTP request.
-     *
-     * @return $this
-     */
-    public function applyRequest(Request $request)
-    {
-        foreach ($request->all() as $filterName => $value) {
-            $this->applyNamedFilter($filterName, $value);
-        }
-        $this->updateItems();
-
-        return $this;
-    }
-
-    /**
-     * Uses the provided name and value to set up a report filter.
-     *
-     *
-     * @param  string  $filterName
-     * @param  string  $value
-     */
-    public function applyNamedFilter($filterName, $value)
-    {
-        switch ($filterName) {
-            case 'begin':
-                $this->beginning($value);
-                break;
-            case 'end':
-                $this->ending($value);
-                break;
-            case 'pv':
-                $this->pv = $value;
-                break;
-            case 'meters':
-                $this->makeNameFilter($value);
-        }
-    }
 
     /**
      * Chainable method to set the beginning of the reporting date range.
@@ -170,22 +95,17 @@ abstract class Consumption implements ReportInterface
         return $this;
     }
 
-    protected function dateStringIncludesTime(string $date)
+    public function __get($var)
     {
-        return preg_match('/^(\d\d\d\d-\d\d-\d\d)\s(\d\d:\d\d).*$/', $date);
-    }
-
-    /**
-     * Update items property with fresh data from the database.
-     * For example after applying updated filters.
-     *
-     * @return void
-     */
-    protected function updateItems()
-    {
-        $this->items = Meter::whereIn('epics_name', $this->nameFilter)
-            ->with('building')
-            ->orderBy('epics_name')->get();
+        switch ($var) {
+            case 'begins_at':
+                return $this->begins_at;
+            case 'ends_at':
+                return $this->ends_at;
+            case 'pv':
+                return $this->pv;
+        }
+        throw new \Exception('property not available');
     }
 
     /**
@@ -268,23 +188,6 @@ abstract class Consumption implements ReportInterface
         });
     }
 
-    /**
-     * Parses the provided string into an array of meter names and stores it in nameFilter property
-     */
-    protected function makeNameFilter($string)
-    {
-        $this->nameFilter = array_filter(preg_split('/[,\r\n]+/', $string));
-    }
-
-    /**
-     * Have filters been specified?
-     *
-     * @return bool
-     */
-    protected function hasFilters()
-    {
-        return ! empty($this->nameFilter);
-    }
 
     /**
      * Returns the first item from the collection with a matching name.
@@ -396,7 +299,7 @@ abstract class Consumption implements ReportInterface
      */
     public function hasExcel()
     {
-        return true;
+        return false;
     }
 
     public function getExcelExport()

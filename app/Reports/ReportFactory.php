@@ -15,6 +15,8 @@ class ReportFactory
     public static function make($name, Request $request)
     {
         switch ($name) {
+            case 'data-export' : $report = new DataExport();
+                break;
             case 'power-consumption' : $report = new PowerConsumption;
                 break;
             case 'water-consumption' : $report = new WaterConsumption;
