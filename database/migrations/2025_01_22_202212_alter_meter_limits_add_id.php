@@ -12,7 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('meter_limits', function (Blueprint $table) {
-            $table->increments('id')->first();
+            if (! Schema::hasColumn('meter_limits', 'id')) {
+                $table->increments('id')->first();
+            }
+
         });
     }
 
