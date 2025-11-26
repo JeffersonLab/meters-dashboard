@@ -79,7 +79,7 @@ return [
         'water' => ['color' => 'aqua', 'symbol' => 'fas fa-fw fa-tint'],
         'gas' => ['color' => 'yellow', 'symbol' => 'fas fa-fw fa-cloud'],
         'cooling_tower' => ['color' => 'aqua', 'symbol' => 'fas fa-fw fa-building'],
-        'database' => ['color' => 'black', 'symbol' => 'fas fa-fw fa-database'],``
+        'database' => ['color' => 'black', 'symbol' => 'fas fa-fw fa-database'],
     ],
 
     // Documents the value at which "rollover" occurs for a
