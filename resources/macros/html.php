@@ -29,6 +29,8 @@ Html::macro('meterIcon', function ($meterType) {
         case 'cooling-tower':  $color = config('meters.icons.cooling_tower.color');
             $symbol = config('meters.icons.cooling_tower.symbol');
             break;
+        case 'database' :  $color = config('meters.icons.data.color');
+            break;
     }
     if ($color && $symbol) {
         return sprintf('<i class="fa fa-fw fa-%s text-%s"></i>', $symbol, $color);
