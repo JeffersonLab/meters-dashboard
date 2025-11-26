@@ -22,6 +22,7 @@
                         <li>{!! Html::meterIcon('cooling-tower') !!}
                             {{ html()->a(route('reports.item', ['cooling-tower-consumption']), 'Cooling Tower Consumption') }}
                         </li>
+                        <li>{!! Html::meterIcon('database') !!} {{ html()->a(route('reports.item', ['export-data']), 'Spreadsheet Export') }}</li>
                     </ul>
 
 {{--                    <h4>{!! Html::meterIcon('power') !!} Power</h4>--}}
