@@ -37,6 +37,10 @@
 
     </style>
 
+    <p><b>This report was thrown together quickly and needs further optimization.  Trying to retrieve data for too many meters at once can
+        lead to server-side memory exhaustion or exceeding execution time limits.  For best results
+        <a href="https://accweb9.acc.jlab.org/apps/meters-dashboard/reports/data-export">execute this report directly
+        on accweb9</a> rather than via the ace proxy server.</b></p>
     <div id="consumption-report-filters"></div>
 
     <div class="card report">
