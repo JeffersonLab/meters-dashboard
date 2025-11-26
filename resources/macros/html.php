@@ -29,7 +29,7 @@ Html::macro('meterIcon', function ($meterType) {
         case 'cooling-tower':  $color = config('meters.icons.cooling_tower.color');
             $symbol = config('meters.icons.cooling_tower.symbol');
             break;
-        case 'database' :  $color = config('meters.icons.data.color');
+        case 'database' :  $color = config('meters.icons.database.color');
             break;
     }
     if ($color && $symbol) {
